@@ -6,7 +6,7 @@ http://cran.r-project.org/web/packages/pegas/index.html
 
 This repository contains:
 - the current development (next to be on CRAN) version of pegas (-> pegas/);
-- any new code to be tested by anybody (-> newcode/).
+- new code to be tested before being included in pegas/ (-> newcode/).
 
 More information on pegas (including description of data structures):
 

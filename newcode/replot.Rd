@@ -41,6 +41,6 @@ o <- replot() # interactive
 ## click to rearrange the network at will...
 ## then do a different plot using the same coordinates:
 plot(net, bg = "red", labels = FALSE, show.mutation = 2)
-replot(o ) # not interactive
+replot(o) # not interactive
 }}
 \keyword{hplot}

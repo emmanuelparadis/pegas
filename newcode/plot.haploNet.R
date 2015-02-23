@@ -69,7 +69,7 @@ source("haploNet.R")
     })
 }
 
-replot <- function(hn, xy = NULL, ...)
+replot <- function(xy = NULL, ...)
 {
     on.exit(return(list(x = xx, y = yy)))
 
