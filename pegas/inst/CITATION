@@ -1,0 +1,13 @@
+citHeader("To cite pegas in a publication use:")
+
+citEntry(entry="Article",
+	title = "pegas: an {R} package for population genetics with an integrated--modular approach",
+        author = personList(as.person("E. Paradis")),
+	journal = "Bioinformatics",
+  	year = "2010",
+	volume = "26",
+	pages = "419-420",
+
+        textVersion = "Paradis E. 2010. pegas: an R package for population genetics with an integrated-modular approach. Bioinformatics 26: 419-420.")
+
+citFooter("As pegas is evolving quickly, you may want to cite also its version number (found with 'library(help = pegas)').")

@@ -1,0 +1,50 @@
+useDynLib(pegas, .registration = TRUE)
+
+export(amova, as.igraph.haploNet, as.loci, as.network.haploNet,
+       dist.haplotype.loci, expand.genotype, Fst, genind2loci, geod, geoTrans,
+       getAlleles, getGenotypes, getPloidy, H, haploNet, haploFreq, haplotype,
+       heterozygosity, hw.test, is.phased, is.snp, LD, LD2, loci2genind, mst,
+       MMD, nuc.div, proba.genotype, R2.test, read.gtx, read.loci, read.vcf,
+       rr.test, site.spectrum, tajima.test, theta.h, theta.k, theta.msat,
+       theta.s, theta.tree, write.loci)
+
+## we try to limit the imports for the moment (2013-08-12)
+importFrom(ape, branching.times, base.freq, dist.dna,
+           floating.pie.asp, perm.rowscols, rcoal, seg.sites)
+importFrom(adegenet, df2genind, genind2df)
+importFrom(graphics, plot)
+## importFrom(stats, density)
+importFrom(utils, edit)
+
+S3method(print, amova)
+
+S3method(as.loci, character)
+S3method(as.loci, data.frame)
+S3method(as.loci,factor)
+S3method(as.loci, genind)
+
+S3method(haplotype, DNAbin)
+S3method(haplotype, loci)
+
+#S3method(as.igraph, haploNet)
+#S3method(as.network, haploNet)
+S3method(plot, haploNet)
+
+S3method("[", haplotype)
+S3method(plot, haplotype)
+S3method(print, haplotype)
+S3method(sort, haplotype)
+
+S3method(plot, haplotype.loci)
+
+S3method("[", loci)
+S3method(cbind, loci)
+S3method(edit, loci)
+S3method(print, loci)
+S3method(rbind, loci)
+S3method(summary, loci)
+
+S3method(plot, spectrum)
+
+S3method(plot, summary.loci)
+S3method(print, summary.loci)
