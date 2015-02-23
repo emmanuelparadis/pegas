@@ -9,3 +9,11 @@
 
 # RStudio files
 .Rproj.user/
+
+# back-up files created by Emacs
+*.R~
+*.Rd~
+*.c~
+*.h~
+*.Rnw~
+
