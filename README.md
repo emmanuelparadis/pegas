@@ -8,6 +8,6 @@ This repository contains:
 - the current development (next to be on CRAN) version of pegas (-> pegas/);
 - any new code to be tested by anybody (-> newcode/).
 
-More information on pegas:
+More information on pegas (including description of data structures):
 
 http://ape-package.ird.fr/pegas.html
