@@ -1,15 +1,16 @@
 useDynLib(pegas, .registration = TRUE)
 
 export(amova, as.igraph.haploNet, as.loci, as.network.haploNet,
-       dist.haplotype.loci, expand.genotype, Fst, genind2loci, geod, geoTrans,
-       getAlleles, getGenotypes, getPloidy, H, haploNet, haploFreq, haplotype,
-       heterozygosity, hw.test, is.phased, is.snp, LD, LD2, loci2genind, mst,
-       MMD, nuc.div, proba.genotype, R2.test, read.gtx, read.loci, read.vcf,
-       rr.test, site.spectrum, tajima.test, theta.h, theta.k, theta.msat,
-       theta.s, theta.tree, write.loci)
+       diffHaplo, dist.haplotype.loci, expand.genotype, Fst, genind2loci,
+       geod, geoTrans, getAlleles, getGenotypes, getPloidy, H, haploNet,
+       haploFreq, haplotype, heterozygosity, hw.test, is.phased, is.snp,
+       LD, LD2, loci2genind, mst, MMD, nuc.div, proba.genotype, R2.test,
+       read.gtx, read.loci, read.vcf, replot, rr.test, site.spectrum,
+       tajima.test, theta.h, theta.k, theta.msat, theta.s, theta.tree,
+       write.loci)
 
 ## we try to limit the imports for the moment (2013-08-12)
-importFrom(ape, branching.times, base.freq, dist.dna,
+importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
            floating.pie.asp, perm.rowscols, rcoal, seg.sites)
 importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, plot)

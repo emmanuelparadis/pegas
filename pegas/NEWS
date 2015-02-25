@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.6-2
+		CHANGES IN PEGAS VERSION 0.7
 
 
 NEW FEATURES
@@ -8,6 +8,21 @@ NEW FEATURES
 
     o The new function geoTrans transforms strings such as
       43°12'34" into a a numerical value.
+
+    o The new function replot edits the layout of a haplotype network
+      interactively or with specified coordinates (typically from a
+      previous call to replot).
+
+    o The new function diffHaplo outputs details of the differences
+      between two haplotypes.
+
+    o haploNet() now outputs alternative links of a haplotype network.
+
+    o plot.haploNet() has been improved (a bit faster) and has a new
+      option 'threshold' to control how alternative links of the
+      network are displayed.
+
+    o The option 'show.mutation' of plot.haploNet() has been extended
 
 
 OTHER CHANGES

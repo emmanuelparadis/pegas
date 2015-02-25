@@ -1,4 +1,4 @@
-/* pegas.c    2015-02-12 */
+/* pegas.c    2015-02-25 */
 
 /* Copyright 2015 Emmanuel Paradis */
 
@@ -14,7 +14,6 @@
 void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo)
 {
     int i1, i2, s1, s2, flag;
-    unsigned char basis;
 
     i1 = 0;
     while (i1 < *n - 1) {

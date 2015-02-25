@@ -13,7 +13,8 @@ haploNet(h, d = NULL)
 \method{plot}{haploNet}(x, size = 1, col = "black", bg = "white",
      col.link = "black", lwd = 1, lty = 1, pie = NULL,
      labels = TRUE, font = 2, cex = 1, scale.ratio = 1,
-     asp = 1, legend = FALSE, fast = FALSE, show.mutation = TRUE, ...)
+     asp = 1, legend = FALSE, fast = FALSE, show.mutation = TRUE,
+     threshold = c(1, 2), ...)
 \method{as.network}{haploNet}(x, directed = FALSE, ...)
 \method{as.igraph}{haploNet}(x, directed = FALSE, use.labels = TRUE, ...)
 }
@@ -53,8 +54,14 @@ haploNet(h, d = NULL)
     to click where to draw the legend.}
   \item{fast}{a logical specifying whether to optimize the spacing of
     the circles; \code{FALSE} by default.}
-  \item{show.mutation}{a logical specifying whether to display the
-    mutations on the links of the network.}
+  \item{show.mutation}{a logical or a numeric value: if 0 (or FALSE)
+    nothing is drawn on the links; if 1 (or TRUE) the mutations are
+    shown with small dots on the links; if 2 the number of mutations are
+    printed on the links.}
+  \item{threshold}{a numeric vector with two values (or 0) giving the
+    lower and upper numbers of mutations for alternative links to be
+    displayed. If \code{threshold = 0}, alternative links are not drawn
+    at all.}
   \item{directed}{a logical specifying whether the network is directed
     (\code{FALSE} by default).}
   \item{use.labels}{a logical specifying whether to use the original
@@ -80,9 +87,9 @@ haploNet(h, d = NULL)
   third column, named \code{"step"}, gives the number of steps in this
   link, and the fourth column, named \code{"Prob"}, gives the
   probability of a parsimonious link as given by Templeton et
-  al. (1992). There are two additional attributes: \code{"freq"}, the
-  absolute frequencies of each haplotype, and \code{"labels"}, their
-  labels.
+  al. (1992). There are three additional attributes: \code{"freq"}, the
+  absolute frequencies of each haplotype, \code{"labels"}, their labels,
+  and \code{"alter.links"}, the alternative links of the network.
 
   \code{as.network} and \code{as.igraph} return objects of the
   appropriate class.
@@ -95,7 +102,8 @@ haploNet(h, d = NULL)
   estimation. \emph{Genetics}, \bold{132}, 619--635.
 }
 \seealso{
-  \code{\link{haplotype}}, \code{\link{haploFreq}}, \code{\link{mst}}
+  \code{\link{haplotype}}, \code{\link{haploFreq}},
+  \code{\link{diffHaplo}}, \code{\link{mst}}
 }
 \examples{
 ## generate some artificial data from 'woodmouse':
