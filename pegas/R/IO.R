@@ -1,8 +1,8 @@
-## IO.R (2014-07-08)
+## IO.R (2015-03-03)
 
 ##   Input/Ouput
 
-## Copyright 2009-2014 Emmanuel Paradis
+## Copyright 2009-2015 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -69,7 +69,7 @@ read.vcf <- function(file, nloci = 1000, skip = 0)
         lv <- gsub("0", REF[j], lv)
         levels(obj[[j]]) <- lv
     }
-    attr(obj, "CHR") <- as.integer(BUFFER[, 1])
+    attr(obj, "CHR") <- as.character(BUFFER[, 1])
     attr(obj, "POS") <- as.numeric(BUFFER[, 2])
     attr(obj, "QUAL") <- as.integer(BUFFER[, 6])
     attr(obj, "FILTER") <- BUFFER[, 7]

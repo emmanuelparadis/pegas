@@ -7,7 +7,7 @@ NEW FEATURES
       distances from coordinates in (decimal) degrees.
 
     o The new function geoTrans transforms strings such as
-      43°12'34" into a a numerical value.
+      43°12'34" into a numerical value.
 
     o The new function replot edits the layout of a haplotype network
       interactively or with specified coordinates (typically from a
@@ -22,7 +22,7 @@ NEW FEATURES
       option 'threshold' to control how alternative links of the
       network are displayed.
 
-    o The option 'show.mutation' of plot.haploNet() has been extended
+    o The option 'show.mutation' of plot.haploNet() has been extended.
 
 
 OTHER CHANGES
@@ -30,6 +30,9 @@ OTHER CHANGES
     o haplotype() now takes base ambiguities into account when
       comparing sequences. For consistency, haploNet() now uses
       pairwise deletion when comparing sequences of haplotypes.
+
+    o The attribute "CHR" returned by read.vcf() is now character (was
+      integer before).
 
 
 

@@ -1,4 +1,4 @@
-## haplotype.R (2015-02-25)
+## haplotype.R (2015-03-05)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -187,6 +187,7 @@ haploNet <- function(h, d = NULL)
 .drawAlternativeLinks <- function(xx, yy, altlink, threshold, show.mutation)
 {
     s <- altlink[, 3] >= threshold[1] & altlink[, 3] <= threshold[2]
+    if (!any(s)) return(NULL)
     xa0 <- xx[altlink[s, 1]]
     ya0 <- yy[altlink[s, 1]]
     xa1 <- xx[altlink[s, 2]]

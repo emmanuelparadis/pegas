@@ -102,7 +102,7 @@ haploNet(h, d = NULL)
   estimation. \emph{Genetics}, \bold{132}, 619--635.
 }
 \seealso{
-  \code{\link{haplotype}}, \code{\link{haploFreq}},
+  \code{\link{haplotype}}, \code{\link{haploFreq}}, \code{\link{replot}},
   \code{\link{diffHaplo}}, \code{\link{mst}}
 }
 \examples{

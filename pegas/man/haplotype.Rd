@@ -43,7 +43,7 @@ The \code{sort} method sorts the haplotypes in decreasing frequencies
 \code{haplotype}), their alphabetical order may not be their numerical
 one (e.g., IX is alphabetically before VIII).
 
-From \pkg{pegas} 0.6-1, \code{haplotype} extracts haplotypes taking into
+From \pkg{pegas} 0.7, \code{haplotype} extracts haplotypes taking into
 account base ambiguities.
 }
 \value{
