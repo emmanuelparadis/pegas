@@ -49,3 +49,6 @@ S3method(plot, spectrum)
 
 S3method(plot, summary.loci)
 S3method(print, summary.loci)
+
+S3method(hw.test, loci)
+S3method(hw.test, genind)
