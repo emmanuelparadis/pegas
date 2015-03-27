@@ -12,8 +12,8 @@
 }
 \usage{
 hw.test(x, B = 1000, \dots)
-method{hw.test}{loci}(x, B = 1000, \dots)
-method{hw.test}{genind}(x, B = 1000, \dots)
+\method{hw.test}{loci}(x, B = 1000, \dots)
+\method{hw.test}{genind}(x, B = 1000, \dots)
 }
 \arguments{
   \item{x}{an object of class \code{\link{loci}} or \linkS4class{genind}.}
