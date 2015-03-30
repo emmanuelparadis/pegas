@@ -1,4 +1,4 @@
-## zzz.R (2015-02-25)
+## zzz.R (2015-03-30)
 
 ##   Library Loading
 
@@ -8,4 +8,4 @@
 ## See the file ../COPYING for licensing issues.
 
 .PlotHaploNetEnv <- new.env()
-
+.cacheVCF <- new.env()

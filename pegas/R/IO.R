@@ -1,4 +1,4 @@
-## IO.R (2015-03-03)
+## IO.R (2015-03-30)
 
 ##   Input/Ouput
 
@@ -34,45 +34,90 @@ read.loci <-
                        col.loci = col.loci)
 }
 
-read.vcf <- function(file, nloci = 1000, skip = 0)
+read.vcf <- function(file, from = 1, to = 1e4, which.loci = NULL, quiet = FALSE)
 {
-    i <- 0
-    repeat {
-        X <- scan(file, what = "", sep = "\n", nlines = 1, skip = i, quiet = TRUE)
-        i <- i + 1
-        if (identical(substr(X, 1, 6), "#CHROM")) break
+    f <- .VCFconnection(file)
+    GZ <- if (inherits(f, "connection")) TRUE else FALSE
+
+    if (is.null(which.loci)) which.loci <- from:to
+    nLoci <- length(which.loci)
+
+    meta <- .getMETAvcf(readBin(f, "raw", 1e5))
+    labs <- strsplit(meta$LABELS, "\t")[[1]]
+    nCol <- length(labs)
+    n <- nCol - 9L
+    hop <- 2L * nCol - 1L
+
+    cache <- ls(envir = .cacheVCF, all.names = TRUE)
+    if (! file %in% cache) {
+        if (!quiet) cat("File apparently not yet accessed:\n")
+        info <- VCFloci(file, what = "POS", quiet = quiet)
     }
-    labs <- strsplit(X, "\t")[[1]]
-    X <- scan(file, what = "", sep = "\n", nlines = nloci, skip = i + skip, quiet = TRUE)
-    nloci <- length(X) # in case X is shorter than nloci
-    obj <- vector("list", nloci)
-    BUFFER <- matrix("", nloci, 7)
-    for (j in seq_len(nloci)) {
-        x <- strsplit(X[j], "\t")[[1]]
-        BUFFER[j, ] <- x[1:7]
-        obj[[j]] <- factor(gsub(":[[:graph:]]*$", "", x[-(1:9)]))
+    cache <- get(file, envir = .cacheVCF)
+
+    FROM <- cache$FROM
+    TO <- cache$TO
+
+    nChunks <- nrow(cache)
+    obj <- vector("list", nLoci)
+    locnms <- character(nLoci)
+
+    if (GZ) open(f)
+
+    ii <- 0L # number of loci read
+    for (k in seq_len(nChunks)) {
+        sel <- match(which.loci, FROM[k]:TO[k])
+        sel <- sel[!is.na(sel)]
+        ck <- cache$CHUNCK.SIZES[k]
+        if (GZ) Y <- readBin(f, "raw", ck)
+        if (!length(sel)) next
+
+        if (!GZ) {
+            skip <- if (k == 1) 0L else sum(cache$CHUNCK.SIZES[1L:(k - 1L)])
+            Y <- .Call(read_bin_pegas, file, ck, skip)
+        }
+
+        skip <- if (k == 1) meta$position else 0L
+        EOL <- .Call(findEOL_C, Y, skip, hop) # can multiply 'hop' by 2 if diploid
+
+        for (i in sel) {
+            start <- if (i == 1) skip + 1L else EOL[i - 1] + 1L
+            end <- EOL[i] - 1L
+            out <- .Call(build_factor_loci, Y[start:end], n)
+            ii <- ii + 1L
+            locnms[ii] <- out[[1L]]
+            REF <- out[[2L]]
+            ALT <- out[[3L]]
+            geno <- out[[4L]]
+            lv <- out[[5L]]
+
+            ## substitute the allele names:
+            tmp <- strsplit(ALT, ",")[[1L]]
+            ## we start from last allele in case there are more than 10 alleles...
+            for (j in length(tmp):1)
+                lv <- gsub(as.character(j), tmp[j], lv)
+            ## ... and we finish with the reference allele:
+            lv <- gsub("0", REF, lv)
+
+            attr(geno, "levels") <- lv
+            class(geno) <- "factor"
+            obj[[ii]] <- geno
+            if (!quiet && !(ii %% 100)) cat("\rReading", ii, "/", nLoci, "loci")
+        }
     }
-    names(obj) <- BUFFER[, 3]
-    obj <- as.data.frame(obj)
+    if (GZ) close(f)
+    if (!quiet) cat("\rReading", ii, "/", ii, "loci.\nDone.\n")
+
+    i2nLoci <- seq_len(ii)
+
+    if (ii < nLoci) {
+        obj[(ii + 1):nLoci] <- NULL
+        locnms <- locnms[i2nLoci]
+    }
+    names(obj) <- locnms
+    class(obj) <- c("loci", "data.frame")
+    attr(obj, "locicol") <- i2nLoci
     rownames(obj) <- labs[-(1:9)]
-    obj <- as.loci(obj)#, allele.sep = "[|]")
-    ## substitute the allele names:
-    REF <- BUFFER[, 4]
-    ALT <- BUFFER[, 5]
-    for (j in seq_len(nloci)) {
-        lv <- levels(obj[[j]])
-        tmp <- strsplit(ALT[j], ",")[[1]]
-        ## we start from last allele in case there are more than 10 alleles...
-        for (i in length(tmp):1)
-            lv <- gsub(as.character(i), tmp[i], lv)
-        ## ... and we finish with the main allele:
-        lv <- gsub("0", REF[j], lv)
-        levels(obj[[j]]) <- lv
-    }
-    attr(obj, "CHR") <- as.character(BUFFER[, 1])
-    attr(obj, "POS") <- as.numeric(BUFFER[, 2])
-    attr(obj, "QUAL") <- as.integer(BUFFER[, 6])
-    attr(obj, "FILTER") <- BUFFER[, 7]
     obj
 }
 

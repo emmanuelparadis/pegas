@@ -57,8 +57,8 @@ is.phased(x)
   alleles. The matrix is numeric by default, or character if the
   argument \code{alleles} is given.
 
-   \code{proba.genotype} returns a numeric vector with names set as the
-   genotypes.
+  \code{proba.genotype} returns a numeric vector with names set as the
+  genotypes.
 
   \code{is.snp} returns a logical vector specifying whether each locus
   is a SNP.

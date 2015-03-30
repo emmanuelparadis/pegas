@@ -5,43 +5,47 @@
   This function reads allelic data from VCF (variant calling format) files.
 }
 \usage{
-read.vcf(file, nloci = 1000, skip = 0)
+read.vcf(file, from = 1, to = 10000, which.loci = NULL, quiet = FALSE)
 }
 \arguments{
   \item{file}{a file name specified by either a variable of mode character,
     or a quoted string.}
-  \item{nloci}{the number of loci to read.}
-  \item{skip}{the number of loci to be skipped before reading the
-    genetic data.}
+  \item{from, to}{the loci to read; by default, the first 10,000.}
+  \item{which.loci}{an alternative way to specify which loci to read is
+    to give their indices (see \code{link{VCFloci}} how to obtain them).}
+  \item{quiet}{a logical: should the progress of the operation be printed?}
 }
 \details{
-  The VCF file can compressed (*.gz) or not, but compressed files cannot
-  be read remotely (see examples).
+  The VCF file can be compressed (*.gz) or not, but compressed files
+  cannot be read remotely (see examples).
 
-  A TABIX file is not required.
-
-  Because VCF files can be very big, only 1000 loci are read by default,
-  but 5000 loci can be read rather quickly.
+  A TABIX file is not required (and will be ignored if present).
 
   In the VCF standard, missing data are represented by a dot and these
   are read ``as is'' by the present function without trying to
   substitute by \code{NA}.
 }
+\note{
+  Like for \code{\link{VCFloci}}, the present function can read either
+  compressed (*.gz) or uncompressed files. There should be no difference
+  in performance for both types of files if they are relatively small
+  (less than 1 Gb as uncompressed, which is equivalent to ~50 Mb when
+  compressed). For bigger files, it is more efficient to uncompress them
+  (if disk space is enough), especially if they have to be accessed
+  several times during the same session.
+}
 \value{
-  an object of class \code{c("loci", "data.frame")} with four additional
-  attributes:
-  \itemize{
-    \item{CHR}{the chromosome number (characters);}
-    \item{POS}{the position of the locus (numeric values);}
-    \item{QUAL}{the quality of the inferred locus (integer values);}
-    \item{FILTER}{the filter (characters).}
-  }
+  an object of class \code{c("loci", "data.frame")}.
 }
 \author{Emmanuel Paradis}
-\references{\url{http://www.1000genomes.org/node/101}}
+\references{
+  \url{http://www.1000genomes.org/node/101}
+
+  \url{https://github.com/samtools/hts-specs}
+}
 \seealso{
-  \code{\link{read.loci}}, \code{\link{read.gtx}},
-  \code{\link{write.loci}}
+  \code{\link{VCFloci}}, \code{\link{read.loci}},
+  \code{\link{read.gtx}}, \code{\link{write.loci}}
 }
 \examples{
 \dontrun{
@@ -51,35 +55,46 @@ b <- "ALL.chrY.phase3_integrated_v1a.20130502.genotypes.vcf.gz"
 ## WARNING: the name of the file above may have changed
 url <- paste(a, b, sep = "/")
 ## file is compressed, so we download first:
-download.file(url, "tmp.vcf.gz")
+download.file(url, "chrY.vcf.gz")
 ## no need to uncompress to read now that the file is local:
-(x <- read.vcf("tmp.vcf.gz", 4000)) # read only 4000 loci
+(info <- VCFloci("chrY.vcf.gz"))
+str(info) # show the modes of the columns
 
-SNP <- is.snp(x)
-table(SNP) # how many loci are really SNPs?
+SNP <- is.snp(info)
+table(SNP) # how many loci are SNPs?
+## compare with:
+table(getINFO(info, "VT"))
 
 op <- par(mfcol = c(4, 1), xpd = TRUE)
 lim <- c(2.65e6, 2.95e6)
 ## distribution of SNP and non-SNP mutations along the Y chr:
-plot(attr(x, "POS"), !SNP, "h", col = "red", main = "non-SNP mutations")
+plot(info$POS, !SNP, "h", col = "red", main = "non-SNP mutations",
+     xlab = "Position", ylab = "", yaxt = "n")
 rect(lim[1], -0.1, lim[2], 1.1, lwd = 2, lty = 2)
-plot(attr(x, "POS"), SNP, "h", col = "blue", main = "SNP mutations")
+plot(info$POS, SNP, "h", col = "blue", main = "SNP mutations",
+     xlab = "Position", ylab = "", yaxt = "n")
 rect(lim[1], -0.1, lim[2], 1.1, lwd = 2, lty = 2)
 par(xpd = FALSE)
 ## same focusing on a smaller portion of the chromosome:
-plot(attr(x, "POS"), !SNP, "h", col = "red", xlim = lim)
-plot(attr(x, "POS"), SNP, "h", col = "blue", xlim = lim)
+plot(info$POS, !SNP, "h", col = "red", xlim = lim, xlab = "Position",
+     ylab = "", yaxt = "n")
+plot(info$POS, SNP, "h", col = "blue", xlim = lim, xlab = "Position",
+     ylab = "", yaxt = "n")
 par(op)
 
+## read both types of mutations separately:
+X.SNP <- read.vcf("chrY.vcf.gz", which.loci = which(SNP))
+X.other <- read.vcf("chrY.vcf.gz", which.loci = which(!SNP))
+
+identical(rownames(X.SNP), VCFlabels("chrY.vcf.gz")) # TRUE
+cat(VCFheader("chrY.vcf.gz"))
+
 ## get haplotypes for the first 10 loci:
-h <- haplotype(x, 1:10)
+h <- haplotype(X.SNP, 1:10)
 ## plot their frequencies:
 op <- par(mar = c(3, 10, 1, 1))
 plot(h, horiz=TRUE, las = 1)
 par(op)
-
-## read the next 4000 loci:
-(x2 <- read.vcf("tmp.vcf.gz", 4000, 4000))
 }
 }
 \keyword{IO}

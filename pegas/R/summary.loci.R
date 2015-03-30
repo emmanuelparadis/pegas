@@ -1,8 +1,8 @@
-## summary.loci.R (2014-07-03)
+## summary.loci.R (2015-03-30)
 
 ##   Print and Summaries of Loci Objects
 
-## Copyright 2009-2014 Emmanuel Paradis
+## Copyright 2009-2015 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -29,7 +29,9 @@ is.phased <- function(x)
     sapply(x[, attr(x, "locicol")], foo)
 }
 
-is.snp <- function(x) sapply(lapply(getAlleles(x), nchar), sum) == 2
+is.snp <- function(x) UseMethod("is.snp")
+
+is.snp.loci <- function(x) sapply(lapply(getAlleles(x), nchar), sum) == 2
 
 print.loci <- function(x, details = FALSE, ...)
 {
@@ -86,9 +88,11 @@ print.summary.loci <- function(x, ...)
     }
 }
 
-"[.loci" <- function(x, i, j, drop = TRUE)
+"[.loci" <- function (x, i, j, drop = TRUE)
 {
     oc <- oldClass(x)
+    colnms.old <- names(x)
+    names(x) <- colnms.new <- as.character(seq_len(ncol(x)))
     loci.nms <- names(x)[attr(x, "locicol")]
     class(x) <- "data.frame"
     x <- NextMethod("[")
@@ -101,6 +105,7 @@ print.summary.loci <- function(x, ...)
             attr(x, "locicol") <- locicol
             class(x) <- oc
         }
+        names(x) <- colnms.old[as.numeric(names(x))]
     }
     x
 }

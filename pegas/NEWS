@@ -3,8 +3,23 @@
 
 NEW FEATURES
 
+    o Seven new functions (VCFloci, VCFheader, VCFlabels, rangePOS,
+      is.snp.VCFinfo, selectQUAL, getINFO) are provided to read
+      information from VCF files.
+
+    o read.vcf() has been completely rewritten.
+
     o hw.test() is now generic with methods for classes "loci" and
       "genind" (contributed by Thibaut Jombart).
+
+    o is.snp() is now generic with methods for classes "loci" and
+      "VCFinfo".
+
+
+BUG FIXES
+
+    o Subsetting "loci" objects failed when some column names were the
+      same (typical when reading VCF files.
 
 
 

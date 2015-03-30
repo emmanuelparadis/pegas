@@ -1,12 +1,13 @@
-/* pegas.c    2015-02-25 */
+/* pegas.c    2015-03-30 */
 
 /* Copyright 2015 Emmanuel Paradis */
 
 /* This file is part of the R-package `pegas'. */
-/* See the file ../COPYING for licensing issues. */
+/* See the file ../DESCRIPTION for licensing issues. */
 
 #include <R.h>
 #include <R_ext/Rdynload.h>
+#include <Rinternals.h>
 
 /* returns 1 if both bases are different surely, 0 otherwise */
 #define DifferentBase(a, b) (a & b) < 16
@@ -46,7 +47,18 @@ static R_CMethodDef C_entries[] = {
     {NULL, NULL, 0}
 };
 
+SEXP read_bin_pegas(SEXP FILENAME, SEXP SIZE, SEXP SKIP);
+SEXP findEOL_C(SEXP x, SEXP SKIP, SEXP HOP);
+SEXP extract_POS(SEXP x, SEXP EOL, SEXP nTABtoSKIP);
+SEXP extract_REF(SEXP x, SEXP EOL, SEXP nTABtoSKIP);
+SEXP build_factor_loci(SEXP x, SEXP N);
+
 static R_CallMethodDef Call_entries[] = {
+    {"read_bin_pegas", (DL_FUNC) &read_bin_pegas, 3},
+    {"findEOL_C", (DL_FUNC) &findEOL_C, 3},
+    {"extract_POS", (DL_FUNC) &extract_POS, 3},
+    {"extract_REF", (DL_FUNC) &extract_REF, 3},
+    {"build_factor_loci", (DL_FUNC) &build_factor_loci, 2},
     {NULL, NULL, 0}
 };
 
