@@ -1,8 +1,8 @@
-## hw.test.R (2014-07-10)
+## hw.test.R (2015-03-30)
 
 ##   Test of Hardy--Weinberg Equilibrium
 
-## Copyright 2009-2014 Emmanuel Paradis
+## Copyright 2009-2014 Emmanuel Paradis, 2015 Thibaut Jombart
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
