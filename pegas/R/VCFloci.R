@@ -1,4 +1,4 @@
-## getVCFinfo.R (2015-03-30)
+## getVCFinfo.R (2015-04-02)
 
 ##   Analysis of Molecular Variance
 
@@ -126,7 +126,6 @@ VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
 
         from <- if (ncycle == 1) 1L else TO[ncycle - 1L] + 1L
         to <- from + nEOL - 2L + extra.locus
-        #if (exists("trail", inherits = FALSE)) to <- to + 1L
         FROM <- c(FROM, from)
         TO <- c(TO, to)
         CHUNCK.SIZES <- c(CHUNCK.SIZES, ck)
@@ -187,7 +186,7 @@ rangePOS <- function(x, from, to)
     which(from <= POS & POS <= to)
 }
 
-selectQUAL <- function(x, threshold = 50)
+selectQUAL <- function(x, threshold = 20)
 {
     QUAL <- x$QUAL
     if (is.null(QUAL)) stop("no QUAL(ility)")

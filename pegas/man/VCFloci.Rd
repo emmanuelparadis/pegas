@@ -19,7 +19,7 @@ VCFheader(file)
 VCFlabels(file)
 \method{is.snp}{VCFinfo}(x, \dots)
 rangePOS(x, from, to)
-selectQUAL(x, threshold = 50)
+selectQUAL(x, threshold = 20)
 getINFO(x, what = "DP", as.is = FALSE)
 }
 \arguments{

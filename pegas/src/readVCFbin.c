@@ -1,4 +1,4 @@
-/* readVCFbin.c    2015-03-30 */
+/* readVCFbin.c    2015-04-01 */
 
 /* Copyright 2015 Emmanuel Paradis */
 
@@ -143,7 +143,7 @@ SEXP extract_REF(SEXP x, SEXP EOL, SEXP nTABtoSKIP)
 {
     int n, i, j, k, a, *eol;
     unsigned char *xr;
-    char str[1000];
+    char str[10000];
     SEXP res;
 
     PROTECT(x = coerceVector(x, RAWSXP));
@@ -163,6 +163,8 @@ SEXP extract_REF(SEXP x, SEXP EOL, SEXP nTABtoSKIP)
 	}
 	a = j;
 	while (xr[j] != 0x09) j++;
+	/* skip if the string is longer than 10,000 bytes */
+	if (j - a > 10000) continue;
 	extract_substring(xr, a, j - 1, str);
 	SET_STRING_ELT(res, i, mkChar(str));
     }

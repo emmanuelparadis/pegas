@@ -28,10 +28,10 @@ read.vcf(file, from = 1, to = 10000, which.loci = NULL, quiet = FALSE)
 \note{
   Like for \code{\link{VCFloci}}, the present function can read either
   compressed (*.gz) or uncompressed files. There should be no difference
-  in performance for both types of files if they are relatively small
-  (less than 1 Gb as uncompressed, which is equivalent to ~50 Mb when
+  in performance between both types of files if they are relatively
+  small (less than 1 Gb as uncompressed, equivalent to ~50 Mb when
   compressed). For bigger files, it is more efficient to uncompress them
-  (if disk space is enough), especially if they have to be accessed
+  (if disk space is sufficient), especially if they have to be accessed
   several times during the same session.
 }
 \value{
