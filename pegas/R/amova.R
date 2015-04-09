@@ -15,7 +15,7 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
     ## keep the highest level first:
     if (length(rhs) > 1) gr.nms <- unlist(strsplit(gr.nms, "/"))
 
-    if (any(sapply(gr.nms, function(x) ! is.factor(eval(parse(text = x)))))) {
+    if (is.null(data) && any(sapply(gr.nms, function(x) ! is.factor(x)))) {
         ## <FIXME>
         ## a warning instead of an error so that StAMMP on CRAN does not
         ## fail. I wrote to Pemberton but got no reply (2014-08-21)
@@ -23,6 +23,10 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
         ## stop("all elements in the rhs of the formula must be factors")
         ## </FIXME>
     }
+
+    gr <-
+    if (is.null(data)) as.data.frame(sapply(gr.nms, get, envir = .GlobalEnv))
+    else data[gr.nms]
 
     y <- get(y.nms)
     if (any(is.na(y)))
@@ -33,9 +37,7 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
         stop("the lhs of the formula must be either a matrix or an object of class 'dist'.")
     n <- dim(y)[1] # number of individuals
 
-    gr <-
-        if (is.null(data)) as.data.frame(sapply(gr.nms, get, envir = .GlobalEnv))
-        else data[gr.nms]
+    
     Nlv <- length(gr) # number of levels
 
 ### 5 local functions
