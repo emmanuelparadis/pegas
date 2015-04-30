@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.7-0.1
+		CHANGES IN PEGAS VERSION 0.7-0.3
 
 
 NEW FEATURES
@@ -19,7 +19,12 @@ NEW FEATURES
 BUG FIXES
 
     o Subsetting "loci" objects failed when some column names were the
-      same (typical when reading VCF files.
+      same (typical when reading VCF files).
+
+    o haploNet() failed when no alternative links were found.
+
+    o amova() failed when the factors in the rhs of the formula were
+      in a data frame. Thanks to Zhian Kamvar for the fix.
 
 
 

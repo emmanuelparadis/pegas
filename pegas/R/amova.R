@@ -1,8 +1,8 @@
-## amova.R (2014-08-21)
+## amova.R (2015-04-30)
 
 ##   Analysis of Molecular Variance
 
-## Copyright 2010-2014 Emmanuel Paradis
+## Copyright 2010-2015 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -17,7 +17,7 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
 
     data.env <- if (is.null(data)) .GlobalEnv
                 else as.environment(data)
-    
+
     if (any(sapply(gr.nms, function(x) ! is.factor(get(x, envir = data.env))))) {
       ## <FIXME>
       ## a warning instead of an error so that StAMMP on CRAN does not
@@ -26,9 +26,9 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
       ## stop("all elements in the rhs of the formula must be factors")
       ## </FIXME>
     }
-    
+
+    ## fix by Zhian Kamvar (2015-04-30)
     gr <- as.data.frame(sapply(gr.nms, get, envir = data.env))
-    
     y <- get(y.nms)
     if (any(is.na(y)))
         warning("at least one missing value in the distance object.")
@@ -37,8 +37,6 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
     if (!is.matrix(y))
         stop("the lhs of the formula must be either a matrix or an object of class 'dist'.")
     n <- dim(y)[1] # number of individuals
-
-    
     Nlv <- length(gr) # number of levels
 
 ### 5 local functions

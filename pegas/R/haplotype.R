@@ -1,4 +1,4 @@
-## haplotype.R (2015-03-05)
+## haplotype.R (2015-04-29)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -165,8 +165,9 @@ haploNet <- function(h, d = NULL)
     dimnames(link) <- list(NULL, c("", "", "step", "Prob"))
     attr(link, "freq") <- freq
     attr(link, "labels") <- rownames(h)
-    attr(link, "alter.links") <-
-        altlink <- cbind(altlink, .TempletonProb(altlink[, 3], ncol(h)))
+    if (nrow(altlink))
+        attr(link, "alter.links") <-
+            cbind(altlink, .TempletonProb(altlink[, 3], ncol(h)))
     class(link) <- "haploNet"
     link
 }
