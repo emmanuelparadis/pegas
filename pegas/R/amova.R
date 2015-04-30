@@ -15,19 +15,20 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
     ## keep the highest level first:
     if (length(rhs) > 1) gr.nms <- unlist(strsplit(gr.nms, "/"))
 
-    if (is.null(data) && any(sapply(gr.nms, function(x) ! is.factor(x)))) {
-        ## <FIXME>
-        ## a warning instead of an error so that StAMMP on CRAN does not
-        ## fail. I wrote to Pemberton but got no reply (2014-08-21)
-        warning("elements in the rhs of the formula are not all factors")
-        ## stop("all elements in the rhs of the formula must be factors")
-        ## </FIXME>
+    data.env <- if (is.null(data)) .GlobalEnv
+                else as.environment(data)
+    
+    if (any(sapply(gr.nms, function(x) ! is.factor(get(x, envir = data.env))))) {
+      ## <FIXME>
+      ## a warning instead of an error so that StAMMP on CRAN does not
+      ## fail. I wrote to Pemberton but got no reply (2014-08-21)
+      warning("elements in the rhs of the formula are not all factors")
+      ## stop("all elements in the rhs of the formula must be factors")
+      ## </FIXME>
     }
-
-    gr <-
-    if (is.null(data)) as.data.frame(sapply(gr.nms, get, envir = .GlobalEnv))
-    else data[gr.nms]
-
+    
+    gr <- as.data.frame(sapply(gr.nms, get, envir = data.env))
+    
     y <- get(y.nms)
     if (any(is.na(y)))
         warning("at least one missing value in the distance object.")
