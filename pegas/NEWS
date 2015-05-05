@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.7-0.3
+		CHANGES IN PEGAS VERSION 0.7-0.5
 
 
 NEW FEATURES
@@ -14,6 +14,10 @@ NEW FEATURES
 
     o is.snp() is now generic with methods for classes "loci" and
       "VCFinfo".
+
+    o There is now a subset method for objects of class "haplotype"
+      giving the possibility to select haplotypes with respect to
+      their absolute frequency and/or frequency of missing data.
 
 
 BUG FIXES

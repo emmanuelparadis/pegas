@@ -1,4 +1,4 @@
-## haplotype.R (2015-04-29)
+## haplotype.R (2015-05-05)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -555,6 +555,30 @@ sort.haplotype <-
     attr(x, "index") <- idx[o]
     class(x) <- oc
     attr(x, "from") <- from
+    x
+}
+
+subset.haplotype <- function(x, minfreq = 1, maxfreq = Inf, maxna = Inf,
+                             na = c("N", "?"), ...)
+{
+    oc <- oldClass(x)
+    idx <- attr(x, "index")
+    f <- sapply(idx, length)
+    s <- f <= maxfreq & f >= minfreq
+    if (is.finite(maxna)) {
+        na <- tolower(na)
+        all <- c("r", "m", "w", "s", "k", "y", "v", "h", "d", "b", "n", "-", "?")
+        if (identical(na, "all")) na <- all
+        if (identical(na, "ambiguous")) na <- all[1:11]
+        freq <- if (maxna < 1) FALSE else TRUE
+        foo <- function(x) sum(base.freq(x, freq, TRUE)[na])
+        count.na <- numeric(n <- nrow(x))
+        for (i in seq_len(n)) count.na[i] <- foo(x[i, ]) # cannot use apply
+        s <- s & count.na <= maxna
+    }
+    x <- x[s, ]
+    attr(x, "index") <- idx[s]
+    class(x) <- oc
     x
 }
 
