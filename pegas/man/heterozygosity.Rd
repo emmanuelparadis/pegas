@@ -45,10 +45,9 @@ H(x, variance = FALSE)
   \code{\link{theta.s}}
 }
 \examples{
-require(adegenet)
-data(nancycats)
+data(jaguar)
 ## convert the data and compute frequencies:
-S <- summary(as.loci(nancycats))
+S <- summary(jaguar)
 ## compute H for all loci:
 sapply(S, function(x) H(x$allele))
 ## ... and its variance

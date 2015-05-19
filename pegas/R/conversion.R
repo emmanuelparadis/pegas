@@ -1,8 +1,8 @@
-## conversion.R (2014-07-10)
+## conversion.R (2015-05-16)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2014 Emmanuel Paradis
+## Copyright 2009-2015 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -109,3 +109,39 @@ as.loci.factor <- function(x, allele.sep = "/|", ...)
 
 as.loci.character <- function(x, allele.sep = "/|", ...)
     as.loci.data.frame(data.frame(factor(x)), allele.sep = allele.sep, ...)
+
+alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
+                         phased = FALSE)
+{
+    withPop <- !is.null(population)
+    x <- as.data.frame(x)
+    if (is.null(rownames)) {
+        idx <- rownames(x)
+        if (is.null(idx)) idx <- as.character(seq_len(d[1]))
+    } else {
+        idx <- as.character(x[[rownames]])
+        x[[rownames]] <- NULL
+        if (withPop && rownames < population)
+            population <- population - 1
+    }
+    if (withPop) {
+        pop <- x[[population]]
+        x[[population]] <- NULL
+    }
+    d <- dim(x)
+    if (d[2] %% ploidy) stop("number of columns not a multiple of ploidy")
+    nloci <- d[2] / ploidy
+    start <- seq(1, by = ploidy, length.out = nloci)
+    end <- start + ploidy - 1
+    loci.nms <- colnames(x)[start]
+    obj <- vector("list", nloci)
+    sep <- if (phased) "|" else "/"
+    foo <- function(...) paste(..., sep = sep)
+    for (i in seq_len(nloci))
+        obj[[i]] <- factor(do.call(foo, x[, start[i]:end[i]]))
+    names(obj) <- loci.nms
+    obj <- as.data.frame(obj, row.names = idx)
+    obj <- as.loci(obj)
+    if (withPop) obj$population <- pop
+    obj
+}

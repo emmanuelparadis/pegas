@@ -8,6 +8,7 @@
 \newcommand{\code}{\texttt}
 \newcommand{\loci}{\code{"loci"}}
 \newcommand{\genind}{\code{"genind"}}
+\newcommand{\NA}{\code{NA}}
 \newcommand{\pkg}{\textsf}
 \newcommand{\ape}{\pkg{ape}}
 \newcommand{\pegas}{\pkg{pegas}}
@@ -109,12 +110,14 @@ x
 print(x, details = TRUE)
 class(x)
 @ 
-Since the file has no label for the column, we used \code{header
-  = FALSE}. Note that printing a \code{"loci"} object displays a very
-brief
-account of the data; the option \code{details = TRUE} allows to print
-them like a standard data frame. If the same data were formatted with
-a different allele separator (file `titi'):
+Since the file has no label for the column, we used \code{header =
+  FALSE}. Note that printing a \code{"loci"} object displays a very
+brief account of the data; the option \code{details = TRUE} allows to
+print them like a standard data frame.\footnote{The function
+  \code{View} can also be used: this will use the same spreadsheet
+  interface than \code{fix} but the data cannot be edited (see
+  below).} If the same data were formatted with a different allele
+separator (file `titi'):
 
 \color{blue}
 \begin{verbatim}
@@ -225,27 +228,23 @@ str(z)
 \subsection{Reading VCF Files}
 
 Starting with version 0.6, \pegas\ can read VCF files with the
-function \code{read.vcf}.
+function \code{read.vcf}. Version 0.8 has a completely rewritten code:
 
 <<>>=
 args(read.vcf)
 @ 
-Because VCF files can be very large, only 1000 loci are read. The option
-\code{skip} specifies how many loci to skip before reading the data,
-so that a file can be read and/or analysed in successive steps.
+By default, the first 10,000 loci are read. The option
+\code{which.loci} is an alternative way to specify which loci to read
+in the file. For instance, the following is the same than the default
+(the arguments \code{from} and \code{to} are ignored here):
 
-\code{read.vcf} returns an object of class \code{"loci"} with the
-following additional attributes:
-
-\begin{description}
-\item[\texttt{CHR}:] the chromosome number (integer values);
-\item[\texttt{POS}:] the position of the locus (numeric values);
-\item[\texttt{QUAL}:] the quality of the inferred locus (integer values);
-\item[\texttt{FILTER}:] the filter (characters).
-\end{description}
-
-VCF files contain a lot more information (genotype likelihoods, \dots)
-which are (currently) not read by \code{read.vcf}.
+\begin{verbatim}
+read.vcf(file, which.loci = 1:1e4)
+\end{verbatim}
+In practice, the numbers passed to this option will be obtained from
+additional functions which query information from VCF files (see
+\code{?VCFloci} for more information). \code{read.vcf} returns an
+object of class \code{"loci"}.
 
 \subsection{Importing \fstat, \genetix, \genepop, and \struc\ Data Files}
 
@@ -270,45 +269,81 @@ console with:
 If you want to copy these files into the working directory to further
 display or edit them with your favourite editor, use these commands:
 
-<<>>=
-file.copy(system.file("files/nancycats.dat", package = "adegenet"), getwd())
-file.copy(system.file("files/nancycats.gtx", package = "adegenet"), getwd())
-file.copy(system.file("files/nancycats.gen", package = "adegenet"), getwd())
-file.copy(system.file("files/nancycats.str", package = "adegenet"), getwd())
-@
+\begin{Schunk}
+\begin{Sinput}
+> file.copy(system.file("files/nancycats.dat", package = "adegenet"), getwd())
+\end{Sinput}
+\begin{Soutput}
+[1] TRUE
+\end{Soutput}
+\begin{Sinput}
+> file.copy(system.file("files/nancycats.gtx", package = "adegenet"), getwd())
+\end{Sinput}
+\begin{Soutput}
+[1] TRUE
+\end{Soutput}
+\begin{Sinput}
+> file.copy(system.file("files/nancycats.gen", package = "adegenet"), getwd())
+\end{Sinput}
+\begin{Soutput}
+[1] TRUE
+\end{Soutput}
+\begin{Sinput}
+> file.copy(system.file("files/nancycats.str", package = "adegenet"), getwd())
+\end{Sinput}
+\begin{Soutput}
+[1] TRUE
+\end{Soutput}
+\end{Schunk}
 
 \adegenet\ provides four functions to read these formats. Reading the
 first three formats is straightforward:
 
-<<>>=
-A <- read.fstat("nancycats.dat", quiet = TRUE)
-B <- read.genetix("nancycats.gtx", quiet = TRUE)
-C <- read.genepop("nancycats.gen", quiet = TRUE)
-@
+\begin{Schunk}
+\begin{Sinput}
+> A <- read.fstat("nancycats.dat", quiet = TRUE)
+> B <- read.genetix("nancycats.gtx", quiet = TRUE)
+> C <- read.genepop("nancycats.gen", quiet = TRUE)
+\end{Sinput}
+\end{Schunk}
 
 Reading a \struc\ file is slightly more complicated because the
 function needs some exta information. This can be done interactively
 (the default), or by specifying the appropriate options in which case
 we will use \code{ask = FALSE}:
 
-<<>>=
-D <- read.structure("nancycats.str", onerowperind=FALSE, n.ind=237, n.loc=9, col.lab=1, col.pop=2, ask=FALSE, quiet=TRUE)
-@
+\begin{Schunk}
+\begin{Sinput}
+> D <- read.structure("nancycats.str", onerowperind=FALSE, n.ind=237, n.loc=9, col.lab=1, col.pop=2, ask=FALSE, quiet=TRUE)
+\end{Sinput}
+\end{Schunk}
 
 All four data sets are identical (we only compare the \code{tab} slots):
 
-<<>>=
-identical(A@tab, C@tab)
-identical(B@tab, D@tab)
-@
+\begin{Schunk}
+\begin{Sinput}
+> identical(A@tab, C@tab)
+\end{Sinput}
+\begin{Soutput}
+[1] TRUE
+\end{Soutput}
+\begin{Sinput}
+> identical(B@tab, D@tab)
+\end{Sinput}
+\begin{Soutput}
+[1] TRUE
+\end{Soutput}
+\end{Schunk}
 
 Once the data have been read into R, they can be analysed with
 \adegenet\ or with \pegas\ after eventually converting them with
 \code{as.loci}. We now delete the data files:
 
-<<>>=
-unlink(c("nancycats.dat", "nancycats.gtx", "nancycats.gen", "nancycats.str"))
-@
+\begin{Schunk}
+\begin{Sinput}
+> unlink(c("nancycats.dat", "nancycats.gtx", "nancycats.gen", "nancycats.str"))
+\end{Sinput}
+\end{Schunk}
 
 Finally, \pegas\ has the function \code{read.gtx} to read a \genetix\
 data file and return an object of class \loci. This function has no option.
@@ -367,6 +402,105 @@ We also note the function \code{read.genealex} in the package \poppr\
 \cite{Kamvar2014} which reads a Genalex file that has been exported
 into csv format and returns an object of class \code{"genind"}.
 
+\section{An Example From Dryad}
+
+This section shows how the \code{jaguar} data set was prepared. This
+data set, deliver with \pegas, was published by Haag et al.\
+\cite{Haag2010}, and was deposited on
+Dryad.\footnote{http://datadryad.org/resource/doi:10.5061/dryad.1884}
+The main data file is in Excel format and can be accessed directly at
+the locations indicated below so that it can be read remotely with
+\gdata:
+
+\begin{Schunk}
+\begin{Sinput}
+> f <- "http://datadryad.org/bitstream/handle/10255/dryad.1885/\
+MicrosatelliteData.xls?sequence=1"
+> library(gdata)
+> x <- read.xls(f, row.names = 1)
+\end{Sinput}
+\begin{Soutput}
+essai de l'URL 'http://datadryad.org/bitstream/handle/10255/\
+dryad.1885/MicrosatelliteData.xls?sequence=1'
+Content type 'application/vnd.ms-excel;charset=ISO-8859-1'\
+length 29184 bytes (28 KB)
+==================================================
+downloaded 28 KB
+\end{Soutput}
+\end{Schunk}
+
+The object \code{x} is a data frame with the row names set correctly
+with the line identifiers of the original file since we have used the
+option \code{row.names = 1}. In this data frame each column is an
+allele so that two columns are used to represent the genotype at a
+given locus. This is clearly not the format used by the class
+\code{"loci"}. Furthermore, some rows indicating the populations have
+been inserted with missing values (\NA) for all columns. Fortunately,
+the rows with genotypes have no \NA, so it is easy to find the rows
+with the population names, and drop them before transforming the data
+frame with the function \code{alleles2loci}. This function has been
+specially designed to transform such data sets. The commands are
+relatively straightforward:
+
+\begin{Schunk}
+\begin{Sinput}
+> s <- apply(x, 1, anyNA)
+> y <- alleles2loci(x[!s, ])
+\end{Sinput}
+\end{Schunk}
+
+We can now extract the population names and assign them to each
+observation; this is slightly more complicated, but the logical is
+based on the fact that the rows below a population name should be
+assigned to it:\footnote{In practice, a \code{for} loop can be used:
+  it would be less efficient but more intuitive and easier to read.}
+
+\begin{Schunk}
+\begin{Sinput}
+> w <- which(s)
+> n <- diff(c(w, nrow(x) + 1)) - 1
+> pop <- factor(rep(1:4, n), labels = names(w))
+> y$population <- pop
+\end{Sinput}
+\end{Schunk}
+
+The data are now ready to be analysed in R. We can check that the row-
+and colnames are correctly set with the labels from original file:
+
+\begin{Schunk}
+\begin{Sinput}
+> y
+\end{Sinput}
+\begin{Soutput}
+Allelic data frame: 59 individuals
+                    13 loci
+                    1 additional variable
+\end{Soutput}
+\begin{Sinput}
+> dimnames(y)
+\end{Sinput}
+\begin{Soutput}
+[[1]]
+ [1] "bPon01"  "bPon02"  "bPon133" "bPon134" "bPon135"
+ [6] "bPon140" "bPon137" "bPon139" "bPon138" "bPon136"
+[11] "bPon141" "bPon143" "bPon142" "bPon124" "bPon366"
+[16] "bPon12"  "bPon91"  "bPon04"  "bPon25"  "bPon48"
+[21] "bPon49"  "bPon50"  "bPon51"  "bPon52"  "bPon53"
+[26] "bPon54"  "bPon35"  "bPon46"  "bPon40"  "bPon41"
+[31] "bPon47"  "bPon78"  "bPon36"  "bPon359" "bPon44"
+[36] "bPon80"  "bPon03"  "bPon11"  "bPon15"  "bPon16"
+[41] "bPon17"  "bPon18"  "bPon19"  "bPon20"  "bPon21"
+[46] "bPon22"  "bPon23"  "bPon27"  "bPon29"  "bPon30"
+[51] "bPon31"  "bPon32"  "bPon38"  "bPon45"  "bPon130"
+[56] "bPon131" "bPon132" "bPon58"  "bPon24"
+
+[[2]]
+ [1] "FCA742"     "FCA723"     "FCA740"     "FCA441"
+ [5] "FCA391"     "F98"        "F53"        "F124"
+ [9] "F146"       "F85"        "F42"        "FCA453"
+[13] "FCA741"     "population"
+\end{Soutput}
+\end{Schunk}
 
 \section{Editing and Writing Genetic Data Files}
 

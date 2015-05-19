@@ -46,9 +46,7 @@ Fst(x, pop = NULL)
   matrix''.
 }
 \examples{
-require(adegenet)
-data(nancycats)
-x <- as.loci(nancycats)
-Fst(x)
+data(jaguar)
+Fst(jaguar)
 }
 \keyword{htest}

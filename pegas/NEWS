@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.7-0.5
+		CHANGES IN PEGAS VERSION 0.8
 
 
 NEW FEATURES
@@ -7,7 +7,10 @@ NEW FEATURES
       is.snp.VCFinfo, selectQUAL, getINFO) are provided to read
       information from VCF files.
 
-    o read.vcf() has been completely rewritten.
+    o The new function alleles2loci transforms a matrix of alleles
+      (typical for microsatellites) into an object of class "loci".
+
+    o read.vcf() has been completely rewritten with new options.
 
     o hw.test() is now generic with methods for classes "loci" and
       "genind" (contributed by Thibaut Jombart).
@@ -19,16 +22,24 @@ NEW FEATURES
       giving the possibility to select haplotypes with respect to
       their absolute frequency and/or frequency of missing data.
 
+    o There is a new data set (jaguar) with microsatellites from four
+      populations of jaguars.
+
 
 BUG FIXES
 
     o Subsetting "loci" objects failed when some column names were the
-      same (typical when reading VCF files).
+      same (often when reading VCF files).
 
     o haploNet() failed when no alternative links were found.
 
     o amova() failed when the factors in the rhs of the formula were
       in a data frame. Thanks to Zhian Kamvar for the fix.
+
+
+OTHER CHANGES
+
+    o The vignette "ReadingFiles" has been revised and extended.
 
 
 

@@ -10,7 +10,7 @@
 }
 
 \arguments{
-  \item{x}{an object of class \code{"haplotype"}.}
+  \item{x}{an object of class \code{c("haplotype", "DNAbin")}.}
   \item{minfreq, maxfreq}{the lower and upper limits of (absolute)
     haplotype frequencies. By default, all haplotypes are selected
     whatever their frequency.}
@@ -24,7 +24,7 @@
 }
 \details{
   The value of \code{maxna} can be either less than one, or greater or
-  equal to this value. In the former case, it is taken as specifying the
+  equal to one. In the former case, it is taken as specifying the
   maximum proportion (relative frequency) of missing data within a given
   haplotype. In the latter case, it  is taken as the maximum number
   (absolute frequency).

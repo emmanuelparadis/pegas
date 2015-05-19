@@ -40,21 +40,21 @@ getINFO(x, what = "DP", as.is = FALSE)
 }
 \details{
   The variant call format (VCF) is described in details in the
-  References. Roughly, a VCF file is made in two parts: the header and
-  the genotypes. The last line of the header gives of the labels of the
-  genotypes. The first nine columns of the latter give information for
-  each locus and are (always) labelled "CHROM", "POS", "ID", "REF",
-  "ALT", "QUAL", "FILTER", "INFO", and "FORMAT". The subsequent columns
-  give the labels (identifiers) of the individuals; these may be missing
-  if the file records only the variants. Note that the data are arranged
-  as the transpose of the usual way: the individuals are as columns and
-  the loci are as rows.
+  References. Roughly, a VCF file is made of two parts: the header and
+  the genotypes. The last line of the header gives the labels of the
+  genotypes: the first nine columns give information for each locus and
+  are (always) "CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER",
+  "INFO", and "FORMAT". The subsequent columns give the labels
+  (identifiers) of the individuals; these may be missing if the file
+  records only the variants. Note that the data are arranged as the
+  transpose of the usual way: the individuals are as columns and the
+  loci are as rows.
 
   \code{VCFloci} is the main function documented here: it reads the
   information relative to each locus. The option \code{what} specifies
   which column(s) to read. By default, all of them are read. If the user
-  is interested in only the locus positions, one would use the option
-  \code{what = "POS"}.
+  is interested in only the locus positions, the option \code{what =
+  "POS"} would be used.
 
   Since VCF files can be very big, the data are read in portions of
   \code{chunk.size} bytes. The default (1 Gb) should be appropriate in
@@ -70,7 +70,7 @@ getINFO(x, what = "DP", as.is = FALSE)
   loci to read with \code{\link{read.vcf}}.
 
   \code{is.snp} tests whether each locus is a SNP (i.e., the reference
-  allele, REF, is a single charater and the alternative allele, REF,
+  allele, REF, is a single charater and the alternative allele, ALT,
   also). It returns a logical vector with as many values as there are
   loci. Note that some VCF files have the information VT (variant type)
   in the INFO column.

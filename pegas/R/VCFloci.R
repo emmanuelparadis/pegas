@@ -1,4 +1,4 @@
-## getVCFinfo.R (2015-04-02)
+## getVCFinfo.R (2015-05-05)
 
 ##   Analysis of Molecular Variance
 
@@ -109,8 +109,9 @@ VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
         if (exists("trail", inherits = FALSE)) {
             x <- c(trail, Y[1:EOL[1L]])
             for (i in what) {
-                lib <- if (i %in% c(2, 6)) "extract_POS" else "extract_REF"
-                tmp <- .Call(lib, x, c(1L, length(trail)), i - 1L)
+                tmp <-
+                    if (i %in% c(2, 6)) .Call(extract_POS, x, c(1L, length(trail)), i - 1L)
+                    else .Call(extract_REF, x, c(1L, length(trail)), i - 1L)
                 obj[[i]] <- c(obj[[i]], tmp)
             }
             ck <- ck + length(trail)
@@ -133,8 +134,9 @@ VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
         ## we assume there are no extra blank line!
 
         for (i in what) {
-            lib <- if (i %in% c(2, 6)) extract_POS else extract_REF
-            tmp <- .Call(lib, Y, EOL, i - 1L)
+            tmp <-
+                if (i %in% c(2, 6)) .Call(extract_POS, Y, EOL, i - 1L)
+                else .Call(extract_REF, Y, EOL, i - 1L)
             obj[[i]] <- c(obj[[i]], tmp)
         }
 

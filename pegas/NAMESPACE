@@ -1,6 +1,6 @@
 useDynLib(pegas, .registration = TRUE)
 
-export(amova, as.igraph.haploNet, as.loci, as.network.haploNet,
+export(alleles2loci, amova, as.igraph.haploNet, as.loci, as.network.haploNet,
        diffHaplo, dist.haplotype.loci, expand.genotype, Fst, genind2loci,
        geod, geoTrans, getAlleles, getGenotypes, getINFO, getPloidy, H,
        haploNet, haploFreq, haplotype, heterozygosity, hw.test, is.phased,
