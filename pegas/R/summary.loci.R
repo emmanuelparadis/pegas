@@ -1,4 +1,4 @@
-## summary.loci.R (2015-03-30)
+## summary.loci.R (2015-05-19)
 
 ##   Print and Summaries of Loci Objects
 
@@ -97,8 +97,8 @@ print.summary.loci <- function(x, ...)
     class(x) <- "data.frame"
     x <- NextMethod("[")
     ## restore the class and the "locicol" attribute only if there
-    ## is at least 2 col *and* at least one loci returned:
-    if (length(x) > 1) {
+    ## is at least 1 col *and* at least one loci returned:
+    if (class(x) == "data.frame") {
         locicol <- match(loci.nms, names(x))
         locicol <- locicol[!is.na(locicol)]
         if (length(locicol)) {

@@ -24,10 +24,6 @@ Fst(x, pop = NULL)
   A matrix with genes (loci) as rows and the three \emph{F}-statistics
   as columns.
 }
-\note{
-  Programming bugs have been fixed in version 0.3-2 of
-  \pkg{pegas}. Further tests and feed-back are still welcome.
-}
 \references{
   Weir, B. S. and Cockerham, C. C. (1984) Estimating \emph{F}-statistics
   for the analysis of population structure. \emph{Evolution}, \bold{38},
