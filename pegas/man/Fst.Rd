@@ -30,11 +30,11 @@ Fst(x, pop = NULL)
   1358--1370.
 
   Weir, B. S. and Hill, W. G. (2002) Estimating \emph{F}-statistics.
-  \emph{Annu Review of Genetics}, \bold{36}, 721--750.
+  \emph{Annual Review of Genetics}, \bold{36}, 721--750.
 }
 \author{Emmanuel Paradis}
 \seealso{
-  \code{\link[adegenet]{fstat}} in \pkg{adegenet}; package \pkg{dirmult}
+  \code{fstat} in package \pkg{hierfstat}; package \pkg{dirmult}
   on CRAN that implements various estimators of the
   Dirichlet-multinomial distribution, including maximum likekihood and
   the moments estimator of Weir and Hill (2002); \code{Fst} in
