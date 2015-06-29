@@ -1,4 +1,21 @@
-		CHANGES IN PEGAS VERSION 0.8-0.1
+		CHANGES IN PEGAS VERSION 0.8-1.1
+
+
+NEW FEATURES
+
+    o as.igraph.haploNet() and as.network.haploNet() gains a new
+      option, altlinks, to output the alternative links in the
+      converted object (TRUE by default).
+
+
+BUX FIXES
+
+    o haplotype.DNAbin() ignored alignment gaps so that identical
+      sequences were considered as different if they contained gaps.
+
+
+
+		CHANGES IN PEGAS VERSION 0.8-1
 
 
 OTHER CHANGES

@@ -1,4 +1,4 @@
-## haplotype.R (2015-05-05)
+## haplotype.R (2015-06-29)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -602,18 +602,21 @@ print.haplotype <- function(x, ...)
 }
 
 if (getRversion() >= "2.15.1") utils::globalVariables(c("network", "network.vertex.names<-"))
-as.network.haploNet <- function(x, directed = FALSE, ...)
+as.network.haploNet <- function(x, directed = FALSE, altlinks = TRUE, ...)
 {
-    res <- network(x[, 1:2], directed = directed, ...)
+    res <- x[, 1:2]
+    if (altlinks) res <- rbind(res, attr(x, "alter.links")[, 1:2])
+    res <- network(res, directed = directed, ...)
     network.vertex.names(res) <- attr(x, "labels")
     res
 }
 
 if (getRversion() >= "2.15.1") utils::globalVariables("graph.edgelist")
-as.igraph.haploNet <- function(x, directed = FALSE, use.labels = TRUE, ...)
+as.igraph.haploNet <- function(x, directed = FALSE, use.labels = TRUE,
+                               altlinks = TRUE, ...)
 {
-    directed <- directed
     y <- x[, 1:2]
+    if (altlinks) y <- rbind(y, attr(x, "alter.links")[, 1:2])
     y <-
         if (use.labels) matrix(attr(x, "labels")[y], ncol = 2)
         else y - 1L

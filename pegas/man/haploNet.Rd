@@ -15,8 +15,9 @@ haploNet(h, d = NULL)
      labels = TRUE, font = 2, cex = 1, scale.ratio = 1,
      asp = 1, legend = FALSE, fast = FALSE, show.mutation = TRUE,
      threshold = c(1, 2), ...)
-\method{as.network}{haploNet}(x, directed = FALSE, ...)
-\method{as.igraph}{haploNet}(x, directed = FALSE, use.labels = TRUE, ...)
+\method{as.network}{haploNet}(x, directed = FALSE, altlinks = TRUE, ...)
+\method{as.igraph}{haploNet}(x, directed = FALSE, use.labels = TRUE,
+        altlinks = TRUE, ...)
 }
 \arguments{
   \item{h}{an object of class \code{"haplotype"}.}
@@ -66,6 +67,8 @@ haploNet(h, d = NULL)
     (\code{FALSE} by default).}
   \item{use.labels}{a logical specifying whether to use the original
     labels in the returned network.}
+  \item{altlinks}{whether to output the alternative links when
+    converting to another class; \code{TRUE} by default.}
   \item{\dots}{further arguments passed to \code{plot}.}
 }
 \details{
