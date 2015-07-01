@@ -1,4 +1,4 @@
-## conversion.R (2015-05-16)
+## conversion.R (2015-07-01)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -125,8 +125,8 @@ alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
             population <- population - 1
     }
     if (withPop) {
-        pop <- x[[population]]
-        x[[population]] <- NULL
+        pop <- x[, population]
+        x <- x[, -population]
     }
     d <- dim(x)
     if (d[2] %% ploidy) stop("number of columns not a multiple of ploidy")

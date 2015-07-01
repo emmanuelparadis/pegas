@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.8-1.1
+		CHANGES IN PEGAS VERSION 0.8-1.2
 
 
 NEW FEATURES
@@ -12,6 +12,8 @@ BUX FIXES
 
     o haplotype.DNAbin() ignored alignment gaps so that identical
       sequences were considered as different if they contained gaps.
+
+    o alleles2loci() did not handle correctly its 'population' option.
 
 
 
