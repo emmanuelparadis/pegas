@@ -24,21 +24,17 @@ Fst(x, pop = NULL)
   A matrix with genes (loci) as rows and the three \emph{F}-statistics
   as columns.
 }
-\note{
-  Programming bugs have been fixed in version 0.3-2 of
-  \pkg{pegas}. Further tests and feed-back are still welcome.
-}
 \references{
   Weir, B. S. and Cockerham, C. C. (1984) Estimating \emph{F}-statistics
   for the analysis of population structure. \emph{Evolution}, \bold{38},
   1358--1370.
 
   Weir, B. S. and Hill, W. G. (2002) Estimating \emph{F}-statistics.
-  \emph{Annu Review of Genetics}, \bold{36}, 721--750.
+  \emph{Annual Review of Genetics}, \bold{36}, 721--750.
 }
 \author{Emmanuel Paradis}
 \seealso{
-  \code{\link[adegenet]{fstat}} in \pkg{adegenet}; package \pkg{dirmult}
+  \code{fstat} in package \pkg{hierfstat}; package \pkg{dirmult}
   on CRAN that implements various estimators of the
   Dirichlet-multinomial distribution, including maximum likekihood and
   the moments estimator of Weir and Hill (2002); \code{Fst} in
@@ -46,9 +42,7 @@ Fst(x, pop = NULL)
   matrix''.
 }
 \examples{
-require(adegenet)
-data(nancycats)
-x <- as.loci(nancycats)
-Fst(x)
+data(jaguar)
+Fst(jaguar)
 }
 \keyword{htest}

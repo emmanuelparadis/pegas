@@ -40,6 +40,7 @@ hw.test(x, B = 1000, \dots)
   objects by Thibaut Jombart.
 }
 \examples{
+\dontrun{
 require(adegenet)
 
 ## load data
@@ -51,5 +52,8 @@ hw.test(nancycats, B=0)
 ## test on loci object
 x <- as.loci(nancycats)
 hw.test(x)
+}
+data(jaguar)
+hw.test(jaguar)
 }
 \keyword{htest}

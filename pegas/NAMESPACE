@@ -1,6 +1,6 @@
 useDynLib(pegas, .registration = TRUE)
 
-export(amova, as.igraph.haploNet, as.loci, as.network.haploNet,
+export(alleles2loci, amova, as.igraph.haploNet, as.loci, as.network.haploNet,
        diffHaplo, dist.haplotype.loci, expand.genotype, Fst, genind2loci,
        geod, geoTrans, getAlleles, getGenotypes, getINFO, getPloidy, H,
        haploNet, haploFreq, haplotype, heterozygosity, hw.test, is.phased,
@@ -13,9 +13,12 @@ export(amova, as.igraph.haploNet, as.loci, as.network.haploNet,
 importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
            floating.pie.asp, perm.rowscols, rcoal, seg.sites)
 importFrom(adegenet, df2genind, genind2df)
-importFrom(graphics, plot)
-## importFrom(stats, density)
-importFrom(utils, edit)
+importFrom(graphics, abline, barplot, lines, locator, mtext, par,
+           plot, segments, strheight, symbols)
+importFrom(grDevices, rainbow)
+importFrom(stats, as.dist, cophenetic, density, dist, na.omit,
+           nlminb, pbeta, pchisq, rpois, weighted.mean)
+importFrom(util, as.romans, edit, read.table, write.table)
 
 S3method(print, amova)
 
@@ -41,6 +44,7 @@ S3method("[", haplotype)
 S3method(plot, haplotype)
 S3method(print, haplotype)
 S3method(sort, haplotype)
+S3method(subset, haplotype)
 
 S3method(plot, haplotype.loci)
 

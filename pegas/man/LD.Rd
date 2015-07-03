@@ -4,7 +4,7 @@
 \title{Linkage Disequilibrium}
 \description{
   These two functions analyse linkage disequilibrium in the case of
-  phased (\code{LD}) and unphased (\code{LD2}) genotypes.
+  phased (\code{LD}) or unphased (\code{LD2}) genotypes.
 }
 \usage{
 LD(x, locus = 1:2, details = TRUE)
@@ -76,9 +76,8 @@ LD2(x, locus = 1:2, details = TRUE)
 }
 \seealso{\code{\link{haplotype.loci}}, \code{\link{is.phased}}}
 \examples{
-require(adegenet)
-data(rupica)
-z <- as.loci(rupica)
-LD2(z, 8:9)
+data(jaguar)
+LD2(jaguar, details = FALSE)
+LD2(jaguar, locus = 8:9, details = FALSE)
 }
 \keyword{models}

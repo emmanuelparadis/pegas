@@ -1,4 +1,37 @@
-		CHANGES IN PEGAS VERSION 0.7-0.1
+		CHANGES IN PEGAS VERSION 0.8-1.3
+
+
+NEW FEATURES
+
+    o as.igraph.haploNet() and as.network.haploNet() gains a new
+      option, altlinks, to output the alternative links in the
+      converted object (TRUE by default).
+
+
+BUX FIXES
+
+    o haplotype.DNAbin() ignored alignment gaps so that identical
+      sequences were considered as different if they contained gaps.
+
+    o alleles2loci() did not handle correctly its 'population' option.
+
+
+OTHER CHANGES
+
+    o Updated NAMESPACE file for r-devel.
+
+
+
+		CHANGES IN PEGAS VERSION 0.8-1
+
+
+OTHER CHANGES
+
+    o Minor correction in Fst.Rd.
+
+
+
+		CHANGES IN PEGAS VERSION 0.8
 
 
 NEW FEATURES
@@ -7,7 +40,10 @@ NEW FEATURES
       is.snp.VCFinfo, selectQUAL, getINFO) are provided to read
       information from VCF files.
 
-    o read.vcf() has been completely rewritten.
+    o The new function alleles2loci transforms a matrix of alleles
+      (typical for microsatellites) into an object of class "loci".
+
+    o read.vcf() has been completely rewritten with new options.
 
     o hw.test() is now generic with methods for classes "loci" and
       "genind" (contributed by Thibaut Jombart).
@@ -15,11 +51,28 @@ NEW FEATURES
     o is.snp() is now generic with methods for classes "loci" and
       "VCFinfo".
 
+    o There is now a subset method for objects of class "haplotype"
+      giving the possibility to select haplotypes with respect to
+      their absolute frequency and/or frequency of missing data.
+
+    o There is a new data set (jaguar) with microsatellites from four
+      populations of jaguars.
+
 
 BUG FIXES
 
     o Subsetting "loci" objects failed when some column names were the
-      same (typical when reading VCF files.
+      same (often when reading VCF files).
+
+    o haploNet() failed when no alternative links were found.
+
+    o amova() failed when the factors in the rhs of the formula were
+      in a data frame. Thanks to Zhian Kamvar for the fix.
+
+
+OTHER CHANGES
+
+    o The vignette "ReadingFiles" has been revised and extended.
 
 
 

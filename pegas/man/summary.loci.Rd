@@ -62,13 +62,13 @@
   \code{\link{read.loci}}, \code{\link{getAlleles}}, \code{\link{edit.loci}}
 }
 \examples{
-require(adegenet)
-data(nancycats)
-x <- as.loci(nancycats)
-s <- summary(x)
-plot(s, layout=20, las=2)
+data(jaguar)
+s <- summary(jaguar)
+\dontrun{
+## works if the device is large enough:
+plot(s, layout = 30, las = 2)
 layout(1)
-
+}
 ## compute the relative frequencies:
 rapply(s, function(x) x/sum(x), how = "replace")
 }

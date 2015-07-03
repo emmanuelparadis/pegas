@@ -42,10 +42,9 @@ theta.k(x, n = NULL, k = NULL)
   \code{\link{theta.h}}, \code{\link{theta.s}}, \code{\link{theta.tree}}
 }
 \examples{
-require(adegenet)
-data(nancycats)
+data(jaguar)
 ## convert the data and compute frequencies:
-S <- summary(as.loci(nancycats))
+S <- summary(jaguar)
 ## compute THETA for all loci:
 sapply(S, function(x) theta.k(x$allele))
 }

@@ -41,9 +41,7 @@ theta.msat(x)
   \code{\link{theta.h}}, \code{\link{theta.tree}}
 }
 \examples{
-require(adegenet)
-data(nancycats)
-x <- as.loci(nancycats)
-theta.msat(x)
+data(jaguar)
+theta.msat(jaguar)
 }
 \keyword{models}

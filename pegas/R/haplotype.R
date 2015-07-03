@@ -1,4 +1,4 @@
-## haplotype.R (2015-03-05)
+## haplotype.R (2015-06-29)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -165,8 +165,9 @@ haploNet <- function(h, d = NULL)
     dimnames(link) <- list(NULL, c("", "", "step", "Prob"))
     attr(link, "freq") <- freq
     attr(link, "labels") <- rownames(h)
-    attr(link, "alter.links") <-
-        altlink <- cbind(altlink, .TempletonProb(altlink[, 3], ncol(h)))
+    if (nrow(altlink))
+        attr(link, "alter.links") <-
+            cbind(altlink, .TempletonProb(altlink[, 3], ncol(h)))
     class(link) <- "haploNet"
     link
 }
@@ -557,6 +558,30 @@ sort.haplotype <-
     x
 }
 
+subset.haplotype <- function(x, minfreq = 1, maxfreq = Inf, maxna = Inf,
+                             na = c("N", "?"), ...)
+{
+    oc <- oldClass(x)
+    idx <- attr(x, "index")
+    f <- sapply(idx, length)
+    s <- f <= maxfreq & f >= minfreq
+    if (is.finite(maxna)) {
+        na <- tolower(na)
+        all <- c("r", "m", "w", "s", "k", "y", "v", "h", "d", "b", "n", "-", "?")
+        if (identical(na, "all")) na <- all
+        if (identical(na, "ambiguous")) na <- all[1:11]
+        freq <- if (maxna < 1) FALSE else TRUE
+        foo <- function(x) sum(base.freq(x, freq, TRUE)[na])
+        count.na <- numeric(n <- nrow(x))
+        for (i in seq_len(n)) count.na[i] <- foo(x[i, ]) # cannot use apply
+        s <- s & count.na <= maxna
+    }
+    x <- x[s, ]
+    attr(x, "index") <- idx[s]
+    class(x) <- oc
+    x
+}
+
 print.haplotype <- function(x, ...)
 {
     d <- dim(x)
@@ -577,18 +602,21 @@ print.haplotype <- function(x, ...)
 }
 
 if (getRversion() >= "2.15.1") utils::globalVariables(c("network", "network.vertex.names<-"))
-as.network.haploNet <- function(x, directed = FALSE, ...)
+as.network.haploNet <- function(x, directed = FALSE, altlinks = TRUE, ...)
 {
-    res <- network(x[, 1:2], directed = directed, ...)
+    res <- x[, 1:2]
+    if (altlinks) res <- rbind(res, attr(x, "alter.links")[, 1:2])
+    res <- network(res, directed = directed, ...)
     network.vertex.names(res) <- attr(x, "labels")
     res
 }
 
 if (getRversion() >= "2.15.1") utils::globalVariables("graph.edgelist")
-as.igraph.haploNet <- function(x, directed = FALSE, use.labels = TRUE, ...)
+as.igraph.haploNet <- function(x, directed = FALSE, use.labels = TRUE,
+                               altlinks = TRUE, ...)
 {
-    directed <- directed
     y <- x[, 1:2]
+    if (altlinks) y <- rbind(y, attr(x, "alter.links")[, 1:2])
     y <-
         if (use.labels) matrix(attr(x, "labels")[y], ncol = 2)
         else y - 1L

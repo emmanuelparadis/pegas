@@ -46,10 +46,9 @@ theta.h(x, standard.error = FALSE)
 }
 \examples{
 ## similar to what is in ?H:
-require(adegenet)
-data(nancycats)
+data(jaguar)
 ## convert the data and compute frequencies:
-S <- summary(as.loci(nancycats))
+S <- summary(jaguar)
 ## compute THETA for all loci:
 sapply(S, function(x) theta.h(x$allele))
 }

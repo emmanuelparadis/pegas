@@ -58,7 +58,8 @@ account base ambiguities.
 }
 \author{Emmanuel Paradis}
 \seealso{
-  \code{\link{haploNet}}, \code{\link{haploFreq}},
+  \code{\link{haploNet}},  \code{\link{haploFreq}},
+  \code{\link{subset.haplotype}},
   \code{\link[ape]{DNAbin}} for manipulation of DNA sequences in R.
 
   The \code{haplotype} method for objects of class \code{"loci"} is

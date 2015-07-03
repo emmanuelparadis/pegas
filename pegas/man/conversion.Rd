@@ -51,16 +51,18 @@ loci2genind(x)
 \author{Emmanuel Paradis}
 \seealso{
   \code{\link{read.loci}}, \code{\link[adegenet]{genind}},
-  \code{\link[adegenet]{df2genind}} for converting data frames to \code{"genind"}
+  \code{\link[adegenet]{df2genind}} for converting data frames to
+  \code{"genind"}, \code{\link{alleles2loci}}
 }
 \examples{
 x <- c("A-A", "A-a", "a-a")
 as.loci(x, allele.sep = "-")
+\dontrun{
 require(adegenet)
 data(nancycats)
 x <- as.loci(nancycats)
 y <- loci2genind(x) # back to "genind"
 identical(nancycats@tab, y@tab)
 identical(nancycats@pop, y@pop)
-}
+}}
 \keyword{IO}
