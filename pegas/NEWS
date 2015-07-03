@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.8-1.2
+		CHANGES IN PEGAS VERSION 0.8-1.3
 
 
 NEW FEATURES
@@ -14,6 +14,11 @@ BUX FIXES
       sequences were considered as different if they contained gaps.
 
     o alleles2loci() did not handle correctly its 'population' option.
+
+
+OTHER CHANGES
+
+    o Updated NAMESPACE file for r-devel.
 
 
 
