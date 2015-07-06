@@ -18,7 +18,7 @@ importFrom(graphics, abline, barplot, lines, locator, mtext, par,
 importFrom(grDevices, rainbow)
 importFrom(stats, as.dist, cophenetic, density, dist, na.omit,
            nlminb, pbeta, pchisq, rpois, weighted.mean)
-importFrom(utils, as.romans, edit, read.table, write.table)
+importFrom(utils, as.roman, edit, read.table, write.table)
 
 S3method(print, amova)
 
