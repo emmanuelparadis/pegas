@@ -1,4 +1,4 @@
-/* pegas.c    2015-06-29 */
+/* pegas.c    2015-07-08 */
 
 /* Copyright 2015 Emmanuel Paradis */
 
@@ -14,7 +14,7 @@
 
 void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo)
 {
-    int i1, i2, s1, s2, flag;
+    int i1, i2, s1, s2, flag, k;
 
     i1 = 0;
     while (i1 < *n - 1) {
@@ -24,8 +24,9 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo)
 		if (!haplo[i2])  {
 		    s1 = i1;
 		    s2 = i2;
+		    k = 0;
 		    flag = 1; /* initially the two sequences are considered identical */
-		    while (s1 < i1 + *n * (*s - 1)) {
+		    while (k < *s) {
 			if (x[s1] != x[s2]) { /* fix the fact that a and b could be gaps (-) or completely missing (?) */
 			    if (DifferentBase(x[s1], x[s2])) {
 				flag = 0;
@@ -34,6 +35,7 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo)
 			}
 			s1 += *n;
 			s2 += *n;
+			k++;
 		    }
 		    if (flag) haplo[i2] = i1 + 1;
 		}

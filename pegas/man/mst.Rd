@@ -24,6 +24,13 @@ mst(d)
 \seealso{
   \code{\link{haploNet}}
 }
+\note{
+  \pkg{ape} has a function with the same name which is older (and used
+  by other packages) and returns its results in a different form. The
+  present version is more efficient. If you want to use the older
+  version after loading \pkg{pegas}, use \code{ape::mst} since \pkg{ape}
+  will certainly always be loaded before \pkg{pegas}.
+}
 \examples{
 data(woodmouse)
 d <- dist.dna(woodmouse, "n")
