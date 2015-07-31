@@ -13,11 +13,12 @@ export(alleles2loci, amova, as.igraph.haploNet, as.loci, as.network.haploNet,
 importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
            floating.pie.asp, perm.rowscols, rcoal, seg.sites)
 importFrom(adegenet, df2genind, genind2df)
-importFrom(graphics, abline, barplot, lines, locator, mtext, par,
-           plot, segments, strheight, symbols)
+importFrom(graphics, abline, barplot, hist, lines, locator, mtext, par,
+           plot, segments, strheight, symbols, text)
 importFrom(grDevices, rainbow)
-importFrom(stats, as.dist, cophenetic, density, dist, na.omit,
-           nlminb, pbeta, pchisq, rpois, weighted.mean)
+importFrom(stats, as.dist, cophenetic, density, dist, integrate, na.omit,
+           nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois, uniroot,
+           weighted.mean)
 importFrom(utils, as.roman, edit, read.table, write.table)
 
 S3method(print, amova)

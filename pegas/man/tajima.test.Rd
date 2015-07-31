@@ -19,6 +19,10 @@ tajima.test(x)
   \item{Pval.beta}{the p-value assuming that \emph{D} follows a beta
     distribution after rescaling on [0, 1] (Tajima, 1989).}
 }
+\note{
+  Alignment gaps in the sequences are ignored when calculating pairwise
+  distances.
+}
 \author{Emmanuel Paradis}
 \references{
   Tajima, F. (1989) Statistical method for testing the neutral mutation

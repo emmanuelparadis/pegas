@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.8-1.4
+		CHANGES IN PEGAS VERSION 0.8-1.5
 
 
 NEW FEATURES
@@ -22,6 +22,10 @@ BUX FIXES
 OTHER CHANGES
 
     o Updated NAMESPACE file for r-devel.
+
+    o haplotype.loci() is now 2-8 times faster and gains a new option
+      (quiet = FALSE) to display or not a message of the progress of
+      the analysis.
 
 
 

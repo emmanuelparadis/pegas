@@ -1,4 +1,4 @@
-## haplotype.R (2015-06-29)
+## haplotype.R (2015-07-30)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -623,7 +623,7 @@ as.igraph.haploNet <- function(x, directed = FALSE, use.labels = TRUE,
     graph.edgelist(y, directed = directed, ...)
 }
 
-haplotype.loci <- function(x, locus = 1:2, ...)
+haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, ...)
 {
     x <- x[, attr(x, "locicol")[locus]]
     nloc <- ncol(x)
@@ -639,11 +639,21 @@ haplotype.loci <- function(x, locus = 1:2, ...)
 
 ### NOTE: trying to find identical rows first does not speed calculations
 
-    res <- matrix("", nloc, 0L) # initialise
-    freq <- integer()           #
+    ## initialise:
+    res <- matrix("", nloc, 0L)
+    freq <- integer()
+
+    class(x) <- "data.frame" # drop "loci"
+    ## the two lines below are the same as y <- as.matrix(sapply(x, as.integer))
+    ## but slightly faster
+    y <- matrix(NA_integer_, n, nloc)
+    for (i in seq_len(nloc)) y[, i] <- as.integer(x[[i]])
+
+    GENO <- lapply(x, levels)
 
     for (i in seq_len(n)) { # loop along each individual
-        tmp <- sapply(x[i, ], as.character) # get the genotype for all loci as char strings
+        if (!quiet && !(i %% 100)) cat("\rAnalysing individual no.", i, "/", n)
+        tmp <- mapply("[", GENO, y[i, ]) # get the genotype for all loci as char strings
         tmp <- matrix(unlist(strsplit(tmp, "|", fixed = TRUE)), nrow = nloc, byrow = TRUE) # arrange the alleles in a matrix
         ntmp <- ncol(tmp) # the number of haplotypes
         ftmp <- rep(1L, ntmp) # and their frequencies
@@ -669,11 +679,12 @@ haplotype.loci <- function(x, locus = 1:2, ...)
         ## now check if these haplotypes were already observed or not:
         new <- rep(TRUE, ntmp)
         if (ncol(res) > 0) {
-            for (j in seq_len(ncol(res))) {
-                for (k in seq_len(ntmp)) {
+            for (k in seq_len(ntmp)) {
+                for (j in seq_len(ncol(res))) {
                     if (identical(res[, j], tmp[, k])) {
                         freq[j] <- freq[j] + ftmp[k]
                         new[k] <- FALSE
+                        break
                     }
                 }
             }
@@ -685,6 +696,7 @@ haplotype.loci <- function(x, locus = 1:2, ...)
             freq <- c(freq, ftmp[new])
         }
     }
+    if (!quiet) cat("\rAnalysing individual no.", n, "/", n, "\n")
 
     rownames(res) <- colnames(x)
     class(res) <- "haplotype.loci"

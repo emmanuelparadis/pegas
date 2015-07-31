@@ -7,7 +7,7 @@
   This function extracts haplotypes from phased genotypes.
 }
 \usage{
-\method{haplotype}{loci}(x, locus = 1:2, ...)
+\method{haplotype}{loci}(x, locus = 1:2, quiet = FALSE, ...)
 \method{plot}{haplotype.loci}(x, ...)
 dist.haplotype.loci(x)
 }
@@ -15,6 +15,8 @@ dist.haplotype.loci(x)
   \item{x}{an object of class \code{"loci"} or of class
     \code{"haplotype.loci"}.}
   \item{locus}{a vector of integers giving the loci to analyse.}
+  \item{quiet}{a logical value specifying whether to not print the
+    progress of the analysis (\code{FALSE} by default).}
   \item{\dots}{arguments passed to and from methods.}
 }
 \details{

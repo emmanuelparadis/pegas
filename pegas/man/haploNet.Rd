@@ -74,7 +74,7 @@ haploNet(h, d = NULL)
 \details{
   By default, the haplotype network is built using an infinite site
   model (i.e., uncorrected or Hamming distance) of DNA sequences and
-  pairwise deletion of missing data (see \code{\link[ape]{dist.dna}})
+  pairwise deletion of missing data (see \code{\link[ape]{dist.dna}}).
   Users may specify their own distance with the argument \code{d}. There
   is no check of labels, so the user must make sure that the distances
   are ordered in the same way than the haplotypes.
