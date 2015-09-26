@@ -1,4 +1,4 @@
-## conversion.R (2015-07-01)
+## conversion.R (2015-08-27)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -29,7 +29,7 @@ as.loci.genind <- function(x, ...)
     for (i in icol) obj[, i] <- factor(obj[, i] )
     class(obj) <- c("loci", "data.frame")
     attr(obj, "locicol") <- icol
-    obj
+    .check.order.alleles(obj)
 }
 
 genind2loci <- function(x) as.loci.genind(x)

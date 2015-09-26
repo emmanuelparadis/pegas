@@ -1,7 +1,9 @@
-		CHANGES IN PEGAS VERSION 0.8-1.5
+		CHANGES IN PEGAS VERSION 0.8-2
 
 
 NEW FEATURES
+
+    o There is now a print method for objects of class "haploNet".
 
     o as.igraph.haploNet() and as.network.haploNet() gains a new
       option, altlinks, to output the alternative links in the
@@ -17,6 +19,8 @@ BUX FIXES
       nucleotides).
 
     o alleles2loci() did not handle correctly its 'population' option.
+
+    o amova() could not be called within a function. This is fixed.
 
 
 OTHER CHANGES

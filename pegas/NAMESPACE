@@ -9,7 +9,6 @@ export(alleles2loci, amova, as.igraph.haploNet, as.loci, as.network.haploNet,
        selectQUAL, site.spectrum, tajima.test, theta.h, theta.k, theta.msat,
        theta.s, theta.tree, VCFheader, VCFlabels, VCFloci, write.loci)
 
-## we try to limit the imports for the moment (2013-08-12)
 importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
            floating.pie.asp, perm.rowscols, rcoal, seg.sites)
 importFrom(adegenet, df2genind, genind2df)
@@ -40,6 +39,7 @@ S3method(is.snp, VCFinfo)
 #S3method(as.igraph, haploNet)
 #S3method(as.network, haploNet)
 S3method(plot, haploNet)
+S3method(print, haploNet)
 
 S3method("[", haplotype)
 S3method(plot, haplotype)

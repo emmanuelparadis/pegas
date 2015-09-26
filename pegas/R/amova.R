@@ -1,4 +1,4 @@
-## amova.R (2015-04-30)
+## amova.R (2015-09-24)
 
 ##   Analysis of Molecular Variance
 
@@ -15,21 +15,15 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
     ## keep the highest level first:
     if (length(rhs) > 1) gr.nms <- unlist(strsplit(gr.nms, "/"))
 
-    data.env <- if (is.null(data)) .GlobalEnv
+    data.env <- if (is.null(data)) environment(formula)
                 else as.environment(data)
 
-    if (any(sapply(gr.nms, function(x) ! is.factor(get(x, envir = data.env))))) {
-      ## <FIXME>
-      ## a warning instead of an error so that StAMMP on CRAN does not
-      ## fail. I wrote to Pemberton but got no reply (2014-08-21)
-      warning("elements in the rhs of the formula are not all factors")
-      ## stop("all elements in the rhs of the formula must be factors")
-      ## </FIXME>
-    }
+    if (any(sapply(gr.nms, function(x) ! is.factor(get(x, envir = data.env)))))
+        warning("elements in the rhs of the formula are not all factors")
 
     ## fix by Zhian Kamvar (2015-04-30)
     gr <- as.data.frame(sapply(gr.nms, get, envir = data.env))
-    y <- get(y.nms)
+    y <- get(y.nms, envir = environment(formula))
     if (any(is.na(y)))
         warning("at least one missing value in the distance object.")
     if (!is.squared) y <- y^2 # square the distances

@@ -1,5 +1,6 @@
 \name{haploNet}
 \alias{haploNet}
+\alias{print.haploNet}
 \alias{plot.haploNet}
 \alias{as.network.haploNet}
 \alias{as.igraph.haploNet}
@@ -10,6 +11,7 @@
 }
 \usage{
 haploNet(h, d = NULL)
+\method{print}{haploNet}(x, ...)
 \method{plot}{haploNet}(x, size = 1, col = "black", bg = "white",
      col.link = "black", lwd = 1, lty = 1, pie = NULL,
      labels = TRUE, font = 2, cex = 1, scale.ratio = 1,
