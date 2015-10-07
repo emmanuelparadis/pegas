@@ -1,4 +1,4 @@
-## getVCFinfo.R (2015-05-05)
+## getVCFinfo.R (2015-10-07)
 
 ##   Analysis of Molecular Variance
 
@@ -34,14 +34,14 @@
 VCFheader <- function(file)
 {
     f <- .VCFconnection(file)
-    x <- readBin(f, "raw", 1e5)
+    x <- readBin(f, "raw", 1e6)
     .getMETAvcf(x)$HEADER
 }
 
 VCFlabels <- function(file)
 {
     f <- .VCFconnection(file)
-    x <- readBin(f, "raw", 1e5)
+    x <- readBin(f, "raw", 1e6)
     strsplit(.getMETAvcf(x)$LABELS, "\t")[[1]][-(1:9)]
 }
 

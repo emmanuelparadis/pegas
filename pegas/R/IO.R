@@ -1,4 +1,4 @@
-## IO.R (2015-03-30)
+## IO.R (2015-10-07)
 
 ##   Input/Ouput
 
@@ -42,7 +42,7 @@ read.vcf <- function(file, from = 1, to = 1e4, which.loci = NULL, quiet = FALSE)
     if (is.null(which.loci)) which.loci <- from:to
     nLoci <- length(which.loci)
 
-    meta <- .getMETAvcf(readBin(f, "raw", 1e5))
+    meta <- .getMETAvcf(readBin(f, "raw", 1e6))
     labs <- strsplit(meta$LABELS, "\t")[[1]]
     nCol <- length(labs)
     n <- nCol - 9L
