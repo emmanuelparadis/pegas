@@ -1,10 +1,13 @@
-		CHANGES IN PEGAS VERSION 0.8-3
+		CHANGES IN PEGAS VERSION 0.8-2.1
 
 
 BUX FIXES
 
     o read.vcf() and VCFlabels() failed when the VCF file had a large
       header (> 1e5 bytes). The chunk read is now 1 Mb.
+
+    o read.vcf() made R crash when reading files with 1000s of loci
+      for a single individual.
 
 
 

@@ -35,7 +35,7 @@ R2.test(x, B = 1000, theta = 1, plot = TRUE, quiet = FALSE, ...)
   neutrality tests against population growth. \emph{Molecular Biology
     and Evolution}, \bold{19}, 2092--2100.
 
-  Sano, J.and Tachida, G. (2005) Gene genealogy and properties of test
+  Sano, J. and Tachida, G. (2005) Gene genealogy and properties of test
   statistics of neutrality under population growth. \emph{Genetics},
   \bold{169}, 1687--1697.
 }
