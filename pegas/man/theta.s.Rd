@@ -2,10 +2,12 @@
 \alias{theta.s}
 \title{Population Parameter THETA using Segregating Sites}
 \usage{
-theta.s(s, n, variance = FALSE)
+theta.s(x, ...)
+\method{theta.s}{DNAbin}(x, variance = FALSE, ...)
+\method{theta.s}{default}(x, n, variance = FALSE, ...)
 }
 \arguments{
-  \item{s}{a numeric giving the number of segregating sites.}
+  \item{x}{a numeric giving the number of segregating sites.}
   \item{n}{a numeric giving the number of sequences.}
   \item{variance}{a logical indicating whether the variance of the
     estimated THETA should be returned (\code{TRUE}), the default being
@@ -39,10 +41,12 @@ theta.s(s, n, variance = FALSE)
 }
 \examples{
 data(woodmouse)
+theta.s(woodmouse)
+theta.s(woodmouse, variance = TRUE)
+## using the default:
 s <- length(seg.sites(woodmouse))
 n <- nrow(woodmouse)
 theta.s(s, n)
-theta.s(s, n, variance = TRUE)
 }
 \keyword{manip}
 \keyword{univar}

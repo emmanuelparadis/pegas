@@ -36,6 +36,12 @@ S3method(hw.test, genind)
 S3method(is.snp, loci)
 S3method(is.snp, VCFinfo)
 
+S3method(nuc.div, DNAbin)
+S3method(nuc.div, haplotype)
+
+S3method(theta.s, default)
+S3method(theta.s, DNAbin)
+
 #S3method(as.igraph, haploNet)
 #S3method(as.network, haploNet)
 S3method(plot, haploNet)

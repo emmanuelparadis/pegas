@@ -1,4 +1,4 @@
-## theta.R (2013-12-03)
+## theta.R (2015-10-27)
 
 ##   Population Parameter THETA
 
@@ -8,7 +8,7 @@
 ## theta.tree: using a genealogy
 ## theta.msat: using micro-satellites
 
-## Copyright 2002-2013 Emmanuel Paradis
+## Copyright 2002-2015 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -47,16 +47,26 @@ theta.k <- function(x, n = NULL, k = NULL)
     uniroot(f, interval = c(1e-8, 100))$root
 }
 
-theta.s <- function(s, n, variance = FALSE)
+theta.s <- function(x, ...) UseMethod("theta.s")
+
+theta.s.default <- function(x, n, variance = FALSE, ...)
 {
-    a1 <- sum(1 / (1:(n - 1)))
-    th <- s / a1
+    b <- 1:(n - 1)
+    a1 <- sum(1/b)
+    th <- x/a1
     if (variance) {
-        a2 <- sum(1 / (1:(n - 1))^2)
-        var.th <- (a1^2 * s + a2 * s^2) / (a1^2 * (a1^2 + a2))
+        a2 <- sum(1/b^2)
+        var.th <- (a1^2 * x + a2 * x^2) / (a1^2 * (a1^2 + a2))
         th <- c(th, var.th)
     }
     th
+}
+
+theta.s.DNAbin <- function(x, variance = FALSE, ...)
+{
+    s <- length(seg.sites(x))
+    n <- nrow(x)
+    theta.s.default(s, n, variance = variance)
 }
 
 theta.tree <-

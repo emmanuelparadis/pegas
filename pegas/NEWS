@@ -1,4 +1,14 @@
-		CHANGES IN PEGAS VERSION 0.8-2.1
+		CHANGES IN PEGAS VERSION 0.8-2.2
+
+
+NEW FEATURES
+
+    o nuc.div() is now generic with methods for the classes "DNAbin"
+      and "haplotype".
+
+    o theta.s() is now generic with a default method (the previous
+      code; the argument 's' has been renamed 'x') and a method for
+      the class "DNAbin".
 
 
 BUX FIXES

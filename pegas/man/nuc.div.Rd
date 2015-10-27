@@ -3,10 +3,12 @@
 \title{Nucleotide Diversity}
 \description{
   This function computes the nucleotide diversity from a sample of DNA
-  sequences.
+  sequences or a set of haplotypes.
 }
 \usage{
-nuc.div(x, variance = FALSE, pairwise.deletion = FALSE)
+nuc.div(x, ...)
+\method{nuc.div}{DNAbin}(x, variance = FALSE, pairwise.deletion = FALSE, ...)
+\method{nuc.div}{haplotype}(x, variance = FALSE, pairwise.deletion = FALSE, ...)
 }
 \arguments{
   \item{x}{a matrix or a list which contains the DNA sequences.}
@@ -15,11 +17,17 @@ nuc.div(x, variance = FALSE, pairwise.deletion = FALSE)
   \item{pairwise.deletion}{a logical indicating whether to delete the
     sites with missing data in a pairwise way. The default is to delete
     the sites with at least one missing data for all sequences.}
+  \item{\dots}{further arguments to be passed.}
 }
 \details{
-  The nucleotide diversity is the sum of the number of differences
-  between pairs of sequences divided by the number of comparisons
-  (i.e. \eqn{n(n - 1)/2}, where \eqn{n} is the number of sequences).
+  This is a generic function with methods for classes \code{"DNAbin"}
+  and \code{"haplotype"}. The first method uses the sum of the number of
+  differences between pairs of sequences divided by the number of
+  comparisons (i.e. \eqn{n(n - 1)/2}, where \eqn{n} is the number of
+  sequences). The second method uses haplotype frequencies. It could be
+  that both methods give (slightly) different results because of missing
+  or ambiguous nucleotides: this is generally solved by setting
+  \code{pairwise.deletion = TRUE}.
 
   The variance of the estimated diversity uses formula (10.9) from Nei
   (1987). This applies only if all sequences are of the same lengths,
