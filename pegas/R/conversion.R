@@ -12,7 +12,7 @@ loci2genind <- function(x)
 {
     ipop <- which(names(x) == "population")
     pop <- if (length(ipop)) x[, ipop] else NULL
-    df2genind(as.matrix(x[, attr(x, "locicol")]), sep = "[/\\|]", pop = pop)
+    df2genind(as.matrix(x[, attr(x, "locicol")]), sep = "[/\\|]", pop = pop, NA.char=".")
 }
 
 as.loci <- function(x, ...) UseMethod("as.loci")
