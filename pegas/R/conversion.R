@@ -1,4 +1,4 @@
-## conversion.R (2015-08-27)
+## conversion.R (2015-11-10)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -12,7 +12,8 @@ loci2genind <- function(x)
 {
     ipop <- which(names(x) == "population")
     pop <- if (length(ipop)) x[, ipop] else NULL
-    df2genind(as.matrix(x[, attr(x, "locicol")]), sep = "[/\\|]", pop = pop)
+    df2genind(as.matrix(x[, attr(x, "locicol")]), sep = "[/\\|]",
+              pop = pop, NA.char = ".") # fix by Thibaut (2015-11-10)
 }
 
 as.loci <- function(x, ...) UseMethod("as.loci")
@@ -35,7 +36,7 @@ as.loci.genind <- function(x, ...)
 genind2loci <- function(x) as.loci.genind(x)
 
 ## to be sure that alleles are sorted in their ASCII code
-## (not in lexicographically order) whatever the locale
+## (not in lexicographical order) whatever the locale
 .sort.alleles <- function(x, index.only = FALSE)
 {
     locale <- Sys.getlocale("LC_COLLATE")

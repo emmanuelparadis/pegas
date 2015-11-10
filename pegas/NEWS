@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.8-2.2
+		CHANGES IN PEGAS VERSION 0.8-2.3
 
 
 NEW FEATURES
@@ -18,6 +18,8 @@ BUX FIXES
 
     o read.vcf() made R crash when reading files with 1000s of loci
       for a single individual.
+
+    o loci2genind() now treats '.' as a missing allele.
 
 
 
