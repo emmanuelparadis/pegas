@@ -7,7 +7,6 @@
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-## as.genind <- function(x)
 loci2genind <- function(x)
 {
     ipop <- which(names(x) == "population")
