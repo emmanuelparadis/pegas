@@ -82,9 +82,9 @@ amova(d ~ g, nperm = 100)
 
 ## 3 levels (quite slow):
 \dontrun{
-pop <- gl(64, 5, labels = paste("pop", 1:64))
-region <- gl(16, 20, labels = paste("region", 1:16))
-conti <- gl(4, 80, labels = paste("conti", 1:4))
+pop <- gl(64, 5, labels = paste0("pop", 1:64))
+region <- gl(16, 20, labels = paste0("region", 1:16))
+conti <- gl(4, 80, labels = paste0("conti", 1:4))
 dd <- as.dist(matrix(runif(320^2), 320))
 amova(dd ~ conti/region/pop, nperm = 100)
 }}

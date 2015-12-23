@@ -1,4 +1,4 @@
-## amova.R (2015-09-24)
+## amova.R (2015-12-23)
 
 ##   Analysis of Molecular Variance
 
@@ -47,7 +47,8 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
         }
         ## now differentiate to get the SSDs:
         if (Nlv > 1)
-            for (i in Nlv:2) SSD[i] <- SSD[i] - SSD[i + 1]
+            for (i in 2:Nlv) SSD[i] <- SSD[i] - SSD[i + 1]
+###          for (i in Nlv:2) SSD[i] <- SSD[i] - SSD[i + 1] # old line replaced by the previous one on 2015-12-22
         SSD[1] <- SSD[Nlv + 2] - sum(SSD[-(Nlv + 2)])
         SSD
     }
@@ -136,24 +137,26 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
                 varcoef = ncoef, varcomp = sigma2, call = match.call())
     class(res) <- "amova"
 
+### Below, "pop" is used for the lowest level of the geo structure,
+### and "region" the one just above pop.
     if (nperm) {
-        rSigma2 <- matrix(0, nperm, length(sigma2))
-        ## First shuffle all individuals among all pops to test
-        ## the within pop var comp; if there is only one level,
-        ## this is used to test both var components.
+        rSigma2 <- matrix(0, nperm, length(sigma2)) # Note that length(sigma2) == Nlv + 1
+        ## First shuffle all individuals among all pops to assess the
+        ## within-pop var components; if there is only one level, this
+        ## is used to test both var components and no need to go further.
         j <- if (Nlv == 1) 1:2 else Nlv + 1
         for (i in 1:nperm) {
             rY <- perm.rowscols(y, n)
-            ## the hierarchical structure is not changed so just
-            ## need to recalculate the SSD and var comp
+            ## the hierarchical structure is not changed so
+            ## need to recalculate only the SSD and var comp
             rSSD <- getSSD(rY, gr, Nlv, N, n)
             rSigma2[i, j] <- getVarComp(rSSD/df, Nlv, ncoef)[j]
         }
         if (Nlv > 1) {
-            ## for the lowest level, we just permute individuals within the
+            ## for the lowest level (i.e., pop), we just permute individuals within the
             ## level just above, so the hierarchical structure is unchanged
             j <- Nlv
-            ## 'L' contains the indices of the individuals for each level just above
+            ## 'L' contains the indices of the individuals for each region
             L <- lapply(levels(gr[, j - 1]), function(x) which(gr[, j - 1] == x))
             for (i in 1:nperm) {
                 rind <- unlist(lapply(L, sample))
@@ -162,6 +165,7 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
                 rSigma2[i, j] <- getVarComp(rSSD/df, Nlv, ncoef)[j]
             }
             if (Nlv > 2) {
+                ## code used from the 2nd lowest level up to the penultimate one
                 for (j in (Nlv - 1):2) {
                     above <- gr[, j - 1]
                     L <- lapply(levels(above), function(x) which(above == x))
@@ -180,17 +184,13 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
                 }
             }
             ## for the highest level permute the level below
-###L <- lapply(levels(gr[, 1]), function(x) which(gr[, 1] == x))
-            Higr <- gr[, 1][cumsum(N[[2]])] # a quel niveau le plus eleve appartient le 2nd niveau?
-            N2 <- N[[2]] # les effectifs correspondants
-            rGR <- gr # on fait une copie de gr dont la 1ere colonne sera changee ci-dessous
+            N2 <- N[[2]]
+            Higr <- gr[, 1][cumsum(N2)] # find at what highest level the 2nd-most one belongs to
+            rGR <- gr # copy gr whose 1st column will be changed below
             for (i in 1:nperm) {
-###rind <- unlist(sample(L))
-###rY <- y[rind, rind]
-###rGR <- gr[rind, ]
-                ## par le mapply(rep, sample....) on conserve la structure sous le niveau le plus eleve
-                ## et on assigne les structures a partir du 2nd niveau dans le 1er niveau
-                rGR[, 1] <- unlist(mapply(rep, sample(Higr), each = N[[2]]))
+                ## with mapply(rep, sample....) the structure below the highest level is kept
+                ## and the structures are assigned from the 2nd level within the 1st one
+                rGR[, 1] <- unlist(mapply(rep, sample(Higr), each = N2, SIMPLIFY = FALSE))
                 rN <- lapply(rGR, tabulate)
                 rSSD <- getSSD(rY, rGR, Nlv, rN, n)
                 rDF <- getDF(rGR, Nlv, rN, n)

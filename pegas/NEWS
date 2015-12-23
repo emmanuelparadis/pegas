@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.8-2.3
+		CHANGES IN PEGAS VERSION 0.8-2.4
 
 
 NEW FEATURES
@@ -20,6 +20,9 @@ BUX FIXES
       for a single individual.
 
     o loci2genind() now treats '.' as a missing allele.
+
+    o amova() with three levels did not work correctly: several bugs
+      were fixed.
 
 
 
