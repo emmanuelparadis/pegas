@@ -16,8 +16,9 @@ importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
            seg.sites)
 importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, abline, barplot, hist, lines, locator, mtext, par,
-           polygon, plot, rect, segments, strheight, symbols, text)
-importFrom(grDevices, rainbow)
+           polygon, plot, plot.default, rect, segments, strheight, symbols,
+           text)
+importFrom(grDevices, colorRampPalette, rainbow)
 importFrom(stats, as.dist, cophenetic, density, dist, integrate, na.omit,
            nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois, uniroot,
            weighted.mean)
