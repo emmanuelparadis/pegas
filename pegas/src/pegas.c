@@ -1,6 +1,6 @@
-/* pegas.c    2015-07-08 */
+/* pegas.c    2016-03-16 */
 
-/* Copyright 2015 Emmanuel Paradis */
+/* Copyright 2015-2016 Emmanuel Paradis */
 
 /* This file is part of the R-package `pegas'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -46,6 +46,49 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo)
     }
 }
 
+SEXP unique_haplotype_loci(SEXP x, SEXP NROW, SEXP NCOL)
+{
+    SEXP res;
+    int nr, nc, i, j, k, *H, flag;
+
+    PROTECT(x = coerceVector(x, STRSXP));
+    PROTECT(NROW = coerceVector(NROW, INTSXP));
+    PROTECT(NCOL = coerceVector(NCOL, INTSXP));
+
+    nr = INTEGER(NROW)[0];
+    nc = INTEGER(NCOL)[0];
+
+    PROTECT(res = allocVector(INTSXP, nc));
+    H = INTEGER(res);
+    memset(H, 0, nc * sizeof(int));
+
+    j = 0;
+    while (j < nc - 1) {
+	if (!H[j]) {
+	    k = j + 1;
+	    while (k < nc) {
+		if (!H[k]) {
+		    i = 0;
+		    flag = 1; /* initially the two haplotypes are considered identical */
+		    while (i < nr) {
+			if (strcmp(CHAR(STRING_ELT(x, i + j*nr)), CHAR(STRING_ELT(x, i + k*nr)))) { /* the strings are different */
+			    flag = 0;
+			    break;
+			}
+			i++;
+		    }
+		    if (flag) H[k] = j + 1;
+		}
+		k++;
+	    }
+	}
+	j++;
+    }
+
+    UNPROTECT(4);
+    return res;
+}
+
 static R_CMethodDef C_entries[] = {
     {"haplotype_DNAbin", (DL_FUNC) &haplotype_DNAbin, 4},
     {NULL, NULL, 0}
@@ -63,6 +106,7 @@ static R_CallMethodDef Call_entries[] = {
     {"extract_POS", (DL_FUNC) &extract_POS, 3},
     {"extract_REF", (DL_FUNC) &extract_REF, 3},
     {"build_factor_loci", (DL_FUNC) &build_factor_loci, 2},
+    {"unique_haplotype_loci", (DL_FUNC) &unique_haplotype_loci, 3},
     {NULL, NULL, 0}
 };
 

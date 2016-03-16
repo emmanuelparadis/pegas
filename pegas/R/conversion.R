@@ -1,8 +1,8 @@
-## conversion.R (2015-11-10)
+## conversion.R (2016-03-16)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2015 Emmanuel Paradis
+## Copyright 2009-2016 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -142,6 +142,27 @@ alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
     names(obj) <- loci.nms
     obj <- as.data.frame(obj, row.names = idx)
     obj <- as.loci(obj)
-    if (withPop) obj$population <- pop
+    if (withPop) obj$population <- factor(pop)
     obj
+}
+
+na.omit.loci <- function(object, na.alleles = c("0", "."), ...)
+{
+    pat <- c(paste0("^", na.alleles, "/"), paste0("/", na.alleles, "$"), paste0("/", na.alleles, "/"))
+    pat <- paste(pat, collapse = "|")
+    drop <- logical(nrow(object))
+    M <- 1:ncol(object)
+    for (i in attr(object, "locicol")) {
+        x <- object[[i]]
+        if (length(na <- grep(pat, x))) drop[na] <- TRUE
+        if (any(na <- is.na(x))) drop[na] <- TRUE
+    }
+    object <- object[!drop, ]
+    for (i in M) {
+        if (is.factor(x <- object[[i]])) {
+            drop <- tabulate(x, nlevels(x)) == 0
+            if (any(drop)) object[[i]] <- factor(x)
+        }
+    }
+    object
 }

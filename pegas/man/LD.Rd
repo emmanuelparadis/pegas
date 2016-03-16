@@ -74,7 +74,9 @@ LD2(x, locus = 1:2, details = TRUE)
   inference for linkage disequilibrium with multiple alleles.
   \emph{Genetics}, \bold{180}, 533--545.
 }
-\seealso{\code{\link{haplotype.loci}}, \code{\link{is.phased}}}
+\seealso{
+  \code{\link{haplotype.loci}}, \code{\link{is.phased}},
+  \code{\link{LDscan}}}
 \examples{
 data(jaguar)
 LD2(jaguar, details = FALSE)

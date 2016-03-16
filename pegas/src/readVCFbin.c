@@ -1,6 +1,6 @@
-/* readVCFbin.c    2015-10-13 */
+/* readVCFbin.c    2016-01-19 */
 
-/* Copyright 2015 Emmanuel Paradis */
+/* Copyright 2015-2016 Emmanuel Paradis */
 
 /* This file is part of the R-package `pegas'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -242,10 +242,12 @@ SEXP build_factor_loci(SEXP x, SEXP N)
 		buf[nunique] = i;
 		p[j] = ++nunique;
 	    }
-	    i = i1;
+	    /* DELETE THIS LINE TO FIX A BUG (2016-01-19): i = i1; */
 	}
 
-	if (RIGHT == 0x3a) while (xr[i] != 0x09) i++;
+	/* CHANGE THE LINE BELOW BY THE NEXT ONE, SAME FIX THAN ABOVE (2016-01-19): */
+	/* if (RIGHT == 0x3a) while (xr[i] != 0x09) i++; */
+	while (xr[i] != 0x09) i++;
 
 	/* treat the last individual separately */
 	done = 0;

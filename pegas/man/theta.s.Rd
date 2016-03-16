@@ -1,5 +1,7 @@
 \name{theta.s}
 \alias{theta.s}
+\alias{theta.s.DNAbin}
+\alias{theta.s.default}
 \title{Population Parameter THETA using Segregating Sites}
 \usage{
 theta.s(x, ...)
@@ -12,6 +14,7 @@ theta.s(x, ...)
   \item{variance}{a logical indicating whether the variance of the
     estimated THETA should be returned (\code{TRUE}), the default being
     \code{FALSE}.}
+  \item{\dots}{arguments passed to methods.}
 }
 \description{
   This function computes the population parameter THETA using the

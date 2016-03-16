@@ -1,19 +1,22 @@
 useDynLib(pegas, .registration = TRUE)
 
-export(alleles2loci, amova, as.igraph.haploNet, as.loci, as.network.haploNet,
-       diffHaplo, dist.haplotype.loci, expand.genotype, Fst, genind2loci,
-       geod, geoTrans, getAlleles, getGenotypes, getINFO, getPloidy, H,
-       haploNet, haploFreq, haplotype, heterozygosity, hw.test, is.phased,
-       is.snp, LD, LD2, loci2genind, mst, MMD, nuc.div, proba.genotype,
-       R2.test, rangePOS, read.gtx, read.loci, read.vcf, replot, rr.test,
-       selectQUAL, site.spectrum, tajima.test, theta.h, theta.k, theta.msat,
-       theta.s, theta.tree, VCFheader, VCFlabels, VCFloci, write.loci)
+export(alleles2loci, amova, as.igraph.haploNet, as.loci,
+       as.network.haploNet, diffHaplo, dist.haplotype.loci,
+       expand.genotype, Fst, genind2loci, geod, geoTrans, getAlleles,
+       getGenotypes, getINFO, getPloidy, H, haploNet, haploFreq,
+       haplotype, heterozygosity, hw.test, is.phased, is.snp, LD, LD2,
+       LDscan, LDmap, loci2genind, mst, MMD, nuc.div, proba.genotype,
+       R2.test, rangePOS, read.gtx, read.loci, read.vcf, replot,
+       rr.test, selectQUAL, site.spectrum, tajima.test, theta.h,
+       theta.k, theta.msat, theta.s, theta.tree, VCFheader, VCFlabels,
+       VCFloci, write.loci)
 
 importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
-           floating.pie.asp, perm.rowscols, rcoal, seg.sites)
+           floating.pie.asp, perm.rowscols, polar2rect, rcoal, rect2polar,
+           seg.sites)
 importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, abline, barplot, hist, lines, locator, mtext, par,
-           plot, segments, strheight, symbols, text)
+           polygon, plot, rect, segments, strheight, symbols, text)
 importFrom(grDevices, rainbow)
 importFrom(stats, as.dist, cophenetic, density, dist, integrate, na.omit,
            nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois, uniroot,
@@ -58,6 +61,7 @@ S3method(plot, haplotype.loci)
 S3method("[", loci)
 S3method(cbind, loci)
 S3method(edit, loci)
+S3method(na.omit, loci)
 S3method(print, loci)
 S3method(rbind, loci)
 S3method(summary, loci)

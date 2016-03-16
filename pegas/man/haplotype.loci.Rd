@@ -7,7 +7,7 @@
   This function extracts haplotypes from phased genotypes.
 }
 \usage{
-\method{haplotype}{loci}(x, locus = 1:2, quiet = FALSE, ...)
+\method{haplotype}{loci}(x, locus = 1:2, quiet = FALSE, compress = TRUE, ...)
 \method{plot}{haplotype.loci}(x, ...)
 dist.haplotype.loci(x)
 }
@@ -17,6 +17,10 @@ dist.haplotype.loci(x)
   \item{locus}{a vector of integers giving the loci to analyse.}
   \item{quiet}{a logical value specifying whether to not print the
     progress of the analysis (\code{FALSE} by default).}
+  \item{compress}{by default only the unique haplotypes are returned
+    with their frequencies. If \code{compress = FALSE}, a matrix with
+    all observed haplotypes is returned (with the number of columns
+    equals to the number of individuals times the ploidy level).}
   \item{\dots}{arguments passed to and from methods.}
 }
 \details{

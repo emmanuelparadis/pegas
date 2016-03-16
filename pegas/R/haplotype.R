@@ -1,8 +1,8 @@
-## haplotype.R (2015-09-24)
+## haplotype.R (2016-03-16)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
-## Copyright 2009-2015 Emmanuel Paradis, 2013 Klaus Schliep
+## Copyright 2009-2016 Emmanuel Paradis, 2013 Klaus Schliep
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -177,7 +177,7 @@ haploNet <- function(h, d = NULL)
 print.haploNet <- function(x, ...)
 {
     cat("Haplotype network with:\n")
-    cat("  ", length(attr(x, "freq")), "haplotypes\n")
+    cat("  ", length(attr(x, "labels")), "haplotypes\n")
     n <- nrow(x)
     cat("  ", n, "links\n")
     cat("  ", nrow(attr(x, "alter.links")), "alternative links\n")
@@ -636,7 +636,7 @@ as.igraph.haploNet <- function(x, directed = FALSE, use.labels = TRUE,
     graph.edgelist(y, directed = directed, ...)
 }
 
-haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, ...)
+haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, compress = TRUE, ...)
 {
     x <- x[, attr(x, "locicol")[locus]]
     nloc <- ncol(x)
@@ -646,69 +646,52 @@ haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, ...)
     n <- nrow(x)
     if (any(!s)) {
         x <- x[s, ]
-        warning(paste0("dropping ", sum(!s), " observations out of ", n, " due to unphased genotype(s)"))
+        warning(paste0("dropping ", sum(!s), " observation(s) out of ", n, " due to unphased genotype(s)"))
         n <- nrow(x)
     }
 
 ### NOTE: trying to find identical rows first does not speed calculations
 
-    ## initialise:
-    res <- matrix("", nloc, 0L)
-    freq <- integer()
+    ## initialise (works for all levels of ploidy)
+    nh <- getPloidy(x[, 1, drop = FALSE]) # the number of haplotypes
+    res <- matrix("", nloc, nh * n)
+    buf <- character(nloc) # prepare a buffer for the genotypes
 
     class(x) <- "data.frame" # drop "loci"
-    ## the two lines below are the same as y <- as.matrix(sapply(x, as.integer))
+    ## the two lines below are the same than: y <- as.matrix(sapply(x, as.integer))
     ## but slightly faster
     y <- matrix(NA_integer_, n, nloc)
     for (i in seq_len(nloc)) y[, i] <- as.integer(x[[i]])
 
     GENO <- lapply(x, levels)
 
+    k <- 1:nh
     for (i in seq_len(n)) { # loop along each individual
         if (!quiet && !(i %% 100)) cat("\rAnalysing individual no.", i, "/", n)
-        tmp <- mapply("[", GENO, y[i, ]) # get the genotype for all loci as char strings
-        tmp <- matrix(unlist(strsplit(tmp, "|", fixed = TRUE)), nrow = nloc, byrow = TRUE) # arrange the alleles in a matrix
-        ntmp <- ncol(tmp) # the number of haplotypes
-        ftmp <- rep(1L, ntmp) # and their frequencies
-
-        ## if more than one haplotype was observed (ie, not haploid), we
-        ## check whether the same haplotype was observed several times
-        if (ntmp > 1) {
-            for (j in 1:(ntmp - 1)) {
-                for (k in (j + 1):ntmp) {
-                    if (identical(tmp[, j], tmp[, k])) {
-                        ftmp[j] <- ftmp[j] + 1L
-                        ftmp[k] <- 0L
-                    }
-                }
-            }
-        }
-        if (any(s <- ftmp == 0)) {
-            tmp <- tmp[, !s, drop = FALSE]
-            ftmp <- ftmp[!s]
-            ntmp <- ncol(tmp)
-        }
-
-        ## now check if these haplotypes were already observed or not:
-        new <- rep(TRUE, ntmp)
-        if (ncol(res) > 0) {
-            for (k in seq_len(ntmp)) {
-                for (j in seq_len(ncol(res))) {
-                    if (identical(res[, j], tmp[, k])) {
-                        freq[j] <- freq[j] + ftmp[k]
-                        new[k] <- FALSE
-                        break
-                    }
-                }
-            }
-        }
-
-        ## if needed add the new haplotypes:
-        if (any(new)) {
-            res <- cbind(res, tmp[, new])
-            freq <- c(freq, ftmp[new])
-        }
+        tmp <- buf # get the genotype for all loci as char strings
+        for (j in seq_len(nloc)) tmp[j] <- GENO[[j]][y[i, j]] # a bit faster than mapply()
+        tmp <- unlist(strsplit(tmp, "|", fixed = TRUE, useBytes = TRUE))
+        dim(tmp) <- c(nh, nloc) # arrange the alleles in a matrix...
+        res[, k] <- t(tmp)      # faster than using matrix(, byrow = TRUE)
+        k <- k + nh
     }
+
+    if (!compress) {
+        rownames(res) <- colnames(x)
+        return(res)
+    }
+
+    nc <- ncol(res)
+    h <- .Call(unique_haplotype_loci, res, nloc, nc)
+    u <- h == 0
+    if (all(u)) freq <- rep(1L, nc) else {
+        i <- which(u)
+        res <- res[, i, drop = FALSE]
+        h[u] <- i
+        freq <- tabulate(h)
+        freq <- freq[freq > 0]
+    }
+
     if (!quiet) cat("\rAnalysing individual no.", n, "/", n, "\n")
 
     rownames(res) <- colnames(x)
@@ -866,3 +849,133 @@ LD2 <- function(x, locus = 1:2, details = TRUE)
     res
 }
 
+LDscan <- function(x, quiet = FALSE)
+{
+    nloci <- ncol(x)
+    hap <- haplotype.loci(x, seq_len(nloci), TRUE, FALSE)
+    .LD <- function (x, loc1, loc2) {
+        nij <- table(hap[loc1, ], hap[loc2, ])
+        N <- sum(nij)
+        pij <- nij/N
+        pi <- rowSums(pij)
+        qj <- colSums(pij)
+        eij <- pi %o% qj * N
+        pi <- rep(pi, ncol(pij))
+        qj <- rep(qj, each = nrow(pij))
+        D <- pij - pi * qj
+        rij <- D/sqrt(pi * (1 - pi) * qj * (1 - qj))
+        ## df <- (k - 1) * (m - 1)
+        ## T2 <- df * N * sum(rij^2)/(k * m)
+        ## res <- c(T2 = T2, df = df, `P-val` = pchisq(T2, df, lower.tail = FALSE))
+        abs(rij[1])
+    }
+    M <- nloci * (nloci - 1) / 2
+    ldx <- numeric(M)
+    k <- 0L
+    for (i in 1:(nloci - 1)) {
+        for (j in (i + 1):nloci) {
+            k <- k + 1L
+            ldx[k] <- .LD(x, i, j)
+            if (!quiet) cat("\r", round(100 * k / M), "%")
+        }
+    }
+    cat("\n")
+    class(ldx) <- "dist"
+    attr(ldx, "Size") <- nloci
+    attr(ldx, "Labels") <- names(x)
+    attr(ldx, "Diag") <- attr(ldx, "Upper") <- FALSE
+    attr(ldx, "call") <- match.call()
+    ldx
+}
+
+LDmap <- function(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
+                  angle = 0, asp = 1, cex = 1, scale.legend = 0.8, ...)
+{
+    if (!is.null(POS) & angle != 0) {
+        warning("'angle' set to 0 since 'POS' is provided")
+        angle <- 0
+    }
+    if (is.matrix(d)) d <- as.dist(d)
+    nloci <- attr(d, "Size")
+    n <- nloci - 1
+    m <- nloci * n /2
+    nl <- if (is.null(col)) 10 else length(col) # Nb of colour levels
+    if (is.null(breaks)) {
+        breaks <- seq(min(d), max(d), length.out = nl + 1)
+    } else {
+        nl <- length(breaks) - 1
+        if (!is.null(col))
+            col <- rep(col, length.out = nl)
+    }
+    if (is.null(col))
+        col <- colorRampPalette(c("lightyellow", "red"))(nl)
+
+    co <- col[cut(d, breaks, include.lowest = TRUE)]
+
+    x.lab.loci <- 1:nloci - 0.75
+    y.lab.loci <- 1:nloci - 0.25
+
+    use.rect <- angle == 45
+
+    ## assume angle = 45
+    yb <- unlist(mapply(":", 1:n, n, USE.NAMES = FALSE))
+    yt <- yb + 1
+    xl <- unlist(mapply(rep, 0:(n - 1), n:1, USE.NAMES = FALSE))
+    xr <- xl + 1
+
+    if (!use.rect) {
+        xx <- rbind(xl, xl, xr, xr, rep(NA, m))
+        yy <- rbind(yb, yt, yt, yb, rep(NA, m))
+        dim(xx) <- dim(yy) <- NULL
+        tmp <- rect2polar(xx, yy)
+        new.angle <- tmp$angle + 2 * pi * (angle - 45)/360
+        xy <- polar2rect(tmp$r, new.angle)
+        X <- range(xy$x, na.rm = TRUE)
+        Y <- range(xy$y, na.rm = TRUE)
+        ## adjust the coordinates of the labels of the loci:
+        tmp <- rect2polar(x.lab.loci, y.lab.loci)
+        new.angle <- tmp$angle + 2 * pi * (angle - 45)/360
+        tmp <- polar2rect(tmp$r, new.angle)
+        x.lab.loci <- tmp$x
+        y.lab.loci <- tmp$y
+    } else {
+        X <- Y <- c(0, nloci)
+    }
+
+    if (!is.null(POS)) Y[1] <- -0.1 * Y[2]
+
+    plot.default(X, Y, "n", axes = FALSE, xlab = "", ylab = "",
+                 asp = asp, ...)
+    if (use.rect) rect(xl, yb, xr, yt, col = co, border = border)
+    else polygon(xy, col = co, border = border)
+
+    psr <- par("usr")
+
+    if (!is.null(POS)) {
+        f <- function(x, mn, mx) {
+            x <- x - mn # translate to the origin
+            x <- x / mx # rescale to 1
+            (psr[2] - psr[1]) * x + psr[1]
+        }
+        POS <- as.double(POS)
+        mn <- POS[1]
+        mx <- POS[nloci] - mn
+        AT <- pretty(POS)
+        at <- f(AT, mn, mx)
+        segments(psr[1], Y[1], psr[2], Y[1], lwd = 2)
+        segments(at, Y[1] - 1, at, Y[1])
+        text(at, Y[1], AT, adj = c(0.5, 2), cex = cex)
+        segments(f(POS, mn, mx), Y[1], x.lab.loci, y.lab.loci, lty = 3)
+        mtext("Position", 1, 1.5, cex = cex)
+    }
+
+    x1 <- psr[1] + scale.legend
+    y1 <- seq(psr[4] - scale.legend * nl, psr[4] - scale.legend,
+              by = scale.legend)
+    y2 <- y1 + scale.legend
+    rect(psr[1], y1, x1, y2, col = col, border = border)
+    text(x1, c(y1[1], y2), round(breaks, 3), adj = -0.1, xpd = TRUE,
+         cex = cex)
+    text(x.lab.loci, y.lab.loci, attr(d, "Labels"),
+         srt = angle - 90, adj = 0, cex = cex)
+}

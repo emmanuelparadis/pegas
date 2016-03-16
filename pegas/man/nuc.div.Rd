@@ -1,5 +1,7 @@
 \name{nuc.div}
 \alias{nuc.div}
+\alias{nuc.div.DNAbin}
+\alias{nuc.div.haplotype}
 \title{Nucleotide Diversity}
 \description{
   This function computes the nucleotide diversity from a sample of DNA

@@ -1,7 +1,14 @@
-		CHANGES IN PEGAS VERSION 0.8-2.4
+		CHANGES IN PEGAS VERSION 0.8-2.7
 
 
 NEW FEATURES
+
+    o The new functions LDscan and LDmap analyse linkage
+      disequilibrium with multiple loci and phased genotypes.
+
+    o The new function na.omit.loci drops observations with unclearly
+      identified genotypes. By default, "0" and "." are considered as
+      missing alleles.
 
     o nuc.div() is now generic with methods for the classes "DNAbin"
       and "haplotype".
@@ -9,6 +16,10 @@ NEW FEATURES
     o theta.s() is now generic with a default method (the previous
       code; the argument 's' has been renamed 'x') and a method for
       the class "DNAbin".
+
+    o haplotype.loci() has a new option (compress) to return all
+      observed haplotypes without checking their frequencies (mostly
+      for internal use).
 
 
 BUX FIXES
@@ -23,6 +34,17 @@ BUX FIXES
 
     o amova() with three levels did not work correctly: several bugs
       were fixed.
+
+    o read.vcf() failed to read correctly the last genotype in a row
+      if the previous one was different from all the others and if
+      only the genotypes are in the file.
+
+    o alleles2loci() now returns the 'population' column as a factor.
+
+
+OTHER CHANGES
+
+    o haplotype.loci() is 5 to 10 times faster.
 
 
 
