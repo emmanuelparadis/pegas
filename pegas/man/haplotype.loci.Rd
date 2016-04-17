@@ -7,7 +7,8 @@
   This function extracts haplotypes from phased genotypes.
 }
 \usage{
-\method{haplotype}{loci}(x, locus = 1:2, quiet = FALSE, compress = TRUE, ...)
+\method{haplotype}{loci}(x, locus = 1:2, quiet = FALSE, compress = TRUE,
+           check.phase = TRUE, ...)
 \method{plot}{haplotype.loci}(x, ...)
 dist.haplotype.loci(x)
 }
@@ -21,6 +22,8 @@ dist.haplotype.loci(x)
     with their frequencies. If \code{compress = FALSE}, a matrix with
     all observed haplotypes is returned (with the number of columns
     equals to the number of individuals times the ploidy level).}
+  \item{check.phase}{a logical value specifying whether to check if the
+    individual genotypes are phased.}
   \item{\dots}{arguments passed to and from methods.}
 }
 \details{
@@ -29,6 +32,11 @@ dist.haplotype.loci(x)
 
   \code{dist.haplotype.loci} computes pairwise distances among
   haplotypes by counting the number of different alleles.
+
+  Checking whether the genotypes are phased can be time consuming with
+  very big data sets. It may be useful to set \code{check.phase = FALSE}
+  if several analyses are done on the same data and no warning was
+  issued after the first scan, or you are sure that the genotypes are phased.
 }
 \note{
   \code{haplotype} is a generic function with methods for objects of

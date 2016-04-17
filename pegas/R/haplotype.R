@@ -1,4 +1,4 @@
-## haplotype.R (2016-03-16)
+## haplotype.R (2016-04-17)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -636,45 +636,59 @@ as.igraph.haploNet <- function(x, directed = FALSE, use.labels = TRUE,
     graph.edgelist(y, directed = directed, ...)
 }
 
-haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, compress = TRUE, ...)
+haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, compress = TRUE,
+                           check.phase = TRUE, ...)
 {
     x <- x[, attr(x, "locicol")[locus]]
     nloc <- ncol(x)
-
-    ## drop the rows with at least one unphased genotype:
-    s <- apply(is.phased(x), 1, all)
     n <- nrow(x)
-    if (any(!s)) {
-        x <- x[s, ]
-        warning(paste0("dropping ", sum(!s), " observation(s) out of ", n, " due to unphased genotype(s)"))
-        n <- nrow(x)
+
+    if (check.phase) {
+        ## drop the rows with at least one unphased genotype:
+        s <- apply(is.phased(x), 1, all)
+        if (any(!s)) {
+            x <- x[s, ]
+            warning(paste0("dropping ", sum(!s), " observation(s) out of ", n, " due to unphased genotype(s)"))
+            n <- nrow(x)
+        }
     }
 
 ### NOTE: trying to find identical rows first does not speed calculations
 
     ## initialise (works for all levels of ploidy)
     nh <- getPloidy(x[, 1, drop = FALSE]) # the number of haplotypes
+    names(nh) <- NULL
     res <- matrix("", nloc, nh * n)
-    buf <- character(nloc) # prepare a buffer for the genotypes
-
     class(x) <- "data.frame" # drop "loci"
-    ## the two lines below are the same than: y <- as.matrix(sapply(x, as.integer))
-    ## but slightly faster
-    y <- matrix(NA_integer_, n, nloc)
-    for (i in seq_len(nloc)) y[, i] <- as.integer(x[[i]])
 
-    GENO <- lapply(x, levels)
+### unlist(lapply()) is a bit faster than filling the matrix with 'for'
+### thanks to use.names = FALSE in unlist(). The old code is:
+###    y <- matrix(NA_integer_, n, nloc)
+###    for (j in seq_len(nloc)) y[, j] <- as.integer(x[[j]])
+    y <- unlist(lapply(x, as.character), FALSE, FALSE)
+    dim(y) <- c(n, nloc)
+
+    mysplit <- function(x)
+        unlist(strsplit(x, "|", fixed = TRUE, useBytes = TRUE), FALSE, FALSE)
 
     k <- 1:nh
     for (i in seq_len(n)) { # loop along each individual
         if (!quiet && !(i %% 100)) cat("\rAnalysing individual no.", i, "/", n)
-        tmp <- buf # get the genotype for all loci as char strings
-        for (j in seq_len(nloc)) tmp[j] <- GENO[[j]][y[i, j]] # a bit faster than mapply()
-        tmp <- unlist(strsplit(tmp, "|", fixed = TRUE, useBytes = TRUE))
+        tmp <- mysplit(y[i, ])
         dim(tmp) <- c(nh, nloc) # arrange the alleles in a matrix...
         res[, k] <- t(tmp)      # faster than using matrix(, byrow = TRUE)
         k <- k + nh
     }
+
+### experimental code to run the above loop with parallel
+### foo <- function(i) {
+###     tmp <- mysplit(y[i, ])
+###     dim(tmp) <- c(nh, nloc)
+###     t(tmp)
+### }
+### res <- mclapply(seq_len(n), foo)
+### res <- unlist(res, FALSE, FALSE)
+### dim(res) <- c(nloc, n * nh)
 
     if (!compress) {
         rownames(res) <- colnames(x)
@@ -682,7 +696,7 @@ haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, compress = TRUE, ...)
     }
 
     nc <- ncol(res)
-    h <- .Call(unique_haplotype_loci, res, nloc, nc)
+    h <- .Call(pegas:::unique_haplotype_loci, res, nloc, nc)
     u <- h == 0
     if (all(u)) freq <- rep(1L, nc) else {
         i <- which(u)
