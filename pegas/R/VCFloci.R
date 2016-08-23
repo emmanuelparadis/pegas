@@ -1,8 +1,8 @@
-## getVCFinfo.R (2015-10-07)
+## VCFloci.R (2016-07-20)
 
-##   Analysis of Molecular Variance
+##   Handling VCF Files
 
-## Copyright 2015 Emmanuel Paradis
+## Copyright 2015-2016 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -202,8 +202,11 @@ getINFO <- function(x, what = "DP", as.is = FALSE)
     regexp <- paste0("^.*", what, "=")
     tmp <- gsub(regexp, "", INFO)
     tmp <- gsub(";.+$", "", tmp)
-    if (!as.is)
+    if (!as.is) {
+        op <- options(warn = -1)
+        on.exit(options(op))
         if (!all(is.na(as.numeric(tmp[1:10]))))
             tmp <- as.numeric(tmp)
+    }
     tmp
 }

@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.9-0.1
+		CHANGES IN PEGAS VERSION 0.9-0.2
 
 
 NEW FEATURES
@@ -6,6 +6,18 @@ NEW FEATURES
     o haplotype.loci() has a new option (check.phase) to optionally
       skip the check of genotype phasing. The code is also now 2-5
       times faster.
+
+    o haploNet() has a new option, getProb = TRUE, to control whether
+      to calculate Templeton's probabilities (in case of difficulties
+      with very divergent sequences).
+
+
+BUG FIXES
+
+    o plot.haploNet() failed with two haplotypes.
+
+    o loci2genind() handles correctly missing alleles.
+
 
 
 		CHANGES IN PEGAS VERSION 0.9

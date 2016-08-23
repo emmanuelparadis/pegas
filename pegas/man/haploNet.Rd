@@ -10,7 +10,7 @@
   and two conversion functions towards other packages.
 }
 \usage{
-haploNet(h, d = NULL)
+haploNet(h, d = NULL, getProb = TRUE)
 \method{print}{haploNet}(x, ...)
 \method{plot}{haploNet}(x, size = 1, col = "black", bg = "white",
      col.link = "black", lwd = 1, lty = 1, pie = NULL,
@@ -23,7 +23,10 @@ haploNet(h, d = NULL)
 }
 \arguments{
   \item{h}{an object of class \code{"haplotype"}.}
-  \item{d}{an object giving the distances among haplotypes (see details).}
+  \item{d}{an object giving the distances among haplotypes (see
+    details).}
+  \item{getProb}{a logical specifying whether to calculate Templeton's
+    probabilities (see details).}
   \item{x}{an object of class \code{"haploNet"}.}
   \item{size}{a numeric vector giving the diameter of the circles
     representing the haplotypes: this is in the same unit than the links
@@ -80,6 +83,11 @@ haploNet(h, d = NULL)
   Users may specify their own distance with the argument \code{d}. There
   is no check of labels, so the user must make sure that the distances
   are ordered in the same way than the haplotypes.
+
+  The probabilities calculated with Templeton et al.'s (1992) method may
+  give non-finite values with very divergent sequences, resulting in an
+  error from \code{haploNet}. If this happens, it may be better to use
+  \code{getProb = FALSE}.
 }
 \note{
   If two haplotypes are very different, \code{haploNet} will likely fail

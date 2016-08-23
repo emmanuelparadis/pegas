@@ -35,7 +35,7 @@ options(width=60)
 \adegenet\ \cite{Jombart2008} and \pegas\ \cite{Paradis2010} are two
 packages that complement each other for population genetic analyses in
 R. Since various computer programs have been used by population
-genetists, most of them with their own data file formats, it is
+geneticists, most of them with their own data file formats, it is
 crucial that R can read them to ease users to switch to R. The present
 document explains how to read several file formats commonly used in
 population genetics. The following formats are considered:
@@ -370,7 +370,7 @@ in Section \ref{sec:tab}, so the objective is to have them in R as a
   that may be needed.
 \item If the ``Save as\dots'' solution does not work, it is possible
   to save a sheet, or part of it, in a text file by following these steps:
-  \begin{itemize}
+  \begin{enumerate}
   \item Open the file, again this may be done with any program.
   \item Select the cells you want to export; this can be done by
     clicking once on the top-left cell, and then clicking a second
@@ -381,7 +381,7 @@ in Section \ref{sec:tab}, so the objective is to have them in R as a
   \item Open a text editor (do not use a word processor), paste the
     content of the clipboard (usually Ctrl-V), and
     save the file.
-  \end{itemize}
+  \end{enumerate}
   The text file can now be read with \code{read.loci(..., loci.sep =
     "\textbackslash t")}.
 \item If Perl is installed on your computer (this is true for almost all

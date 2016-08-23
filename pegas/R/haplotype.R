@@ -1,4 +1,4 @@
-## haplotype.R (2016-04-17)
+## haplotype.R (2016-05-08)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -123,7 +123,7 @@ diffHaplo <- function(h, a = 1, b = 2)
     data.frame(pos = s, toupper(t(as.character(x))))
 }
 
-haploNet <- function(h, d = NULL)
+haploNet <- function(h, d = NULL, getProb = TRUE)
 {
     if (!inherits(h, "haplotype"))
         stop("'h' must be of class 'haplotype'")
@@ -161,12 +161,14 @@ haploNet <- function(h, d = NULL)
         }
         step <- step + 1
     }
-    link <- cbind(link, .TempletonProb(link[, 3], ncol(h)))
+    Probs <- if (getProb) .TempletonProb(link[, 3], ncol(h)) else NA
+    link <- cbind(link, Probs)
     dimnames(link) <- list(NULL, c("", "", "step", "Prob"))
     attr(link, "freq") <- freq
     attr(link, "labels") <- rownames(h)
     if (nrow(altlink)) {
-        altlink <- cbind(altlink, .TempletonProb(altlink[, 3], ncol(h)))
+        Probs <- if (getProb) .TempletonProb(altlink[, 3], ncol(h)) else NA
+        altlink <- cbind(altlink, Probs)
         dimnames(altlink) <- dimnames(link)
         attr(link, "alter.links") <- altlink
     }
@@ -179,8 +181,10 @@ print.haploNet <- function(x, ...)
     cat("Haplotype network with:\n")
     cat("  ", length(attr(x, "labels")), "haplotypes\n")
     n <- nrow(x)
-    cat("  ", n, "links\n")
-    cat("  ", nrow(attr(x, "alter.links")), "alternative links\n")
+    msg <- if (n > 1) "links\n" else "link\n"
+    cat("  ", n, msg)
+    altlinks <- attr(x, "alter.links")
+    cat("  ", if (is.null(altlinks)) 0 else nrow(altlinks), "alternative links\n")
     cat("   link lengths between", x[1, 3], "and", x[n, 3], "steps\n\n")
     cat("Use print.default() to display all elements.\n")
 }
@@ -315,50 +319,57 @@ plot.haploNet <-
              threshold = c(1, 2), ...)
 {
     par(xpd = TRUE)
-    link <- x[, 1:2]
+    link <- x[, 1:2, drop = FALSE]
     l1 <- x[, 1]
     l2 <- x[, 2]
     ld <- x[, 3] * scale.ratio
 
     tab <- tabulate(link)
     n <- length(tab)
-    xx <- yy <- angle <- theta <- r <- numeric(n)
-    avlb <- !logical(length(ld))
 
     ## adjust 'ld' wrt the size of the symbols:
     size <- rep(size, length.out = n)
     ld <- ld + (size[l1] + size[l2])/2
 
-    H <- vector("list", n) # the list of hierarchy of nodes...
+    if (n < 3) {
+        xx <- c(-ld, ld)/2
+        yy <- rep(0, 2)
+        fast <- TRUE
+    } else {
+        xx <- yy <- angle <- theta <- r <- numeric(n)
+        avlb <- !logical(length(ld))
 
-    ## the recursive function to allocate quadrants
-    foo <- function(i) {
-        j <- integer() # indices of the haplotypes linked to 'i'
-        for (ii in 1:2) { # look at both columns
-            ll <- which(link[, ii] == i & avlb)
-            if (length(ll)) {
-                newj <- link[ll, -ii]
-                r[newj] <<- ld[ll]
-                j <- c(j, newj)
-                avlb[ll] <<- FALSE
+        H <- vector("list", n) # the list of hierarchy of nodes...
+
+        ## the recursive function to allocate quadrants
+        foo <- function(i) {
+            j <- integer() # indices of the haplotypes linked to 'i'
+            for (ii in 1:2) { # look at both columns
+                ll <- which(link[, ii] == i & avlb)
+                if (length(ll)) {
+                    newj <- link[ll, -ii]
+                    r[newj] <<- ld[ll]
+                    j <- c(j, newj)
+                    avlb[ll] <<- FALSE
+                }
+            }
+            if (nlink <- length(j)) {
+                H[[i]] <<- j
+                start <- theta[i] - angle[i]/2
+                by <- angle[i]/nlink
+                theta[j] <<- seq(start, by = by, length.out = nlink)
+                angle[j] <<- by
+                xx[j] <<- r[j] * cos(theta[j]) + xx[i]
+                yy[j] <<- r[j] * sin(theta[j]) + yy[i]
+                for (ii in j) foo(ii)
             }
         }
-        if (nlink <- length(j)) {
-            H[[i]] <<- j
-            start <- theta[i] - angle[i]/2
-            by <- angle[i]/nlink
-            theta[j] <<- seq(start, by = by, length.out = nlink)
-            angle[j] <<- by
-            xx[j] <<- r[j] * cos(theta[j]) + xx[i]
-            yy[j] <<- r[j] * sin(theta[j]) + yy[i]
-            for (ii in j) foo(ii)
-        }
-    }
 
-    ## start with the haplotype with the most links:
-    central <- which.max(tab)
-    angle[central] <- 2*pi
-    foo(central)
+        ## start with the haplotype with the most links:
+        central <- which.max(tab)
+        angle[central] <- 2*pi
+        foo(central)
+    }
 
     if (!fast) {
         fCollect <- function(i) {
@@ -696,7 +707,7 @@ haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, compress = TRUE,
     }
 
     nc <- ncol(res)
-    h <- .Call(pegas:::unique_haplotype_loci, res, nloc, nc)
+    h <- .Call(unique_haplotype_loci, res, nloc, nc)
     u <- h == 0
     if (all(u)) freq <- rep(1L, nc) else {
         i <- which(u)
