@@ -11,6 +11,9 @@ NEW FEATURES
       to calculate Templeton's probabilities (in case of difficulties
       with very divergent sequences).
 
+    o loci2genind() has the new option 'ploidy' which is by default
+      taken from the data with getPloidy().
+
 
 BUG FIXES
 

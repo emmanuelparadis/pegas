@@ -15,7 +15,7 @@ as.loci(x, ...)
 \method{as.loci}{genind}(x, ...)
 genind2loci(x)
 \method{as.loci}{data.frame}(x, allele.sep = "/|", col.pop = NULL, col.loci = NULL, ...)
-loci2genind(x)
+loci2genind(x, ploidy = getPloidy(x)[1])
 \method{as.loci}{factor}(x, allele.sep = "/|", ...)
 \method{as.loci}{character}(x, allele.sep = "/|", ...)
 }
@@ -31,6 +31,7 @@ loci2genind(x)
     indices or the names of the columns that are loci. By default, all
     columns are taken as loci except the one labelled "population", if
     present or specified.}
+  \item{ploidy}{the ploidy level.}
   \item{\dots}{further arguments to be passed to or from other methods.}
 }
 \details{

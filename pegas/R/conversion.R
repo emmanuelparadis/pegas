@@ -1,4 +1,4 @@
-## conversion.R (2016-08-23)
+## conversion.R (2016-08-26)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -7,12 +7,12 @@
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-loci2genind <- function(x) # fix by Thibaut (2016-08-23)
+loci2genind <- function(x, ploidy = getPloidy(x)[1])
 {
     ipop <- which(names(x) == "population")
     pop <- if (length(ipop)) x[, ipop] else NULL
     df2genind(as.matrix(x[, attr(x, "locicol")]), sep = "/",
-              pop = pop, NA.char = "_")
+              pop = pop, NA.char = "_", ploidy = ploidy)
 }
 
 as.loci <- function(x, ...) UseMethod("as.loci")
