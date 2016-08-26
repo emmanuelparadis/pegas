@@ -7,7 +7,7 @@
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-loci2genind <- function(x, ploidy = getPloidy(x)[1])
+loci2genind <- function(x, ploidy = getPloidy(x))
 {
     ipop <- which(names(x) == "population")
     pop <- if (length(ipop)) x[, ipop] else NULL
