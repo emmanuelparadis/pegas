@@ -1,4 +1,4 @@
-/* pegas.c    2016-03-16 */
+/* pegas.c    2016-12-06 */
 
 /* Copyright 2015-2016 Emmanuel Paradis */
 
@@ -21,13 +21,13 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo)
 	if (!haplo[i1]) {
 	    i2 = i1 + 1;
 	    while (i2 < *n) {
-		if (!haplo[i2])  {
+		if (!haplo[i2]) {
 		    s1 = i1;
 		    s2 = i2;
 		    k = 0;
 		    flag = 1; /* initially the two sequences are considered identical */
 		    while (k < *s) {
-			if (x[s1] != x[s2]) { /* fix the fact that a and b could be gaps (-) or completely missing (?) */
+			if (x[s1] != x[s2] && x[s1] > 0x07 && x[s2] > 0x07) { /* fix the fact that a and b could be gaps (-) or completely missing (?) */
 			    if (DifferentBase(x[s1], x[s2])) {
 				flag = 0;
 				break;
@@ -43,6 +43,23 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo)
 	    }
 	}
 	i1++;
+    }
+}
+
+void distDNA_pegas(unsigned char *x, int *n, int *s, double *d)
+{
+    int i1, i2, s1, s2, target, Nd;
+    target = 0;
+    for (i1 = 1; i1 < *n; i1++) {
+	for (i2 = i1 + 1; i2 <= *n; i2++) {
+	    Nd = 0;
+	    for (s1 = i1 - 1, s2 = i2 - 1; s1 < i1 + *n*(*s - 1); s1 += *n, s2 += *n) {
+		if (x[s1] <= 0x07 || x[s2] <= 0x07) continue;
+		if (DifferentBase(x[s1], x[s2])) Nd++;
+	    }
+	    d[target] = ((double) Nd);
+	    target++;
+	}
     }
 }
 
@@ -91,6 +108,7 @@ SEXP unique_haplotype_loci(SEXP x, SEXP NROW, SEXP NCOL)
 
 static R_CMethodDef C_entries[] = {
     {"haplotype_DNAbin", (DL_FUNC) &haplotype_DNAbin, 4},
+    {"distDNA_pegas", (DL_FUNC) &distDNA_pegas, 4},
     {NULL, NULL, 0}
 };
 

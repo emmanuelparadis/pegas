@@ -15,7 +15,7 @@ as.loci(x, ...)
 \method{as.loci}{genind}(x, ...)
 genind2loci(x)
 \method{as.loci}{data.frame}(x, allele.sep = "/|", col.pop = NULL, col.loci = NULL, ...)
-loci2genind(x, ploidy = getPloidy(x)[1])
+loci2genind(x, ploidy = getPloidy(x))
 \method{as.loci}{factor}(x, allele.sep = "/|", ...)
 \method{as.loci}{character}(x, allele.sep = "/|", ...)
 }

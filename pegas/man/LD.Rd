@@ -7,12 +7,12 @@
   phased (\code{LD}) or unphased (\code{LD2}) genotypes.
 }
 \usage{
-LD(x, locus = 1:2, details = TRUE)
-LD2(x, locus = 1:2, details = TRUE)
+LD(x, locus = c(1, 2), details = TRUE)
+LD2(x, locus = c(1, 2), details = TRUE)
 }
 \arguments{
   \item{x}{an object of class \code{"loci"}.}
-  \item{locus}{a vector of integers giving the two loci to analyse.}
+  \item{locus}{a vector of two integers giving the loci to analyse.}
   \item{details}{a logical value indicating whether to print the
     correlation matrix among alleles.}
 }

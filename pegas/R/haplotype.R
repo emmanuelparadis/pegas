@@ -1,4 +1,4 @@
-## haplotype.R (2016-05-08)
+## haplotype.R (2016-12-06)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -130,7 +130,14 @@ haploNet <- function(h, d = NULL, getProb = TRUE)
     freq <- sapply(attr(h, "index"), length)
     n <- length(freq) # number of haplotypes
     link <- matrix(0, 0, 3)
-    if (is.null(d)) d <- dist.dna(h, "N", pairwise.deletion = TRUE)
+    if (is.null(d)) {
+        ## d <- dist.dna(h, "N", pairwise.deletion = TRUE)
+        d <- .C(distDNA_pegas, h, as.integer(n), ncol(h), numeric(n * (n - 1)/2), NAOK = TRUE)[[4]]
+        attr(d, "Size") <- n
+        attr(d, "Labels") <- rownames(h)
+        attr(d, "Diag") <- attr(d, "Upper") <- FALSE
+        class(d) <- "dist"
+    }
     d <- as.matrix(d)
     d[col(d) >= row(d)] <- NA # put NA's in the diag and above-diag elts
     one2n <- seq_len(n)
@@ -753,7 +760,7 @@ dist.haplotype.loci <- function(x)
     d
 }
 
-LD <- function(x, locus = 1:2, details = TRUE)
+LD <- function(x, locus = c(1, 2), details = TRUE)
 {
     if (length(locus) != 2)
         stop("you must specify two loci to compute linkage disequilibrium")
@@ -785,7 +792,7 @@ LD <- function(x, locus = 1:2, details = TRUE)
     res
 }
 
-LD2 <- function(x, locus = 1:2, details = TRUE)
+LD2 <- function(x, locus = c(1, 2), details = TRUE)
 {
     if (length(locus) != 2)
         stop("you must specify two loci to compute linkage disequilibrium")

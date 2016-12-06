@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.9-0.2
+		CHANGES IN PEGAS VERSION 0.9-0.3
 
 
 NEW FEATURES
@@ -20,6 +20,8 @@ BUG FIXES
     o plot.haploNet() failed with two haplotypes.
 
     o loci2genind() handles correctly missing alleles.
+
+    o haplotype.DNAbin() failed with too many missing data.
 
 
 
