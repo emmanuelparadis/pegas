@@ -7,7 +7,7 @@
 }
 \usage{
 MMD(x, xlab = "Distance", main = "", rug = TRUE, legend = TRUE,
-    lcol = c("blue", "red"), lty = c(1, 1), ...)
+    lcol = c("blue", "red"), lty = c(1, 1), bw = 2, ...)
 }
 \arguments{
   \item{x}{a set of DNA sequences (object of class \code{"DNAbin"}).}
@@ -18,6 +18,8 @@ MMD(x, xlab = "Distance", main = "", rug = TRUE, legend = TRUE,
   \item{legend}{a logical specifying whether to draw a legend.}
   \item{lcol}{the colours used for the curves.}
   \item{lty}{the line types for the curves}
+  \item{bw}{the bandwidth used for the empirical density curve (passed
+    to \code{\link[stats]{density}}).}
   \item{\dots}{further arguments passed to \code{hist}.}
 }
 \details{

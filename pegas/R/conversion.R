@@ -1,18 +1,32 @@
-## conversion.R (2016-08-26)
+## conversion.R (2017-01-19)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2016 Emmanuel Paradis
+## Copyright 2009-2017 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-loci2genind <- function(x, ploidy = getPloidy(x))
+loci2genind <- function(x, ploidy = 2, na.alleles = c("0", "."))
 {
     ipop <- which(names(x) == "population")
     pop <- if (length(ipop)) x[, ipop] else NULL
+
+    if (any(isDot <- na.alleles == ".")) na.alleles[isDot] <- "\\."
+    pat <- c(paste0("^", na.alleles, "/"), paste0("/", na.alleles, "$"), paste0("/", na.alleles, "/"))
+    pat <- paste(pat, collapse = "|")
+
+    for (i in attr(x, "locicol")) {
+        z <- x[[i]]
+        if (length(na <- grep(pat, z))) {
+            z[na] <- NA_integer_
+            z <- factor(z)
+        }
+        x[[i]] <- z
+    }
+
     df2genind(as.matrix(x[, attr(x, "locicol")]), sep = "/",
-              pop = pop, NA.char = "_", ploidy = ploidy)
+              pop = pop, ploidy = ploidy)
 }
 
 as.loci <- function(x, ...) UseMethod("as.loci")
@@ -148,6 +162,7 @@ alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
 
 na.omit.loci <- function(object, na.alleles = c("0", "."), ...)
 {
+    if (any(isDot <- na.alleles == ".")) na.alleles[isDot] <- "\\."
     pat <- c(paste0("^", na.alleles, "/"), paste0("/", na.alleles, "$"), paste0("/", na.alleles, "/"))
     pat <- paste(pat, collapse = "|")
     drop <- logical(nrow(object))
@@ -157,7 +172,7 @@ na.omit.loci <- function(object, na.alleles = c("0", "."), ...)
         if (length(na <- grep(pat, x))) drop[na] <- TRUE
         if (any(na <- is.na(x))) drop[na] <- TRUE
     }
-    object <- object[!drop, ]
+    object <- object[!drop, , drop = FALSE]
     for (i in M) {
         if (is.factor(x <- object[[i]])) {
             drop <- tabulate(x, nlevels(x)) == 0

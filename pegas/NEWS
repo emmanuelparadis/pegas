@@ -14,14 +14,21 @@ NEW FEATURES
     o loci2genind() has the new option 'ploidy' which is by default
       taken from the data with getPloidy().
 
+    o MMD() has a new option, bw, to specify the bandwidth of the
+      empirical density curve.
+
 
 BUG FIXES
 
     o plot.haploNet() failed with two haplotypes.
 
-    o loci2genind() handles correctly missing alleles.
+    o loci2genind() handles correctly missing alleles with a new
+      option na.alleles = c("0", "."). The default value of 'ploidy'
+      is now 2 (see explanation in the help page).
 
     o haplotype.DNAbin() failed with too many missing data.
+
+    o A bug was fixed in na.omit.loci().
 
 
 

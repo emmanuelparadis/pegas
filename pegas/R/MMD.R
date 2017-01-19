@@ -1,18 +1,18 @@
-## MMD.R (2013-12-12)
+## MMD.R (2018-01-08)
 
 ##   Mismatch Distribution
 
-## Copyright 2009-2013 Emmanuel Paradis, 2013 David Winter
+## Copyright 2009-2017 Emmanuel Paradis, 2013 David Winter
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
 MMD <- function(x, xlab = "Distance", main = "", rug = TRUE, legend = TRUE,
-                lcol = c("blue", "red"), lty = c(1, 1), ...)
+                lcol = c("blue", "red"), lty = c(1, 1), bw = 2, ...)
 {
     d <- dist.dna(x, "N")
     hist(d, xlab = xlab, main = main, freq = FALSE, ...)
-    lines(density(d, bw = 2), col = lcol[1], lty = lty[1])
+    lines(density(d, bw = bw), col = lcol[1], lty = lty[1])
     ## by David Winter:
     theta <- mean(d)
     upper <- ceiling(max(d))

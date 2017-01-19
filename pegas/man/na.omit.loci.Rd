@@ -11,7 +11,7 @@
   \item{object}{an object of class \code{"loci"}.}
   \item{na.alleles}{a vector of charater strings giving the alleles
     to be treated as missing data.}
-  \item{\dots}{unused.}
+  \item{\dots}{(unused)}
 }
 \details{
   The side effect of this function is to drop the rows (individuals)
