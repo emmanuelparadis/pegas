@@ -1,11 +1,118 @@
-## haplotype.R (2016-12-06)
+## haplotype.R (2017-03-28)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
-## Copyright 2009-2016 Emmanuel Paradis, 2013 Klaus Schliep
+## Copyright 2009-2017 Emmanuel Paradis, 2013 Klaus Schliep
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
+
+rmst <- function(d, B = 100)
+{
+    if (!is.matrix(d) && !inherits(d, "dist"))
+        stop("'d' must be a matrix or a 'dist' object")
+    D <- as.matrix(d)
+    n <- nrow(D)
+    MAT <- matrix(NA_character_, 0, 2)
+    for (rep in 1:B) {
+        if (rep == B) d <- D
+        else {
+            ri <- sample(n)
+            d <- D[ri, ri]
+        }
+        d <- as.dist(d)
+        rnt <- mst(d)
+        m <- rnt[, 1:2]
+        dm <- dim(m)
+        mat <- attr(rnt, "labels")[m]
+        dim(mat) <- dm
+        MAT <- rbind(MAT, t(apply(mat, 1, sort)))
+    }
+    X <- paste(MAT[, 1], MAT[, 2], sep = "\r")
+    tab <- table(X)
+    if (length(tab) == n - 1) {
+        attr(rnt, "weight") <- rep(B, n - 1)
+        return(rnt)
+    }
+    links <- names(tab)
+    ## define the alternative links wrt the last MST:
+    labs <- attr(rnt, "labels")
+    MST.str <- labs[rnt[, 1:2]]
+    dim(MST.str) <- c(n - 1, 2)
+    MST.str <- apply(MST.str, 1, sort)
+    MST.str <- paste(MST.str[1, ], MST.str[2, ], sep = "\r")
+    k <- match(links, MST.str)
+    nak <- is.na(k)
+    tab <- c(tab[match(MST.str, links)], tab[nak])
+    alt <- unlist(strsplit(links[nak], "\r"))
+    alt <- match(alt, labs)
+    alt <- matrix(alt, length(alt)/2, 2, byrow = TRUE)
+    alt <- t(apply(alt, 1, sort))
+    i <- alt[, 1]
+    j <- alt[, 2]
+    k <- n*(i - 1) - i*(i - 1)/2 + j - i
+    alt <- cbind(alt, d[k])
+    colnames(alt) <- c("", "", "step")
+    attr(rnt, "alter.links") <- alt
+    names(tab) <- gsub("\r", "--", names(tab))
+    attr(rnt, "weight") <- tab
+    rnt
+}
+
+msn <- function(d)
+{
+    getIandJ <- function(ij, n) {
+        ## assumes a lower triangle, so i > j
+        ## n must be > 1 (not checked)
+        ## ij must be <= (n - 1)*n/2 (not checked too)
+        j <- 1L
+        N <- n - 1L
+        while (ij > N) {
+            j <- j + 1L
+            N <- N + n - j
+        }
+        i <- n - (N - ij)
+        c(j, i) # return the smaller index first
+    }
+    if (is.matrix(d)) d <- as.dist(d)
+    MST <- mst(d)
+    n <- attr(d, "Size")
+    if (n < 3) {
+        warning("less than 3 observations: function mst() was used")
+        return(MST)
+    }
+    m <- matrix(NA_real_, 0, 3)
+    forest <- 1:n
+    ud <- sort(unique(d)) # unique distances in increasing order
+
+    i <- 1L
+    while (length(unique(forest)) > 1) {
+        delta <- ud[i]
+        for (iud in which(d == delta)) {
+            p <- getIandJ(iud, n)
+            f1 <- forest[p[1L]]
+            f2 <- forest[p[2L]]
+            m <- rbind(m, c(p, delta))
+            if (f1 != f2) forest[forest == f2] <- f1
+        }
+        i <- i + 1L
+    }
+    ## define the alternative links wrt the MST:
+    MST.str <- paste(MST[, 1], MST[, 2], sep = "\r")
+    m.str <- paste(m[, 1], m[, 2], sep = "\r")
+    k <- match(m.str, MST.str)
+    nak <- is.na(k)
+    if (any(nak)) {
+        alt <- m[nak, , drop = FALSE]
+        colnames(alt) <- c("", "", "step")
+        m <- m[!nak, , drop = FALSE]
+        attr(m, "alter.links") <- alt
+    }
+    colnames(m) <- c("", "", "step")
+    attr(m, "labels") <- attr(d, "Labels")
+    class(m) <- "haploNet"
+    m
+}
 
 mst <- function(d)
 {
@@ -88,6 +195,23 @@ haplotype.DNAbin <- function(x, labels = NULL, ...)
     rownames(obj) <- labels
     class(obj) <- c("haplotype", "DNAbin")
     attr(obj, "index") <- lapply(i, function(x) which(h == x))
+    attr(obj, "from") <- nms.x
+    obj
+}
+
+haplotype.character <- function(x, labels = NULL, ...)
+{
+    nms.x <- deparse(substitute(x))
+    if (!is.matrix(x)) stop("x must be a matrix")
+    h <- factor(apply(x, 1, paste, collapse = "\r"))
+    h <- as.integer(h)
+    obj <- x[which(!duplicated(h)), , drop = FALSE]
+    N <- nrow(obj)
+    if (is.null(labels))
+        labels <- as.character(as.roman(1:N))
+    rownames(obj) <- labels
+    class(obj) <- c("haplotype", "character")
+    attr(obj, "index") <- lapply(1:N, function(y) which(h == y))
     attr(obj, "from") <- nms.x
     obj
 }
@@ -566,10 +690,10 @@ plot.haploNet <-
            envir = .PlotHaploNetEnv)
 }
 
-plot.haplotype <- function(x, ...)
+plot.haplotype <- function(x, xlab = "Haplotype", ylab = "Number", ...)
 {
-    barplot(sapply(attr(x, "index"), length), xlab = "Haplotype",
-            ylab = "Number", names.arg = rownames(x), ...)
+    barplot(sapply(attr(x, "index"), length), xlab = xlab, ylab = ylab,
+            names.arg = rownames(x), ...)
 }
 
 sort.haplotype <-

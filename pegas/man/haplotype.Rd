@@ -1,6 +1,7 @@
 \name{haplotype}
 \alias{haplotype}
 \alias{haplotype.DNAbin}
+\alias{haplotype.character}
 \alias{plot.haplotype}
 \alias{print.haplotype}
 \alias{plot.haplotype}
@@ -14,7 +15,8 @@
 \usage{
 haplotype(x, ...)
 \method{haplotype}{DNAbin}(x, labels = NULL, ...)
-\method{plot}{haplotype}(x, ...)
+\method{haplotype}{character}(x, labels = NULL, ...)
+\method{plot}{haplotype}(x, xlab = "Haplotype", ylab = "Number", ...)
 \method{print}{haplotype}(x, ...)
 \method{sort}{haplotype}(x,
      decreasing = ifelse(what == "frequencies", TRUE, FALSE),
@@ -26,6 +28,7 @@ haplotype(x, ...)
     \code{"DNAbin"}), or an object of class \code{"haplotype"}.}
   \item{labels}{a vector of character strings used as names for the rows
     of the returned object. By default, Roman numerals are given.}
+  \item{xlab, ylab}{labels for the x- and x-axes.}
   \item{\dots}{further arguments passed to
     \code{\link[graphics]{barplot}} (unused in \code{print} and
     \code{sort}).}

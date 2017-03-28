@@ -5,11 +5,11 @@ export(alleles2loci, amova, as.igraph.haploNet, as.loci,
        expand.genotype, Fst, genind2loci, geod, geoTrans, getAlleles,
        getGenotypes, getINFO, getPloidy, H, haploNet, haploFreq,
        haplotype, heterozygosity, hw.test, is.phased, is.snp, LD, LD2,
-       LDscan, LDmap, loci2genind, mst, MMD, nuc.div, proba.genotype,
-       R2.test, rangePOS, read.gtx, read.loci, read.vcf, replot,
-       rr.test, selectQUAL, site.spectrum, tajima.test, theta.h,
-       theta.k, theta.msat, theta.s, theta.tree, VCFheader, VCFlabels,
-       VCFloci, write.loci)
+       LDscan, LDmap, loci2genind, msn, mst, MMD, nuc.div, plotNetMDS,
+       proba.genotype, R2.test, rangePOS, read.gtx, read.loci, read.vcf,
+       replot, rmst, rr.test, selectQUAL, site.spectrum, tajima.test,
+       theta.h, theta.k, theta.msat, theta.s, theta.tree, VCFheader,
+       VCFlabels, VCFloci, write.loci)
 
 importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
            floating.pie.asp, perm.rowscols, polar2rect, rcoal, rect2polar,
@@ -18,10 +18,10 @@ importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, abline, barplot, hist, lines, locator, mtext, par,
            polygon, plot, plot.default, rect, segments, strheight, symbols,
            text)
-importFrom(grDevices, colorRampPalette, rainbow)
-importFrom(stats, as.dist, cophenetic, density, dist, integrate, na.omit,
-           nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois, uniroot,
-           weighted.mean)
+importFrom(grDevices, colorRampPalette, rainbow, rgb)
+importFrom(stats, as.dist, cmdscale, cophenetic, density, dist, integrate,
+           na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois,
+           uniroot, weighted.mean)
 importFrom(utils, as.roman, edit, read.table, write.table)
 
 S3method(print, amova)
@@ -31,6 +31,7 @@ S3method(as.loci, data.frame)
 S3method(as.loci,factor)
 S3method(as.loci, genind)
 
+S3method(haplotype, character)
 S3method(haplotype, DNAbin)
 S3method(haplotype, loci)
 

@@ -1,11 +1,23 @@
-		CHANGES IN PEGAS VERSION 0.9-0.3
+		CHANGES IN PEGAS VERSION 0.9-0.4
 
 
 NEW FEATURES
 
+    o The new function msn computes the minimum spanning network
+      (Bandelt et al., 1999, Mol Biol Evol, 16:37).
+
+    o The new function rmst computes the randomized minimum spanning
+      tree (Paradis, in prep.)
+
+    o The new function plotNetMDS plots a network (class "haploNet")
+      using a coordinaes of the haplotypes from an MDS done on the
+      distance matrix.
+
     o haplotype.loci() has a new option (check.phase) to optionally
       skip the check of genotype phasing. The code is also now 2-5
       times faster.
+
+    o There is a new haplotype.character() method.
 
     o haploNet() has a new option, getProb = TRUE, to control whether
       to calculate Templeton's probabilities (in case of difficulties
@@ -29,6 +41,12 @@ BUG FIXES
     o haplotype.DNAbin() failed with too many missing data.
 
     o A bug was fixed in na.omit.loci().
+
+
+OTHER CHANGES
+
+    o The arguments xlab and ylab in plot.haplotype can now be
+      modified from the plot() call.
 
 
 
