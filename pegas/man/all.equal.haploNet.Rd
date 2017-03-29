@@ -12,6 +12,7 @@ all.equal.haploNet(current, target, use.steps = TRUE, ...)
   \item{current, target}{two objects of class \code{"haplotype"}.}
   \item{use.steps}{a logical value: whether to consider the number of
     steps (or length) in each link.}
+  \item{\dots}{(unused).}
 }
 \details{
   This function should return \code{TRUE} if the two networks are

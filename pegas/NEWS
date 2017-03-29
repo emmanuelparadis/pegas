@@ -13,6 +13,10 @@ NEW FEATURES
       using a coordinaes of the haplotypes from an MDS done on the
       distance matrix.
 
+    o The new function dist.hamming implements a general purpose
+      Hamming distance. It can be used for many types of data,
+      particularly the output of haplotype.character().
+
     o There is a new haplotype.character() method.
 
     o There is a new all.equal.haploNet() method to compare two

@@ -31,6 +31,6 @@ plotNetMDS(net, d, k = 2, col = NULL, font = 2, cex = 1)
 data(woodmouse)
 d <- dist.dna(woodmouse, "n")
 net <- rmst(d)
-plot(net)
+plotNetMDS(net, d)
 }
 \keyword{hplot}

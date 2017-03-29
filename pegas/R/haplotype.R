@@ -863,6 +863,27 @@ plot.haplotype.loci <- function(x, ...)
     barplot(y, ...)
 }
 
+dist.hamming <- function(x) 
+{
+    n <- nrow(x)
+    if (n < 2) stop("less than two haplotypes")
+    d <- numeric(n * (n - 1)/2)
+    k <- 1L
+    for (i in 1:(n - 1)) {
+        for (j in (i + 1):n) {
+            d[k] <- sum(x[i, ] != x[j, ])
+            k <- k + 1L
+        }
+    }
+    attr(d, "Size") <- n
+    attr(d, "Labels") <- rownames(x)
+    attr(d, "Diag") <- attr(d, "Upper") <- FALSE
+    attr(d, "call") <- match.call()
+    attr(d, "method") <- "N"
+    class(d) <- "dist"
+    d
+}
+
 dist.haplotype.loci <- function(x)
 {
     n <- ncol(x)
