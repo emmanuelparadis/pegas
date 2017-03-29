@@ -15,7 +15,7 @@ SEXP read_bin_pegas(SEXP FILENAME, SEXP SIZE, SEXP SKIP)
     SEXP res;
     const char *filename;
     FILE *fl;
-    int sz, o;
+    int sz;
     double skip;
     unsigned char *p;
 
@@ -29,7 +29,7 @@ SEXP read_bin_pegas(SEXP FILENAME, SEXP SIZE, SEXP SKIP)
     p = RAW(res);
     fl = fopen(filename, "r");
     fseek(fl, (long)skip, SEEK_SET);
-    o = fread(p, 1, sz, fl);
+    fread(p, 1, sz, fl);
     fclose(fl);
     UNPROTECT(4);
     return res;

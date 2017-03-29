@@ -19,8 +19,6 @@ plotNetMDS <- function(net, d, k = 2, col = NULL, font = 2, cex = 1)
             if (!requireNamespace("rgl", quietly = TRUE)) {
                 k <- 2
                 warning("package 'rgl' not available: k was set to 2")
-            } else {
-                require(rgl)
             }
         }
     }
@@ -38,11 +36,11 @@ plotNetMDS <- function(net, d, k = 2, col = NULL, font = 2, cex = 1)
         }
         text(mds, labels = rownames(mds), font = font, cex = cex)
     } else { # k == 3
-        clear3d()
+        rgl::clear3d()
         for (i in 1:nrow(mat)) {
             a <- mat[i, 1:2]
-            segments3d(mds[a, 1:3], col = col)
+            rgl::segments3d(mds[a, 1:3], col = col)
         }
-        text3d(mds, texts = rownames(mds), font = font, cex = cex)
+        rgl::text3d(mds, texts = rownames(mds), font = font, cex = cex)
     }
 }

@@ -1,4 +1,4 @@
-## haplotype.R (2017-03-28)
+## haplotype.R (2017-03-29)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -1134,4 +1134,87 @@ LDmap <- function(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
          cex = cex)
     text(x.lab.loci, y.lab.loci, attr(d, "Labels"),
          srt = angle - 90, adj = 0, cex = cex)
+}
+
+all.equal.haploNet <- function(current, target, use.steps = TRUE, ...)
+{
+    if (identical(current, target)) return(TRUE)
+    ## function to build a list to make comparisons easier
+    foo <- function(x) {
+        mat <- x[, 1:2]
+        step <- x[, 3]
+        if (!is.null(attr(x, "alter.links"))) {
+            mat <- rbind(mat, attr(x, "alter.links")[, 1:2])
+            step <- c(step, attr(x, "alter.links")[, 3])
+        }
+        dm <- dim(mat)
+        mat <- attr(x, "labels")[mat]
+        dim(mat) <- dm
+        mat <- t(apply(mat, 1, sort))
+        list(mat = mat, step = step)
+    }
+    ## function to arrange print of links:
+    bar <- function(x) gsub("\r", "--", x)
+    ## another one to print comparison of link lenghts:
+    bar2 <- function(x, y, z) paste0(bar(x), " (", y, ", ", z, ")")
+
+    msg <- NULL
+
+    labs1 <- attr(current, "labels")
+    labs2 <- attr(target, "labels")
+    comp12 <- is.na(match(labs1, labs2))
+    comp21 <- is.na(match(labs2, labs1))
+    if (all(comp12) && all(comp21))
+        return("No common label between current and target")
+    else {
+        if (any(comp12))
+            msg <- c(msg, "Labels in current not in target:",
+                     paste(labs1[comp12], sep = ", "))
+        if (any(comp21))
+            msg <- c(msg, "Labels in target not in current:",
+                     paste(labs2[comp21], sep = ", "))
+    }
+
+    X1 <- foo(current)
+    X2 <- foo(target)
+    links1 <- paste(X1$mat[, 1], X1$mat[, 2], sep = "\r")
+    links2 <- paste(X2$mat[, 1], X2$mat[, 2], sep = "\r")
+    comp12 <- match(links1, links2)
+    if (length(links1) == length(links2)) {
+        if (anyNA(comp12)) {
+            comp21 <- match(links2, links1)
+            msg <- c(msg, "Number of links equal",
+                     "Links in current not in target:",
+                     bar(links1[is.na(comp12)]),
+                     "Links in target not in current:",
+                     bar(links2[is.na(comp21)]))
+        }
+        if (use.steps) {
+            tmp <- X2$step[comp12]
+            test <- X1$step != tmp
+            if (anyNA(test)) test[is.na(test)] <- FALSE
+            if (any(test))
+                msg <- c(msg, "Link lengths different (in current, in target):",
+                         bar2(links1[test], X1$step[test], tmp[test]))
+        }
+    } else {
+        msg <- c(msg, "Number of links different")
+        comp21 <- match(links2, links1)
+        if (anyNA(comp12))
+            msg <- c(msg, "Links in current not in target:",
+                     bar(links1[is.na(comp12)]))
+        if (anyNA(comp21))
+            msg <- c(msg, "Links in target not in current:",
+                     bar(links2[is.na(comp21)]))
+        if (use.steps) {
+            tmp1 <- X1$step[!is.na(comp12)]
+            tmp2 <- X2$step[comp12]
+            test <- tmp1 != tmp2
+            if (any(test))
+                msg <- c(msg,
+                         "Links identical but of lengths different (in current, in target):",
+                         bar2(links1[tmp1][test], tmp1[test], tmp2[test]))
+        }
+    }
+    if (is.null(msg)) TRUE else msg
 }
