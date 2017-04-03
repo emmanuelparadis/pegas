@@ -6,10 +6,10 @@
   \code{TRUE} or a description of the differences.
 }
 \usage{
-all.equal.haploNet(current, target, use.steps = TRUE, ...)
+\method{all.equal}{haploNet}(target, current, use.steps = TRUE, ...)
 }
 \arguments{
-  \item{current, target}{two objects of class \code{"haplotype"}.}
+  \item{target, current}{two objects of class \code{"haplotype"}.}
   \item{use.steps}{a logical value: whether to consider the number of
     steps (or length) in each link.}
   \item{\dots}{(unused).}

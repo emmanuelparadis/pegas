@@ -1,4 +1,4 @@
-## haplotype.R (2017-03-29)
+## haplotype.R (2017-03-30)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -1157,9 +1157,9 @@ LDmap <- function(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
          srt = angle - 90, adj = 0, cex = cex)
 }
 
-all.equal.haploNet <- function(current, target, use.steps = TRUE, ...)
+all.equal.haploNet <- function(target, current, use.steps = TRUE, ...)
 {
-    if (identical(current, target)) return(TRUE)
+    if (identical(target, current)) return(TRUE)
     ## function to build a list to make comparisons easier
     foo <- function(x) {
         mat <- x[, 1:2]
@@ -1181,12 +1181,12 @@ all.equal.haploNet <- function(current, target, use.steps = TRUE, ...)
 
     msg <- NULL
 
-    labs1 <- attr(current, "labels")
-    labs2 <- attr(target, "labels")
+    labs1 <- attr(target, "labels")
+    labs2 <- attr(current, "labels")
     comp12 <- is.na(match(labs1, labs2))
     comp21 <- is.na(match(labs2, labs1))
     if (all(comp12) && all(comp21))
-        return("No common label between current and target")
+        return("No common label between target and current")
     else {
         if (any(comp12))
             msg <- c(msg, "Labels in current not in target:",
@@ -1196,8 +1196,8 @@ all.equal.haploNet <- function(current, target, use.steps = TRUE, ...)
                      paste(labs2[comp21], sep = ", "))
     }
 
-    X1 <- foo(current)
-    X2 <- foo(target)
+    X1 <- foo(target)
+    X2 <- foo(current)
     links1 <- paste(X1$mat[, 1], X1$mat[, 2], sep = "\r")
     links2 <- paste(X2$mat[, 1], X2$mat[, 2], sep = "\r")
     comp12 <- match(links1, links2)
@@ -1215,17 +1215,17 @@ all.equal.haploNet <- function(current, target, use.steps = TRUE, ...)
             test <- X1$step != tmp
             if (anyNA(test)) test[is.na(test)] <- FALSE
             if (any(test))
-                msg <- c(msg, "Link lengths different (in current, in target):",
+                msg <- c(msg, "Link lengths different (in target, in current):",
                          bar2(links1[test], X1$step[test], tmp[test]))
         }
     } else {
         msg <- c(msg, "Number of links different")
         comp21 <- match(links2, links1)
         if (anyNA(comp12))
-            msg <- c(msg, "Links in current not in target:",
+            msg <- c(msg, "Links in current not in current:",
                      bar(links1[is.na(comp12)]))
         if (anyNA(comp21))
-            msg <- c(msg, "Links in target not in current:",
+            msg <- c(msg, "Links in target not in target:",
                      bar(links2[is.na(comp21)]))
         if (use.steps) {
             tmp1 <- X1$step[!is.na(comp12)]
@@ -1233,7 +1233,7 @@ all.equal.haploNet <- function(current, target, use.steps = TRUE, ...)
             test <- tmp1 != tmp2
             if (any(test))
                 msg <- c(msg,
-                         "Links identical but of lengths different (in current, in target):",
+                         "Links identical but of lengths different (in target, in current):",
                          bar2(links1[tmp1][test], tmp1[test], tmp2[test]))
         }
     }
