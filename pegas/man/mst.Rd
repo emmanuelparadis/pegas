@@ -2,12 +2,12 @@
 \alias{mst}
 \alias{msn}
 \alias{rmst}
+\title{Minimum Spanning Tree and Network}
 \description{
   Computes a minimum spanning tree using Kruskal's algorithm, the
   minimum spanning network using Bandelt et al.'s algorithm, or the
   randomized minimum spanning tree (Paradis 2017).
 }
-\title{Minimum Spanning Tree and Network}
 \usage{
 mst(d)
 msn(d)
@@ -35,7 +35,7 @@ rmst(d, B = 100)
 }
 \author{Emmanuel Paradis}
 \seealso{
-  \code{\link{haploNet}}
+  \code{\link{haploNet}}, \code{\link{mjn}}
 }
 \note{
   \pkg{ape} has a function named \code{mst} which is older (and used by

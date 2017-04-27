@@ -116,7 +116,7 @@ haploNet(h, d = NULL, getProb = TRUE)
 }
 \seealso{
   \code{\link{haplotype}}, \code{\link{haploFreq}}, \code{\link{replot}},
-  \code{\link{diffHaplo}}, \code{\link{mst}}
+  \code{\link{diffHaplo}}, \code{\link{mst}}, \code{\link{mjn}}
 }
 \examples{
 ## generate some artificial data from 'woodmouse':
