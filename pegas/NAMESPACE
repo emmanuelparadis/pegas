@@ -22,7 +22,7 @@ importFrom(grDevices, colorRampPalette, rainbow, rgb)
 importFrom(stats, as.dist, cmdscale, cophenetic, density, dist, integrate,
            na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois,
            uniroot, weighted.mean)
-importFrom(utils, as.roman, edit, read.table, write.table)
+importFrom(utils, as.roman, combn, edit, read.table, write.table)
 
 S3method(print, amova)
 

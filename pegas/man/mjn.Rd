@@ -75,7 +75,7 @@ z <- list(c("g", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a"),
           c("a", "a", "a", "a", "a", "a", "a", "a", "g", "g", "c", "c"),
           c("a", "a", "a", "a", "a", "a", "g", "g", "g", "g", "a", "a"))
 names(z) <- c("A1", "A2", "B1", "B2", "C", "D")
-z <- as.matrix(z)
+z <- as.matrix(as.DNAbin(z))
 (ntz <- mjn(z, 2))
 
 \dontrun{

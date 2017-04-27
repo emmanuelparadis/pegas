@@ -80,14 +80,14 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000)
         }
     }
 
-    funUpdateDistmat <-
-        switch(mode(x),
-               "raw" = function(x) dist.dna(x, "n", p = TRUE, as.matrix = TRUE),
-               "numeric" = function(x) as.matrix(dist(x, "manhattan")))
+###    funUpdateDistmat <-
+###        switch(mode(x),
+###               "raw" = function(x) dist.dna(x, "n", pairwise.deletion = TRUE, as.matrix = TRUE),
+###               "numeric" = function(x) as.matrix(dist(x, "manhattan")))
 
     funDist <-
         switch(mode(x),
-               "raw" = function(x) dist.dna(x, "n", p = TRUE),
+               "raw" = function(x) dist.dna(x, "n", pairwise.deletion = TRUE),
                "numeric" = function(x) dist(x, "manhattan"))
 
     funVariableCol <-
@@ -101,7 +101,7 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000)
     alreadyIn <-
         switch(mode(x),
                "raw" = function(x, table) {
-            D <- dist.dna(rbind(x, table), "n", p = TRUE, as.matrix = TRUE)
+            D <- dist.dna(rbind(x, table), "n", pairwise.deletion = TRUE, as.matrix = TRUE)
             s1 <- 1:nrow(x)
             s2 <- nrow(x) + 1:nrow(table)
             res <- logical(nrow(x))
