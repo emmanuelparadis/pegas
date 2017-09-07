@@ -45,9 +45,8 @@ theta.h(x, standard.error = FALSE)
   \code{\link{theta.k}}, \code{\link{theta.tree}}
 }
 \examples{
-## similar to what is in ?H:
 data(jaguar)
-## convert the data and compute frequencies:
+## compute frequencies:
 S <- summary(jaguar)
 ## compute THETA for all loci:
 sapply(S, function(x) theta.h(x$allele))

@@ -1,4 +1,4 @@
-## mjn.R (2017-04-27)
+## mjn.R (2017-05-02)
 
 ##   Median-Joining Network
 
@@ -7,7 +7,7 @@
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-mjn <- function(x, epsilon = 0, max.n.cost = 10000)
+mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
 {
     if (is.data.frame(x)) x <- as.matrix(x)
     if (mode(x) == "numeric") {
@@ -192,7 +192,7 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000)
             ## if (!is.null(median.vector)) if (alreadyIn(tmp, median.vector)) next
 
             m <- nrow(tmp)
-            rownames(tmp) <- paste("median.vector", nextX:(nextX + m - 1), sep = "_")
+            rownames(tmp) <- paste0(prefix, nextX:(nextX + m - 1))
             ## rownames(tmp) <- paste("median.vector", nextX, sep = "_")
             ## dist2X <- funDist(rbind(tmp, subsamp))[1:3]
             dist2X <- matrix(0, m, 3)
@@ -266,6 +266,7 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000)
                     n2 <- c(m[m[, 2] == p2, 1], m[m[, 1] == p2, 2])
                     for (k1 in c(p1, n1)) {
                         for (k2 in c(p2, n2)) {
+                            if (k1 == k2) next
                             j <- getIndex(k1, k2, N)
                             A <- if (k1 == p1) 0 else dnet[getIndex(k1, p1, N)]
                             B <- if (k2 == p2) 0 else dnet[getIndex(k2, p2, N)]

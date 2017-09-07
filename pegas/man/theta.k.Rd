@@ -43,7 +43,7 @@ theta.k(x, n = NULL, k = NULL)
 }
 \examples{
 data(jaguar)
-## convert the data and compute frequencies:
+## compute frequencies:
 S <- summary(jaguar)
 ## compute THETA for all loci:
 sapply(S, function(x) theta.k(x$allele))

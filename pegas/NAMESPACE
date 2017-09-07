@@ -8,7 +8,7 @@ export(alleles2loci, amova, as.igraph.haploNet, as.loci,
        LDscan, LDmap, loci2genind, mjn, msn, mst, MMD, nuc.div, plotNetMDS,
        proba.genotype, R2.test, rangePOS, read.gtx, read.loci, read.vcf,
        replot, rmst, rr.test, selectQUAL, site.spectrum, tajima.test,
-       theta.h, theta.k, theta.msat, theta.s, theta.tree, VCFheader,
+       theta.h, theta.k, theta.msat, theta.s, unphase, theta.tree, VCFheader,
        VCFlabels, VCFloci, write.loci)
 
 importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
@@ -17,7 +17,7 @@ importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
 importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, abline, barplot, hist, lines, locator, mtext, par,
            polygon, plot, plot.default, rect, segments, strheight, symbols,
-           text)
+           text, xinch)
 importFrom(grDevices, colorRampPalette, rainbow, rgb)
 importFrom(stats, as.dist, cmdscale, cophenetic, density, dist, integrate,
            na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois,

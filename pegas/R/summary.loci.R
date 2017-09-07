@@ -1,8 +1,8 @@
-## summary.loci.R (2015-05-19)
+## summary.loci.R (2017-09-07)
 
 ##   Print and Summaries of Loci Objects
 
-## Copyright 2009-2015 Emmanuel Paradis
+## Copyright 2009-2017 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -27,6 +27,27 @@ is.phased <- function(x)
         as.integer(x) %in% phased
     }
     sapply(x[, attr(x, "locicol")], foo)
+}
+
+unphase <- function(x)
+{
+    locale <- Sys.getlocale("LC_COLLATE")
+    if (!identical(locale, "C")) {
+        Sys.setlocale("LC_COLLATE", "C")
+        on.exit(Sys.setlocale("LC_COLLATE", locale))
+    }
+    foo <- function(x) {
+        f <- function(y) sort(strsplit(y, "|", fixed = TRUE)[[1]])
+        geno <- levels(x)
+        bar <- grep("|", geno, fixed = TRUE)
+        if (!length(bar)) return(x)
+        for (i in seq_along(bar))
+            geno[i] <- paste(f(geno[i]), collapse = "/")
+        x <- geno[x]
+        factor(x)
+    }
+    for (i in attr(x, "locicol")) x[, i] <- foo(x[, i])
+    x
 }
 
 is.snp <- function(x) UseMethod("is.snp")

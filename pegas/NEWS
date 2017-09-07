@@ -1,4 +1,16 @@
-		CHANGES IN PEGAS VERSION 0.9-0.5
+		CHANGES IN PEGAS VERSION 0.10-0.1
+
+
+NEW FEATURES
+
+    o The new function unphase unphases the genotypes and eventually
+      pools those identical once unphased (e.g., A|T and T|A).
+
+    o loci2gening() gains an option unphase (TRUE by default).
+
+
+
+                CHANGES IN PEGAS VERSION 0.10
 
 
 NEW FEATURES
@@ -32,6 +44,10 @@ NEW FEATURES
     o haploNet() has a new option, getProb = TRUE, to control whether
       to calculate Templeton's probabilities (in case of difficulties
       with very divergent sequences).
+
+    o The option 'show.mutation' of plot.haploNet() now takes an
+      integer between 0 and 3. The default (1) is to show the
+      mutations with small segments on the links.
 
     o loci2genind() has the new option 'ploidy' which is by default
       taken from the data with getPloidy().

@@ -15,7 +15,7 @@ as.loci(x, ...)
 \method{as.loci}{genind}(x, ...)
 genind2loci(x)
 \method{as.loci}{data.frame}(x, allele.sep = "/|", col.pop = NULL, col.loci = NULL, ...)
-loci2genind(x, ploidy = 2, na.alleles = c("0", "."))
+loci2genind(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
 \method{as.loci}{factor}(x, allele.sep = "/|", ...)
 \method{as.loci}{character}(x, allele.sep = "/|", ...)
 }
@@ -34,6 +34,8 @@ loci2genind(x, ploidy = 2, na.alleles = c("0", "."))
   \item{ploidy}{the ploidy level (see details).}
   \item{na.alleles}{a vector of charater strings giving the alleles
     to be treated as missing data.}
+  \item{unphase}{a logical value; by default, the genotypes are unphased
+    before conversion (this should not be changed).}
   \item{\dots}{further arguments to be passed to or from other methods.}
 }
 \details{

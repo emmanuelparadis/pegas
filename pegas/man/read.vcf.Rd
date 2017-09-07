@@ -51,7 +51,7 @@ read.vcf(file, from = 1, to = 10000, which.loci = NULL, quiet = FALSE)
 \dontrun{
 ## Chr Y from the 1000 genomes:
 a <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502"
-b <- "ALL.chrY.phase3_integrated_v1a.20130502.genotypes.vcf.gz"
+b <- "ALL.chrY.phase3_integrated_v1b.20130502.genotypes.vcf.gz"
 ## WARNING: the name of the file above may change
 url <- paste(a, b, sep = "/")
 ## file is compressed, so we download first:

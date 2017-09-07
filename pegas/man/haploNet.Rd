@@ -15,7 +15,7 @@ haploNet(h, d = NULL, getProb = TRUE)
 \method{plot}{haploNet}(x, size = 1, col = "black", bg = "white",
      col.link = "black", lwd = 1, lty = 1, pie = NULL,
      labels = TRUE, font = 2, cex = 1, scale.ratio = 1,
-     asp = 1, legend = FALSE, fast = FALSE, show.mutation = TRUE,
+     asp = 1, legend = FALSE, fast = FALSE, show.mutation = 1,
      threshold = c(1, 2), ...)
 \method{as.network}{haploNet}(x, directed = FALSE, altlinks = TRUE, ...)
 \method{as.igraph}{haploNet}(x, directed = FALSE, use.labels = TRUE,
@@ -60,10 +60,10 @@ haploNet(h, d = NULL, getProb = TRUE)
     to click where to draw the legend.}
   \item{fast}{a logical specifying whether to optimize the spacing of
     the circles; \code{FALSE} by default.}
-  \item{show.mutation}{a logical or a numeric value: if 0 (or FALSE)
-    nothing is drawn on the links; if 1 (or TRUE) the mutations are
-    shown with small dots on the links; if 2 the number of mutations are
-    printed on the links.}
+  \item{show.mutation}{an integer value: if 0, nothing is drawn on the
+    links; if 1, the mutations are shown with small segments on the
+    links; if 2, they are shown with small dots; if 3, the number of
+    mutations are printed on the links.}
   \item{threshold}{a numeric vector with two values (or 0) giving the
     lower and upper numbers of mutations for alternative links to be
     displayed. If \code{threshold = 0}, alternative links are not drawn

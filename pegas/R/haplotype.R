@@ -1,4 +1,4 @@
-## haplotype.R (2017-03-30)
+## haplotype.R (2017-09-01)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -344,18 +344,59 @@ print.haploNet <- function(x, ...)
     segments(xa0, ya0, xa1, ya1, col = "grey", lty = 2)
     if (show.mutation)
         .labelSegmentsHaploNet(xx, yy, altlink[s, 1:2, drop = FALSE],
-                               altlink[s, 3, drop = FALSE], NULL, 1, NULL, 2)
+                               altlink[s, 3, drop = FALSE], NULL, 1, NULL,
+                               show.mutation)
+}
+
+.mutationRug <- function(x0, y0, x1, y1, n, space = 0.05, length = 0.2)
+{
+    ## convert inches into user-coordinates:
+    l <- xinch(length)
+    sp <- xinch(space)
+    for (i in seq_along(x0)) {
+        xstart <- seq(-(sp*(n[i] - 1))/2, by = sp, length.out = n[i])
+        ystart <- rep(-l/2, n[i])
+        xstop <- xstart
+        ystop <- -ystart
+        ## rotation if the line is not horizontal
+        if (y0[i] != y1[i]) {
+            theta <- atan2(y1[i] - y0[i], x1[i] - x0[i])
+            tmpstart <- rect2polar(xstart, ystart)
+            tmpstop <- rect2polar(xstop, ystop)
+            Rstart <- tmpstart$r
+            Rstop <- tmpstop$r
+            THETAstart <- tmpstart$angle + theta
+            THETAstop <- tmpstop$angle + theta
+            xy.start <- polar2rect(Rstart, THETAstart)
+            xy.stop <- polar2rect(Rstop, THETAstop)
+            xstart <- xy.start$x
+            ystart <- xy.start$y
+            xstop <- xy.stop$x
+            ystop <- xy.stop$y
+        }
+        ## translation:
+        xm <- (x0[i] + x1[i])/2
+        ym <- (y0[i] + y1[i])/2
+        xstart <- xstart + xm
+        ystart <- ystart + ym
+        xstop <- xstop + xm
+        ystop <- ystop + ym
+        segments(xstart, ystart, xstop, ystop)
+    }
 }
 
 .labelSegmentsHaploNet <- function(xx, yy, link, step, size, lwd, col.link, method)
 {
 ### method: the way the segments are labelled
-###   1: Klaus's method
-###   2: show the number of mutations on each link
+### 1: small segments
+### 2: Klaus's method
+### 3: show the number of mutations on each link
 
     l1 <- link[, 1]
     l2 <- link[, 2]
     switch(method, {
+        .mutationRug(xx[l1], yy[l1], xx[l2], yy[l2], step)
+    }, {
         ld1 <- step
         ld2 <- step# * scale.ratio
         for (i in seq_along(ld1)) {
@@ -446,7 +487,7 @@ plot.haploNet <-
     function(x, size = 1, col = "black", bg = "white",
              col.link = "black", lwd = 1, lty = 1, pie = NULL,
              labels = TRUE, font = 2, cex = 1, scale.ratio = 1,
-             asp = 1, legend = FALSE, fast = FALSE, show.mutation = TRUE,
+             asp = 1, legend = FALSE, fast = FALSE, show.mutation = 1,
              threshold = c(1, 2), ...)
 {
     par(xpd = TRUE)
@@ -457,6 +498,7 @@ plot.haploNet <-
 
     tab <- tabulate(link)
     n <- length(tab)
+    show.mutation <- as.integer(show.mutation)
 
     ## adjust 'ld' wrt the size of the symbols:
     size <- rep(size, length.out = n)
@@ -648,7 +690,8 @@ plot.haploNet <-
         .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation)
 
     if (show.mutation)
-        .labelSegmentsHaploNet(xx, yy, link, x[, 3], size, lwd, col.link, as.numeric(show.mutation))
+        .labelSegmentsHaploNet(xx, yy, link, x[, 3], size, lwd, col.link,
+                               show.mutation)
 
     .drawSymbolsHaploNet(xx, yy, size, col, bg, pie)
 
@@ -1205,9 +1248,9 @@ all.equal.haploNet <- function(target, current, use.steps = TRUE, ...)
         if (anyNA(comp12)) {
             comp21 <- match(links2, links1)
             msg <- c(msg, "Number of links equal",
-                     "Links in current not in target:",
-                     bar(links1[is.na(comp12)]),
                      "Links in target not in current:",
+                     bar(links1[is.na(comp12)]),
+                     "Links in current not in target:",
                      bar(links2[is.na(comp21)]))
         }
         if (use.steps) {
@@ -1222,10 +1265,10 @@ all.equal.haploNet <- function(target, current, use.steps = TRUE, ...)
         msg <- c(msg, "Number of links different")
         comp21 <- match(links2, links1)
         if (anyNA(comp12))
-            msg <- c(msg, "Links in current not in current:",
+            msg <- c(msg, "Links in target not in current:",
                      bar(links1[is.na(comp12)]))
         if (anyNA(comp21))
-            msg <- c(msg, "Links in target not in target:",
+            msg <- c(msg, "Links in current not in target:",
                      bar(links2[is.na(comp21)]))
         if (use.steps) {
             tmp1 <- X1$step[!is.na(comp12)]

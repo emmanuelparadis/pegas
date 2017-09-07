@@ -6,12 +6,13 @@
   by Bandelt et al. (1999).
 }
 \usage{
-mjn(x, epsilon = 0, max.n.cost = 10000)
+mjn(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
 }
 \arguments{
   \item{x}{a matrix (or data frame) of DNA sequences or binary 0/1 data.}
   \item{epsilon}{tolerance parameter.}
   \item{max.n.cost}{the maximum number of costs to be computed.}
+  \item{prefix}{the prefix used to label the median vectors.}
 }
 \details{
   MJN is a network method where intermediate (unobserved) sequences (the
@@ -80,7 +81,7 @@ z <- as.matrix(as.DNAbin(z))
 
 \dontrun{
 ## same like in Fig. 5 of Bandelt et al. (1999):
-plotNetMDS(ntz, dist(attr(ntz, "data"), "manhattan"), 3)
+plotNetMDS(ntz, dist.dna(attr(ntz, "data"), "N"), 3)
 }
 }
 \keyword{models}

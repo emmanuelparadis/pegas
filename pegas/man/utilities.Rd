@@ -6,6 +6,7 @@
 \alias{proba.genotype}
 \alias{is.snp}
 \alias{is.phased}
+\alias{unphase}
 \title{Utily Functions for pegas}
 \description{
   The first three functions extract information on loci,
@@ -23,6 +24,7 @@ expand.genotype(n, alleles = NULL, ploidy = 2, matrix = FALSE)
 proba.genotype(alleles = c("1", "2"), p, ploidy = 2)
 is.snp(x)
 is.phased(x)
+unphase(x)
 }
 \arguments{
   \item{x}{an object of class \code{"loci"}.}
@@ -65,6 +67,9 @@ is.phased(x)
 
   \code{is.phased} returns a matrix of the same size than the original
   data specifying whether each genotype is phased or not.
+
+  \code{unphase} unphases the genotypes and eventually pools those that
+  become identical once unphased (e.g., A|T and T|A).
 }
 \author{Emmanuel Paradis}
 \examples{
