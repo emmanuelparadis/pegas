@@ -1,4 +1,4 @@
-## conversion.R (2017-01-19)
+## conversion.R (2017-09-08)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -7,10 +7,12 @@
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-loci2genind <- function(x, ploidy = 2, na.alleles = c("0", "."))
+loci2genind <- function(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
 {
     ipop <- which(names(x) == "population")
     pop <- if (length(ipop)) x[, ipop] else NULL
+
+    if (unphase) x <- unphase(x)
 
     if (any(isDot <- na.alleles == ".")) na.alleles[isDot] <- "\\."
     pat <- c(paste0("^", na.alleles, "/"), paste0("/", na.alleles, "$"), paste0("/", na.alleles, "/"))
