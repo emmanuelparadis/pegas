@@ -1,4 +1,4 @@
-### pegas: Population and Evolutionary Genetics Analysis System
+# pegas: Population and Evolutionary Genetics Analysis System
 
 pegas is an R package for the analysis of population genetic data. It is distributed on CRAN:
 
