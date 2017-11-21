@@ -1,8 +1,8 @@
-## hw.test.R (2015-03-30)
+## hw.test.R (2017-11-21)
 
 ##   Test of Hardy--Weinberg Equilibrium
 
-## Copyright 2009-2014 Emmanuel Paradis, 2015 Thibaut Jombart
+## Copyright 2009-2017 Emmanuel Paradis, 2015 Thibaut Jombart
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -127,14 +127,14 @@ hw.test.loci <- function(x, B = 1000, ...)
 
 ## method for class 'genind'
 hw.test.genind <- function(x, B=1000, ...){
-    ## checks
-    byPop <- FALSE
-    pop <- NULL
-    if(is.null(pop)) pop <- pop(x)
-    if(byPop && is.null(pop(x))){
-        warning("byPop requested but pop(x) is NULL")
-        byPop <- FALSE
-    }
+    ## checks -- commented out by EP (2017-11-21)
+    ##byPop <- FALSE
+    ##pop <- NULL
+    ##if(is.null(pop)) pop <- pop(x)
+    ##if(byPop && is.null(pop(x))){
+    ##    warning("byPop requested but pop(x) is NULL")
+    ##    byPop <- FALSE
+    ##}
 
     ## convert genind to loci
     x <- as.loci(x)

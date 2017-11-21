@@ -1,4 +1,4 @@
-## summary.loci.R (2017-09-07)
+## summary.loci.R (2017-11-13)
 
 ##   Print and Summaries of Loci Objects
 
@@ -75,20 +75,23 @@ print.loci <- function(x, details = FALSE, ...)
 
 summary.loci <- function(object, ...)
 {
+    class(object) <- NULL
     L <- attr(object, "locicol")
     ans <- vector("list", length(L))
-    names(ans) <- names(object[L])
+    names(ans) <- names(object)[L]
     ii <- 1L
     for (i in L) {
-        geno <- levels(object[, i])
+        geno <- levels.default(object[[i]])
+        ng <- length(geno)
         alle <- strsplit(geno, "[/|]")
         unialle <- sort(unique(unlist(alle)))
-        l <- tabulate(object[, i], length(geno))
+        l <- tabulate(object[[i]], ng)
         names(l) <- geno
-        tab <- matrix(0, length(unialle), length(geno),
+        tab <- matrix(0L, length(unialle), ng,
                       dimnames = list(unialle, geno))
         for (j in seq_along(alle))
-            for (k in alle[[j]]) tab[k, j] <- tab[k, j] + 1
+            for (k in alle[[j]])
+                tab[k, j] <- tab[k, j] + 1L
         ans[[ii]] <- list(genotype = l, allele = drop(tab %*% l))
         ii <- ii + 1L
     }

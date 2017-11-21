@@ -1,12 +1,22 @@
-		CHANGES IN PEGAS VERSION 0.10-0.1
+		CHANGES IN PEGAS VERSION 0.10-2
 
 
 NEW FEATURES
 
+    o The new function dist.snp computes the allelic sharing distance
+      (ASD) for strict SNPs (only for unphased, diploid genotypes).
+
     o The new function unphase unphases the genotypes and eventually
-      pools those identical once unphased (e.g., A|T and T|A).
+      pools those identical once unphased (e.g., A|T and T|A become
+      A/T).
 
     o loci2gening() gains an option unphase (TRUE by default).
+
+
+OTHER CHANGES
+
+    o summary.loci() is faster and scales better: 10 times faster with
+      1000 loci, 10O times faster with 10,000 loci.
 
 
 

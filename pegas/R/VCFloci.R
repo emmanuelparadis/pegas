@@ -1,8 +1,8 @@
-## VCFloci.R (2016-07-20)
+## VCFloci.R (2017-11-19)
 
 ##   Handling VCF Files
 
-## Copyright 2015-2016 Emmanuel Paradis
+## Copyright 2015-2017 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -110,8 +110,8 @@ VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
             x <- c(trail, Y[1:EOL[1L]])
             for (i in what) {
                 tmp <-
-                    if (i %in% c(2, 6)) .Call(extract_POS, x, c(1L, length(trail)), i - 1L)
-                    else .Call(extract_REF, x, c(1L, length(trail)), i - 1L)
+                    if (i %in% c(2, 6)) .Call(extract_POS, x, c(0L, length(trail)), i - 1L)
+                    else .Call(extract_REF, x, c(0L, length(trail)), i - 1L)
                 obj[[i]] <- c(obj[[i]], tmp)
             }
             ck <- ck + length(trail)

@@ -12,9 +12,10 @@
   The first three functions extract information on loci,
   \code{expand.genotype} creates a table of all possible genotypes given
   a set of alleles, \code{proba.genotype} calculates expected
-  probabilities of genotypes under Hardy--Weinberg equilibrium, and the
-  last two functions test whether a locus is a SNP or whether a
-  gentotype is phased.
+  probabilities of genotypes under Hardy--Weinberg equilibrium,
+  \code{is.snp} tests whether a locus is a SNP, \code{is.phased} tests
+  whether a gentotype is phased, and \code{unphase} unphase phased
+  genotypes.
 }
 \usage{
 getPloidy(x)
