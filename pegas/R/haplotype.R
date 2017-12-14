@@ -833,7 +833,7 @@ haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, compress = TRUE,
         s <- apply(is.phased(x), 1, all)
         if (any(!s)) {
             x <- x[s, ]
-            warning(paste0("dropping ", sum(!s), " observation(s) out of ", n, " due to unphased genotype(s)"))
+            warning(paste("dropping", sum(!s), "individual(s) out of", n, "due to unphased genotype(s)"))
             n <- nrow(x)
         }
     }
@@ -906,7 +906,7 @@ plot.haplotype.loci <- function(x, ...)
     barplot(y, ...)
 }
 
-dist.hamming <- function(x) 
+dist.hamming <- function(x)
 {
     n <- nrow(x)
     if (n < 2) stop("less than two haplotypes")

@@ -1,8 +1,8 @@
-## amova.R (2015-12-23)
+## amova.R (2017-12-14)
 
 ##   Analysis of Molecular Variance
 
-## Copyright 2010-2015 Emmanuel Paradis
+## Copyright 2010-2017 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -215,9 +215,18 @@ print.amova <- function(x, ...)
     print(x$tab)
     cat("\nVariance components:\n")
     if (is.data.frame(x$varcomp)) {
-        x$varcomp["Error", "P.value"] <- NA
         printCoefmat(x$varcomp, na.print = "")
-    } else print(x$varcomp)
+        sigma2 <- x$varcomp$sigma2
+    } else print(sigma2 <- x$varcomp)
+    if (length(sigma2) == 3) {
+        sigTot <- sum(sigma2)
+        Phi <- c(sum(sigma2[-3])/sigTot,
+                 sigma2[1]/sigTot,
+                 sigma2[2]/sum(sigma2[-1]))
+        names(Phi) <- paste("Phi", c("ST", "CT", "SC"), sep = "_")
+        cat("\nPhi-statistics:\n")
+        print(Phi)
+    }
     cat("\nVariance coefficients:\n")
     print(x$varcoef)
     cat("\n")

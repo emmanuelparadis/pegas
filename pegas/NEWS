@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.10-2
+		CHANGES IN PEGAS VERSION 0.10-3
 
 
 NEW FEATURES
@@ -12,11 +12,14 @@ NEW FEATURES
 
     o loci2gening() gains an option unphase (TRUE by default).
 
+    o print.amova() now displays the Phi-statistics (only if there are
+      two levels).
+
 
 OTHER CHANGES
 
     o summary.loci() is faster and scales better: 10 times faster with
-      1000 loci, 10O times faster with 10,000 loci.
+      1000 loci, 100 times faster with 10,000 loci.
 
 
 
