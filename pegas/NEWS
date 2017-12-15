@@ -12,8 +12,7 @@ NEW FEATURES
 
     o loci2gening() gains an option unphase (TRUE by default).
 
-    o print.amova() now displays the Phi-statistics (only if there are
-      two levels).
+    o print.amova() now displays the Phi-statistics.
 
 
 OTHER CHANGES

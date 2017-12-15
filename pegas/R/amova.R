@@ -1,4 +1,4 @@
-## amova.R (2017-12-14)
+## amova.R (2017-12-15)
 
 ##   Analysis of Molecular Variance
 
@@ -218,15 +218,35 @@ print.amova <- function(x, ...)
         printCoefmat(x$varcomp, na.print = "")
         sigma2 <- x$varcomp$sigma2
     } else print(sigma2 <- x$varcomp)
-    if (length(sigma2) == 3) {
-        sigTot <- sum(sigma2)
-        Phi <- c(sum(sigma2[-3])/sigTot,
-                 sigma2[1]/sigTot,
-                 sigma2[2]/sum(sigma2[-1]))
-        names(Phi) <- paste("Phi", c("ST", "CT", "SC"), sep = "_")
-        cat("\nPhi-statistics:\n")
-        print(Phi)
+    ## formulas from Excoffier et al. (1992):
+    ##if (length(sigma2) == 3) {
+    ##    sigTot <- sum(sigma2)
+    ##    Phi <- c(sum(sigma2[-3])/sigTot,
+    ##             sigma2[1]/sigTot,
+    ##             sigma2[2]/sum(sigma2[-1]))
+    ##    names(Phi) <- paste("Phi", c("ST", "CT", "SC"), sep = "_")
+    ##    cat("\nPhi-statistics:\n")
+    ##    print(Phi)
+    ##}
+    nsig <- length(sigma2)
+    Phi <- numeric(0.5 * nsig * (nsig - 1))
+    nms <- character(0.5 * nsig * (nsig - 1))
+    lv <- row.names(x$tab)
+    k <- 1L
+    for (i in 1:(nsig - 1)) {
+        for (j in i:(nsig - 1)) {
+            Phi[k] <- sum(sigma2[i:j]) / sum(sigma2[i:nsig])
+            nms[k] <-
+                if (i == 1) paste0(lv[j], ".in.GLOBAL")
+                else paste0(lv[nsig - i + 1], ".in.", lv[nsig - j])
+            k <- k + 1L
+        }
     }
+    names(Phi) <- nms
+    if (nsig == 3)
+        names(Phi) <- paste0(names(Phi), " (Phi_", c("CT", "ST", "SC"), ")")
+    cat("\nPhi-statistics:\n")
+    print(Phi)
     cat("\nVariance coefficients:\n")
     print(x$varcoef)
     cat("\n")

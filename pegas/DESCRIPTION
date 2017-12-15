@@ -1,6 +1,6 @@
 Package: pegas
 Version: 0.10-3
-Date: 2017-12-14
+Date: 2017-12-15
 Title: Population and Evolutionary Genetics Analysis System
 Authors@R: c(person("Emmanuel", "Paradis", role = c("aut", "cre", "cph"), email = "Emmanuel.Paradis@ird.fr"),
   person("Thibaut", "Jombart", role = c("aut", "cph")),
