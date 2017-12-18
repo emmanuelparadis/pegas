@@ -238,7 +238,7 @@ print.amova <- function(x, ...)
             Phi[k] <- sum(sigma2[i:j]) / sum(sigma2[i:nsig])
             nms[k] <-
                 if (i == 1) paste0(lv[j], ".in.GLOBAL")
-                else paste0(lv[nsig - i + 1], ".in.", lv[nsig - j])
+                else paste0(lv[j] ".in.", lv[i - 1])
             k <- k + 1L
         }
     }
