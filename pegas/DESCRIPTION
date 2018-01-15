@@ -1,12 +1,13 @@
 Package: pegas
-Version: 0.10-3
-Date: 2017-12-15
+Version: 0.10-4
+Date: 2017-12-19
 Title: Population and Evolutionary Genetics Analysis System
 Authors@R: c(person("Emmanuel", "Paradis", role = c("aut", "cre", "cph"), email = "Emmanuel.Paradis@ird.fr"),
   person("Thibaut", "Jombart", role = c("aut", "cph")),
   person("Klaus", "Schliep", role = c("aut", "cph")),
   person("Alastair", "Potts", role = c("aut", "cph")),
-  person("David", "Winter", role = c("aut", "cph")))
+  person("David", "Winter", role = c("aut", "cph")),
+  person("Zhian N.", "Kamvar", role = c("aut", "cph")))
 Depends: R (>= 2.6.0), ape (>= 2.4), adegenet
 Imports: graphics, utils
 Suggests: rgl

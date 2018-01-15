@@ -1,8 +1,8 @@
-## amova.R (2017-12-15)
+## amova.R (2017-12-19)
 
 ##   Analysis of Molecular Variance
 
-## Copyright 2010-2017 Emmanuel Paradis
+## Copyright 2010-2017 Emmanuel Paradis, 2017 Zhian N. Kamvar
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -238,7 +238,7 @@ print.amova <- function(x, ...)
             Phi[k] <- sum(sigma2[i:j]) / sum(sigma2[i:nsig])
             nms[k] <-
                 if (i == 1) paste0(lv[j], ".in.GLOBAL")
-                else paste0(lv[nsig - i + 1], ".in.", lv[nsig - j])
+                else paste0(lv[j], ".in.", lv[i - 1])
             k <- k + 1L
         }
     }

@@ -1,4 +1,4 @@
-## conversion.R (2017-09-08)
+## conversion.R (2017-12-17)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -59,7 +59,8 @@ genind2loci <- function(x) as.loci.genind(x)
         Sys.setlocale("LC_COLLATE", "C")
         on.exit(Sys.setlocale("LC_COLLATE", locale))
     }
-    if (index.only) order(x) else sort(x)
+    o <- sort.list(x) # faster than order(x)
+    if (index.only) o else x[o] # faster than sort()
 }
 
 .check.order.alleles <- function(x)
