@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.10-4
+		CHANGES IN PEGAS VERSION 0.10-5
 
 
 NEW FEATURES
@@ -18,6 +18,12 @@ NEW FEATURES
 
     o print.amova() now displays the Phi-statistics thanks to a
       contribution by Zhian Kamvar.
+
+
+BUG FIXES
+
+    o read.vcf(file = "~/chr.vcf") made R crash (apparently only under
+      some OSs). Thanks to Frédéric Michaud for the fix.
 
 
 OTHER CHANGES

@@ -1,8 +1,8 @@
-## IO.R (2015-10-07)
+## IO.R (2018-02-16)
 
 ##   Input/Ouput
 
-## Copyright 2009-2015 Emmanuel Paradis
+## Copyright 2009-2017 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -36,7 +36,7 @@ read.loci <-
 
 read.vcf <- function(file, from = 1, to = 1e4, which.loci = NULL, quiet = FALSE)
 {
-    file <- path.expand(file)
+    file <- path.expand(file) # fix by Frederic Michaud
     f <- .VCFconnection(file)
     GZ <- if (inherits(f, "connection")) TRUE else FALSE
 

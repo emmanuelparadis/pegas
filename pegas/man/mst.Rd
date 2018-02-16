@@ -30,8 +30,9 @@ rmst(d, B = 100)
   and the traveling salesman problem. \emph{Proceedings of the American
     Mathematical Society}, \bold{7}, 48--50.
 
-  Paradis, E. (2017) Analysis of haplotype networks: the randomized
-  minimum spanning tree method. Manuscript.
+  Paradis, E. (2018) Analysis of haplotype networks: the randomized
+  minimum spanning tree method. \emph{Methods in Ecology and Evolution},
+  \bold{9}, 000--000. DOI: 10.1111/2041-210X.12969.
 }
 \author{Emmanuel Paradis}
 \seealso{
