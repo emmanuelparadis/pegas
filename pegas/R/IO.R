@@ -36,6 +36,7 @@ read.loci <-
 
 read.vcf <- function(file, from = 1, to = 1e4, which.loci = NULL, quiet = FALSE)
 {
+    file <- path.expand(file)
     f <- .VCFconnection(file)
     GZ <- if (inherits(f, "connection")) TRUE else FALSE
 
