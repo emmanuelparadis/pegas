@@ -19,6 +19,9 @@ NEW FEATURES
     o print.amova() now displays the Phi-statistics thanks to a
       contribution by Zhian Kamvar.
 
+    o VCFloci() and read.vcf() can now read compressed files (.vcf.gz)
+      remotely.
+
 
 BUG FIXES
 

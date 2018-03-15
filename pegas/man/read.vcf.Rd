@@ -16,8 +16,8 @@ read.vcf(file, from = 1, to = 10000, which.loci = NULL, quiet = FALSE)
   \item{quiet}{a logical: should the progress of the operation be printed?}
 }
 \details{
-  The VCF file can be compressed (*.gz) or not, but compressed files
-  cannot be read remotely (see examples).
+  The VCF file can be compressed (*.gz) or not. Since pegas 0.11,
+  compressed remote files can be read (see examples).
 
   A TABIX file is not required (and will be ignored if present).
 
@@ -49,16 +49,20 @@ read.vcf(file, from = 1, to = 10000, which.loci = NULL, quiet = FALSE)
 }
 \examples{
 \dontrun{
-## Chr Y from the 1000 genomes:
+## Chr Y from the 1000 Genomes:
 a <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502"
 b <- "ALL.chrY.phase3_integrated_v1b.20130502.genotypes.vcf.gz"
 ## WARNING: the name of the file above may change
 url <- paste(a, b, sep = "/")
-## file is compressed, so we download first:
+## Solution 1: download first
 download.file(url, "chrY.vcf.gz")
-## no need to uncompress to read now that the file is local:
+## no need to uncompress:
 (info <- VCFloci("chrY.vcf.gz"))
 str(info) # show the modes of the columns
+## Solution 2: read remotely (since pegas 0.11)
+info2 <- VCFloci(url)
+identical(info, info2)
+rm(info2)
 
 SNP <- is.snp(info)
 table(SNP) # how many loci are SNPs?
