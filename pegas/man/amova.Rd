@@ -1,6 +1,7 @@
 \name{amova}
 \alias{amova}
 \alias{print.amova}
+\alias{getPhi}
 \title{Analysis of Molecular Variance}
 \description{
   This function performs a hierarchical analysis of molecular variance
@@ -10,6 +11,7 @@
 \usage{
 amova(formula, data = NULL, nperm = 1000, is.squared = FALSE)
 \method{print}{amova}(x, ...)
+getPhi(sigma2)
 }
 \arguments{
   \item{formula}{a formula giving the AMOVA model to be fitted with the
@@ -23,6 +25,7 @@ amova(formula, data = NULL, nperm = 1000, is.squared = FALSE)
   \item{is.squared}{a logical specifying whether the distance matrix has
     already been squared.}
   \item{x}{an object of class \code{"amova"}.}
+  \item{sigma2}{a named vector of variance components.}
   \item{\dots}{unused (here for compatibility.}
 }
 \details{
@@ -34,6 +37,14 @@ amova(formula, data = NULL, nperm = 1000, is.squared = FALSE)
 
   It is assumed that the rows of the distance matrix are in the same
   order than the hierarchical levels (which may be checked by the user).
+  
+  The function \code{getPhi()} is a convenience function for extracting a
+  table of hierarchical Phi-statistics for reporting. This will be an N+1 
+  by N matrix where N is the number of hierarchcial levels and GLOBAL is
+  always the first row of the matrix. The matrix can read as COLUMN in ROW.
+  
+  If the variance components passed to getPhi() are not named, they will
+  be reported as "level 1", "level 2", etc.
 }
 \note{
   If there are more than three levels, approximate formulae are used to
@@ -76,7 +87,9 @@ data(woodmouse)
 d <- dist.dna(woodmouse)
 g <- factor(c(rep("A", 7), rep("B", 8)))
 p <- factor(c(rep(1, 3), rep(2, 4), rep(3, 4), rep(4, 4)))
-amova(d ~ g/p, nperm = 100) # 2 levels
+(d_gp <- amova(d ~ g/p, nperm = 100)) # 2 levels
+sig2 <- setNames(d_gp$varcomp$sigma2, rownames(d_gp$varcomp))
+getPhi(sig2) # Phi table
 amova(d ~ p, nperm = 100) # 1 level
 amova(d ~ g, nperm = 100)
 
@@ -86,6 +99,8 @@ pop <- gl(64, 5, labels = paste0("pop", 1:64))
 region <- gl(16, 20, labels = paste0("region", 1:16))
 conti <- gl(4, 80, labels = paste0("conti", 1:4))
 dd <- as.dist(matrix(runif(320^2), 320))
-amova(dd ~ conti/region/pop, nperm = 100)
+(dd_crp <- amova(dd ~ conti/region/pop, nperm = 100))
+sig2 <- setNames(dd_crp$varcomp$sigma2, rownames(dd_crp$varcomp))
+getPhi(sig2)
 }}
 \keyword{models}

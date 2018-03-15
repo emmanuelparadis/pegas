@@ -19,6 +19,9 @@ NEW FEATURES
     o print.amova() now displays the Phi-statistics thanks to a
       contribution by Zhian Kamvar.
 
+    o The new function getPhi() will return Phi-statistics from a 
+      vector of variance components.
+
 
 BUG FIXES
 
