@@ -14,14 +14,13 @@ NEW FEATURES
       pools those identical once unphased (e.g., A|T and T|A become
       A/T).
 
+    o The new function getPhi returns Phi-statistics from a vector of
+      variance components.
+
     o loci2gening() gains an option unphase (TRUE by default).
 
     o print.amova() now displays the Phi-statistics thanks to a
       contribution by Zhian Kamvar.
-
-
-    o The new function getPhi() will return Phi-statistics from a 
-      vector of variance components.
 
     o VCFloci() and read.vcf() can now read compressed files (.vcf.gz)
       remotely.

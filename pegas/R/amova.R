@@ -1,8 +1,8 @@
-## amova.R (2017-12-19)
+## amova.R (2018-03-16)
 
 ##   Analysis of Molecular Variance
 
-## Copyright 2010-2017 Emmanuel Paradis, 2017 Zhian N. Kamvar
+## Copyright 2010-2017 Emmanuel Paradis, 2018 Zhian N. Kamvar
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -253,22 +253,23 @@ print.amova <- function(x, ...)
 }
 
 ## This will take a named vector of sigma^2 values and return a data frame of
-## heirarchical Phi statistics. 
-getPhi <- function(sigma2){
-  nsig <- length(sigma2)
-  Phi <- numeric(0.5 * nsig * (nsig - 1))
-  nms <- character(0.5 * nsig * (nsig - 1))
-  lv <- if (is.null(names(sigma2))) paste("level", seq_along(sigma2)) else names(sigma2)
-  k <- 1L
-  mat <- matrix(NA_real_, nrow = nsig, ncol = nsig - 1)
-  colnames(mat) <- lv[seq(nsig - 1)]
-  rownames(mat) <- c("GLOBAL", lv[seq(nsig - 1)])
-  for (i in 1:(nsig - 1)) {
-    for (j in i:(nsig - 1)) {
-      Phi[k] <- sum(sigma2[i:j])/sum(sigma2[i:nsig])
-      mat[i, j] <- Phi[k]
-      k <- k + 1L
+## hierarchical Phi statistics.
+getPhi <- function(sigma2)
+{
+    nsig <- length(sigma2)
+    Phi <- numeric(0.5 * nsig * (nsig - 1))
+    nms <- character(0.5 * nsig * (nsig - 1))
+    lv <- if (is.null(names(sigma2))) paste("level", seq_along(sigma2)) else names(sigma2)
+    k <- 1L
+    mat <- matrix(NA_real_, nrow = nsig, ncol = nsig - 1)
+    colnames(mat) <- lv[seq(nsig - 1)]
+    rownames(mat) <- c("GLOBAL", lv[seq(nsig - 1)])
+    for (i in 1:(nsig - 1)) {
+        for (j in i:(nsig - 1)) {
+            Phi[k] <- sum(sigma2[i:j])/sum(sigma2[i:nsig])
+            mat[i, j] <- Phi[k]
+            k <- k + 1L
+        }
     }
-  }
-  mat
+    mat
 }
