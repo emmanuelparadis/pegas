@@ -31,6 +31,10 @@ BUG FIXES
     o read.vcf(file = "~/chr.vcf") made R crash (apparently only under
       some OSs). Thanks to Frédéric Michaud for the fix.
 
+    o plot.haploNet() failed with the default show.mutation = 1 if the
+      distances were all less than one. A warning is now issued and
+      show.mutation is changed to 3.
+
 
 OTHER CHANGES
 
