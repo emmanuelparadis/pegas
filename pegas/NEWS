@@ -35,6 +35,9 @@ BUG FIXES
       distances were all less than one. A warning is now issued and
       show.mutation is changed to 3.
 
+    o Fst() did not use correct sample size with respect to missing
+      data: the correction is now done locus by locus.
+
 
 OTHER CHANGES
 
