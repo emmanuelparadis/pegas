@@ -1,8 +1,8 @@
-## amova.R (2018-03-16)
+## amova.R (2018-05-14)
 
 ##   Analysis of Molecular Variance
 
-## Copyright 2010-2017 Emmanuel Paradis, 2018 Zhian N. Kamvar
+## Copyright 2010-2018 Emmanuel Paradis, 2018 Zhian N. Kamvar
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -32,6 +32,20 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
         stop("the lhs of the formula must be either a matrix or an object of class 'dist'.")
     n <- dim(y)[1] # number of individuals
     Nlv <- length(gr) # number of levels
+    ## reorder the observations so that they are arranged in hierarchical
+    ## blocks for the permutations (2018-05-14)
+    if (nperm) {
+        o <- do.call("order", gr)
+        gr <- gr[o, ]
+        if (Nlv > 1) {
+            f <- function(x) {
+                lp <- as.character(unique(x))
+                factor(match(as.character(x), lp))
+            }
+            for (i in 2:Nlv) gr[, i] <- f(gr[, i])
+        }
+        y <- y[o, o]
+    }
 
 ### 5 local functions
     ## a simplified version of tapply(X, INDEX, FUN = sum):
@@ -138,7 +152,7 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
     class(res) <- "amova"
 
 ### Below, "pop" is used for the lowest level of the geo structure,
-### and "region" the one just above pop.
+### and "region" for the one just above pop.
     if (nperm) {
         rSigma2 <- matrix(0, nperm, length(sigma2)) # Note that length(sigma2) == Nlv + 1
         ## First shuffle all individuals among all pops to assess the

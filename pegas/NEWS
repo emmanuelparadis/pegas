@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.10-5
+		CHANGES IN PEGAS VERSION 0.10-6
 
 
 NEW FEATURES
@@ -37,6 +37,10 @@ BUG FIXES
 
     o Fst() did not use correct sample size with respect to missing
       data: the correction is now done locus by locus.
+
+    o amova() failed to compute P-values for the higher levels if the
+      levels were not arranged as blocks: the data are now rearranged
+      internally.
 
 
 OTHER CHANGES
