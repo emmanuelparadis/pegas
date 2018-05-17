@@ -42,6 +42,8 @@ BUG FIXES
       levels were not arranged as blocks: the data are now rearranged
       internally.
 
+    o A bug was fixed in unphase().
+
 
 OTHER CHANGES
 

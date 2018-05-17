@@ -1,8 +1,8 @@
-## summary.loci.R (2017-11-13)
+## summary.loci.R (2018-05-17)
 
 ##   Print and Summaries of Loci Objects
 
-## Copyright 2009-2017 Emmanuel Paradis
+## Copyright 2009-2018 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -41,7 +41,7 @@ unphase <- function(x)
         geno <- levels(x)
         bar <- grep("|", geno, fixed = TRUE)
         if (!length(bar)) return(x)
-        for (i in seq_along(bar))
+        for (i in bar)
             geno[i] <- paste(f(geno[i]), collapse = "/")
         x <- geno[x]
         factor(x)
