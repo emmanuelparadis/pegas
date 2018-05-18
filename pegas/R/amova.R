@@ -287,3 +287,26 @@ getPhi <- function(sigma2)
     }
     mat
 }
+
+
+write.pegas.amova <- function(x, file = ""){
+  if(class(x) != "amova"){
+    stop(paste("Expecting an object of class 'amova',  instead received:", class(x)))
+  }
+  if(file == ""){
+    stop("Please specify a filename.")
+  }
+  
+  # Convert variances coefficients to a matrix with a 'Total' row.
+  x[[2]] <- as.data.frame(as.matrix(x[[2]], ncol=1))
+  rownames(x[[2]]) <- rownames(x[[3]])
+  x[[2]]['Total', 1] <- c('')
+  colnames(x[[2]]) <- 'Variance coefficients'
+  # Convert variance components to a matrix with a 'Total' row.
+  x[[3]]['Total', 1:2] <- c('','')
+  
+  x[[1]] <- cbind(x[[1]], x[[3]], x[[2]])
+  
+  utils::write.csv(x[[1]], file=file)
+}
+
