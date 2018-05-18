@@ -298,6 +298,9 @@ write.pegas.amova <- function(x, file = ""){
   }
   
   # Convert variances coefficients to a matrix with a 'Total' row.
+  if(length(x[[2]]) == 1){
+    x[[2]] <- c(x[[2]], '')
+  }
   x[[2]] <- as.data.frame(as.matrix(x[[2]], ncol=1))
   rownames(x[[2]]) <- rownames(x[[3]])
   x[[2]]['Total', 1] <- c('')
@@ -309,4 +312,5 @@ write.pegas.amova <- function(x, file = ""){
   
   utils::write.csv(x[[1]], file=file)
 }
+
 
