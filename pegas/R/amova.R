@@ -2,7 +2,7 @@
 
 ##   Analysis of Molecular Variance
 
-## Copyright 2010-2018 Emmanuel Paradis, 2018 Zhian N. Kamvar
+## Copyright 2010-2018 Emmanuel Paradis, 2018 Zhian N. Kamvar, 2018 Brian Knaus
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -296,7 +296,6 @@ write.pegas.amova <- function(x, file = ""){
   if(file == ""){
     stop("Please specify a filename.")
   }
-  
   # Convert variances coefficients to a matrix with a 'Total' row.
   if(length(x[[2]]) == 1){
     x[[2]] <- c(x[[2]], '')
@@ -307,10 +306,8 @@ write.pegas.amova <- function(x, file = ""){
   colnames(x[[2]]) <- 'Variance coefficients'
   # Convert variance components to a matrix with a 'Total' row.
   x[[3]]['Total', 1:2] <- c('','')
-  
   x[[1]] <- cbind(x[[1]], x[[3]], x[[2]])
-  
-  utils::write.csv(x[[1]], file=file)
+  write.csv(x[[1]], file=file)
 }
 
 

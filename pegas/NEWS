@@ -17,6 +17,9 @@ NEW FEATURES
     o The new function getPhi returns Phi-statistics from a vector of
       variance components.
 
+    o The new function write.pegas.amova contributed by Brian Knaus
+      writes outputs from amova() into files.
+
     o loci2gening() gains an option unphase (TRUE by default).
 
     o print.amova() now displays the Phi-statistics thanks to a

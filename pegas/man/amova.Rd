@@ -2,6 +2,7 @@
 \alias{amova}
 \alias{print.amova}
 \alias{getPhi}
+\alias{write.pegas.amova}
 \title{Analysis of Molecular Variance}
 \description{
   This function performs a hierarchical analysis of molecular variance
@@ -12,6 +13,7 @@
 amova(formula, data = NULL, nperm = 1000, is.squared = FALSE)
 \method{print}{amova}(x, ...)
 getPhi(sigma2)
+write.pegas.amova(x, file = "")
 }
 \arguments{
   \item{formula}{a formula giving the AMOVA model to be fitted with the
@@ -26,6 +28,7 @@ getPhi(sigma2)
     already been squared.}
   \item{x}{an object of class \code{"amova"}.}
   \item{sigma2}{a named vector of variance components.}
+  \item{file}{a file name.}
   \item{\dots}{unused (here for compatibility.}
 }
 \details{
@@ -66,7 +69,7 @@ getPhi(sigma2)
   of square deviations (SSD), mean square deviations (MSD), and the
   number of degrees of freedom, and a vector of variance components.
 }
-\author{Emmanuel Paradis}
+\author{Emmanuel Paradis, Zhian N. Kamvar, and Brian Knaus}
 \references{
   Excoffier, L., Smouse, P. E. and Quattro, J. M. (1992) Analysis of
   molecular variance inferred from metric distances among DNA
