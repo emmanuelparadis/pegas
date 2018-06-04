@@ -1,4 +1,4 @@
-## haplotype.R (2018-04-09)
+## haplotype.R (2018-06-04)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -310,13 +310,12 @@ haploNet <- function(h, d = NULL, getProb = TRUE)
 print.haploNet <- function(x, ...)
 {
     cat("Haplotype network with:\n")
-    cat("  ", length(attr(x, "labels")), "haplotypes\n")
-    n <- nrow(x)
-    msg <- if (n > 1) "links\n" else "link\n"
-    cat("  ", n, msg)
+    cat(" ", length(attr(x, "labels")), "haplotypes\n")
+    N <- n <- nrow(x)
     altlinks <- attr(x, "alter.links")
-    cat("  ", if (is.null(altlinks)) 0 else nrow(altlinks), "alternative links\n")
-    cat("   link lengths between", x[1, 3], "and", x[n, 3], "steps\n\n")
+    if (!is.null(altlinks)) N <- N + nrow(altlinks)
+    cat(" ", N, if (N > 1) "links\n" else "link\n")
+    cat("  link lengths between", x[1, 3], "and", x[n, 3], "steps\n\n")
     cat("Use print.default() to display all elements.\n")
 }
 
