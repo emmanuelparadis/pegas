@@ -41,6 +41,8 @@ BUG FIXES
     o Fst() did not use correct sample size with respect to missing
       data: the correction is now done locus by locus.
 
+    o Fst() failed when the data contained only a single locus.
+
     o amova() failed to compute P-values for the higher levels if the
       levels were not arranged as blocks: the data are now rearranged
       internally.
