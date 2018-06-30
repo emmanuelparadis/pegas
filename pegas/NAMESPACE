@@ -35,6 +35,7 @@ S3method(as.loci, genind)
 S3method(haplotype, character)
 S3method(haplotype, DNAbin)
 S3method(haplotype, loci)
+S3method(haplotype, numeric)
 
 S3method(hw.test, loci)
 S3method(hw.test, genind)

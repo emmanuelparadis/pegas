@@ -2,6 +2,7 @@
 \alias{haplotype}
 \alias{haplotype.DNAbin}
 \alias{haplotype.character}
+\alias{haplotype.numeric}
 \alias{plot.haplotype}
 \alias{print.haplotype}
 \alias{plot.haplotype}
@@ -16,6 +17,7 @@
 haplotype(x, ...)
 \method{haplotype}{DNAbin}(x, labels = NULL, ...)
 \method{haplotype}{character}(x, labels = NULL, ...)
+\method{haplotype}{numeric}(x, labels = NULL, ...)
 \method{plot}{haplotype}(x, xlab = "Haplotype", ylab = "Number", ...)
 \method{print}{haplotype}(x, ...)
 \method{sort}{haplotype}(x,

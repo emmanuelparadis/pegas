@@ -1,8 +1,8 @@
-## mjn.R (2017-05-02)
+## mjn.R (2018-06-30)
 
 ##   Median-Joining Network
 
-## Copyright 2017 Emmanuel Paradis
+## Copyright 2017-2018 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -110,7 +110,7 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
         },
         "numeric" = function(x, table)
             any(apply(table, 1, function(y) all(y == x))))
-    
+
     ## initialization --
     n <- nrow(x)
     nextX <- n + 1L
@@ -171,6 +171,8 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
             ## get the median vectors:
             subsamp <- x[s, ] # get the sequences for triplet 's'
             s4 <- funVariableCol(subsamp)
+            if (!length(s4))
+                stop("maybe there are duplicated sequences in your data")
             subsamp4 <- subsamp[, s4, drop = FALSE] # get only the variable cols for 's'
             X <- getMedianVectors(subsamp4)
             tmp <- subsamp[rep(1, nrow(X)), , drop = FALSE]

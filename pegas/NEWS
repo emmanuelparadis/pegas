@@ -28,6 +28,9 @@ NEW FEATURES
     o VCFloci() and read.vcf() can now read compressed files (.vcf.gz)
       remotely.
 
+    o There is a new haplotype.numeric() method (for 0/1 sequences but
+      not only.
+
 
 BUG FIXES
 
@@ -57,6 +60,9 @@ OTHER CHANGES
 
     o The help page of theta.tree() has been clarified and its example
       extended.
+
+    o mjn() gives a more explicit error message if failing because of
+      duplicated sequences.
 
 
 

@@ -1,4 +1,4 @@
-## haplotype.R (2018-06-04)
+## haplotype.R (2018-06-30)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -215,6 +215,9 @@ haplotype.character <- function(x, labels = NULL, ...)
     attr(obj, "from") <- nms.x
     obj
 }
+
+haplotype.numeric <- function(x, labels = NULL, ...)
+    haplotype.character(x = x, labels = labels, ...)
 
 haploFreq <- function(x, fac, split = "_", what = 2, haplo = NULL)
 {
