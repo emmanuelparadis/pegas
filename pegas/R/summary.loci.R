@@ -1,4 +1,4 @@
-## summary.loci.R (2018-05-17)
+## summary.loci.R (2018-07-05)
 
 ##   Print and Summaries of Loci Objects
 
@@ -7,9 +7,32 @@
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-getPloidy <- function(x) {
-    foo <- function(x) sum(charToRaw(levels(x)[1]) %in% as.raw(c(47, 124))) + 1L
-    unlist(lapply(x[, attr(x, "locicol"), drop = FALSE], foo))
+getPloidy <- function(x)
+{
+    foo <- function(x, n) {
+        class(x) <- NULL
+        res <- integer(n)
+        ploidyGENO <- nchar(gsub("[^|/]", "", levels(x))) + 1L
+        uniquePloidy <- unique(ploidyGENO)
+        if (length(uniquePloidy) == 1L) {
+            res[] <- uniquePloidy
+            return(res)
+        }
+        for (i in uniquePloidy) {
+            k <- which(ploidyGENO == i)
+            res[x %in% k] <- i
+        }
+        res
+    }
+    n <- nrow(x)
+    LOCI <- attr(x, "locicol")
+    p <- length(LOCI)
+    ans <- matrix(NA_integer_, n, p)
+    colnames(ans) <- names(x)[LOCI]
+    rownames(ans) <- row.names(x)
+    class(x) <- NULL
+    for (j in 1:p) ans[, j] <- foo(x[[LOCI[j]]], n)
+    ans
 }
 
 getAlleles <- function(x)

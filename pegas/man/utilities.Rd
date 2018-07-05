@@ -48,8 +48,8 @@ unphase(x)
   and 2, but not A and AT).
 }
 \value{
-  \code{getPloidy} returns the ploidy level of all loci in an object of
-  class \code{"loci"} as a numeric vector.
+  \code{getPloidy} returns the ploidy level of all genotypes as a matrix
+  of integers with rownames and colnames taken from \code{x}.
 
   \code{getAlleles} and \code{getGenotypes} return the alleles and
   genotypes, respectively, observed in all loci in an object of class

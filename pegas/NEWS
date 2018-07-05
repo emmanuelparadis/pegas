@@ -29,7 +29,7 @@ NEW FEATURES
       remotely.
 
     o There is a new haplotype.numeric() method (for 0/1 sequences but
-      not only.
+      not only).
 
 
 BUG FIXES
@@ -63,6 +63,8 @@ OTHER CHANGES
 
     o mjn() gives a more explicit error message if failing because of
       duplicated sequences.
+
+    o getPloidy() now returns a matrix of integers.
 
 
 
