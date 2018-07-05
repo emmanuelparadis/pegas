@@ -14,6 +14,9 @@ NEW FEATURES
       pools those identical once unphased (e.g., A|T and T|A become
       A/T).
 
+    o The new generic function hap.div computes haplotype diversity.
+      There are methods for the "haplotype" and "DNAbin" classes.
+
     o The new function getPhi returns Phi-statistics from a vector of
       variance components.
 

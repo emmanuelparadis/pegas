@@ -1,8 +1,8 @@
-## nuc.div.R (2015-10-27)
+## nuc.div.R (2018-07-05)
 
-##   Nucleotide Diversity
+##   Nucleotide and Haplotype Diversity
 
-## Copyright 2009-2015 Emmanuel Paradis
+## Copyright 2009-2018 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -44,4 +44,29 @@ nuc.div.haplotype <- function(x, variance = FALSE, pairwise.deletion = FALSE, ..
         ans <- c(ans, var)
     }
     ans
+}
+
+hap.div <- function(x, ...) UseMethod("hap.div")
+
+hap.div.haplotype <- function(x, variance = FALSE, method = "Nei", ...)
+{
+    f <- sapply(attr(x, "index"), length)
+    n <- sum(f)
+    p <- f/n
+    sump2 <- sum(p^2)
+    n1 <- n - 1L
+    res <- (1 - sump2) * n / n1
+    if (variance) {
+        tmp <- sump2^2
+        sump3 <- sum(p^3)
+        var <- (sump2 - tmp + 4 * n1 * (sump3 - tmp))/(n * n1)
+        res <- c(res, var)
+    }
+    res
+}
+
+hap.div.DNAbin <- function(x, variance = FALSE, method = "Nei", ...)
+{
+    h <- haplotype(x)
+    hap.div.haplotype(h, variance = variance, method = method, ...)
 }
