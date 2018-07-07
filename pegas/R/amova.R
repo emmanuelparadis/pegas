@@ -1,4 +1,4 @@
-## amova.R (2018-05-14)
+## amova.R (2018-07-07)
 
 ##   Analysis of Molecular Variance
 
@@ -36,7 +36,7 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
     ## blocks for the permutations (2018-05-14)
     if (nperm) {
         o <- do.call("order", gr)
-        gr <- gr[o, ]
+        gr <- gr[o, , drop = FALSE] # drop=FALSE in case there is a single level
         if (Nlv > 1) {
             f <- function(x) {
                 lp <- as.character(unique(x))

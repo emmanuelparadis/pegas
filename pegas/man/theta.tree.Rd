@@ -76,9 +76,9 @@ polygon(c(xx, rev(xx)), c(yy, rep(0, length(xx))),
         border = NA, col = "lightblue")
 segments(o$theta, 0, o$theta, o$logLik, col = "blue")
 abline(v = 2, lty = 3)
-legend("bottomright", legend = c("log-likelihood",
-  expression("True "*theta), expression(hat(theta)*" (MLE)"),
-  "95% conf. interv."), lty = c(1, 3, 1, 1), lwd = c(1, 1, 1, 15),
-  col = c("black", "black", "blue", "lightblue"))
+legend("bottomright", legend = expression("log-likelihood",
+       "True " * theta, hat(theta) * " (MLE)", "95\%\ conf. interv."),
+       lty = c(1, 3, 1, 1), lwd = c(1, 1, 1, 15),
+       col = c("black", "black", "blue", "lightblue"))
 }
 \keyword{models}

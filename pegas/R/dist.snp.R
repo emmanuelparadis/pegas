@@ -45,7 +45,6 @@ dist.asd <- function(x, scaled = TRUE)
     locicol <- attr(x, "locicol")
     nloc <- length(locicol)
     n <- nrow(x)
-    ploidy <- getPloidy(x)
     class(x) <- NULL # makes things MUCH faster
     foo <- function(x) {
         geno <- levels(x)

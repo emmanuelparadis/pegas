@@ -1,4 +1,4 @@
-## summary.loci.R (2018-07-05)
+## summary.loci.R (2018-07-07)
 
 ##   Print and Summaries of Loci Objects
 
@@ -6,6 +6,19 @@
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
+
+## utility to check that all individuals have the same ploidy level for each locus:
+## outputs a vector with ploidy level if all individuals have the same, 0 otherwise
+.checkPloidy <- function(x)
+{
+    PLOIDY <- getPloidy(x)
+    ploidy <- integer(ncol(PLOIDY))
+    for (j in seq_along(ploidy)) {
+        tmp <- unique(PLOIDY[, j])
+        if (length(tmp) == 1) ploidy[j] <- tmp
+    }
+    ploidy
+}
 
 getPloidy <- function(x)
 {

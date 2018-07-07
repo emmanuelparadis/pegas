@@ -31,6 +31,7 @@ sw(x, width, step, ...)
 }
 \author{Emmanuel Paradis}
 \examples{
+data(woodmouse)
 sw(woodmouse)
 sw(woodmouse, 200, 200)
 sw(woodmouse, 200, 200, rowAverage = TRUE)

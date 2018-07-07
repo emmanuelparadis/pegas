@@ -57,12 +57,9 @@ expand.genotype <- function(n, alleles = NULL, ploidy = 2, matrix = FALSE)
 ## CODE MODIFICATION BY THIBAUT JOMBART
 ## t.jombart@imperial.ac.uk
 ## March 2015
-##
 
 ## generic
-hw.test <- function (x, B=1000, ...){
-    UseMethod("hw.test")
-}
+hw.test <- function (x, B = 1000, ...) UseMethod("hw.test")
 
 ## method for class 'loci'
 hw.test.loci <- function(x, B = 1000, ...)
@@ -81,7 +78,13 @@ hw.test.loci <- function(x, B = 1000, ...)
         c(chi2, DF, 1 - pchisq(chi2, DF))
     }
     y <- summary.loci(x)
-    ploidy <- getPloidy(x)
+    ploidy <- .checkPloidy(x) # see summary.loci.R
+    if (any(del <- !ploidy)) {
+        msg <- paste("The following loci were dropped (not the same ploidy for all individuals):",
+                     names(y)[del], sep = "\n")
+        y <- y[!del]
+        warning(msg)
+    }
     ans <- t(mapply(test.polyploid, y, ploidy = ploidy))
     dimnames(ans) <- list(names(y), c("chi^2", "df", "Pr(chi^2 >)"))
     if (B) {
@@ -121,12 +124,10 @@ hw.test.loci <- function(x, B = 1000, ...)
         ans <- cbind(ans, "Pr.exact" = mapply(test.mc, y, ploidy))
     }
     ans
-} # end hw.test.loci
-
-
+}
 
 ## method for class 'genind'
-hw.test.genind <- function(x, B=1000, ...){
+hw.test.genind <- function(x, B = 1000, ...){
     ## checks -- commented out by EP (2017-11-21)
     ##byPop <- FALSE
     ##pop <- NULL
@@ -140,11 +141,8 @@ hw.test.genind <- function(x, B=1000, ...){
     x <- as.loci(x)
 
     ## call hw.test.loci
-    out <- hw.test.loci(x=x, B=B, ...)
-
-    ## return result
-    return(out)
-} # end hw.test.genind
+    hw.test.loci(x = x, B = B, ...)
+}
 
 
 

@@ -1,4 +1,4 @@
-## Fst.R (2018-06-04)
+## Fst.R (2018-07-07)
 
 ##   F-Statistics
 
@@ -9,7 +9,7 @@
 
 Fst <- function(x, pop = NULL, quiet = TRUE)
 {
-    if (any(getPloidy(x) != 2))
+    if (any(.checkPloidy(x) != 2))
         stop("Fst() requires diploid data")
 
     NAMESX <- names(x)

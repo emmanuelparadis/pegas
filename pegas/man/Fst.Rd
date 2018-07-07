@@ -6,7 +6,7 @@
   \eqn{F_{IS}}{Fis} for each locus in the data.
 }
 \usage{
-Fst(x, pop = NULL)
+Fst(x, pop = NULL, quiet = TRUE)
 }
 \arguments{
   \item{x}{an object of class \code{"loci"}.}
@@ -14,6 +14,7 @@ Fst(x, pop = NULL)
     row of \code{x}, or a single numeric value specifying which column
     of \code{x} to use as population indicator. By default, the column
     labelled \code{"population"} is used.}
+  \item{quiet}{a logical value: should calculations be quiet?}
 }
 \details{
   The formulae in Weir and Cockerham (1984) are used for each allele,

@@ -1,5 +1,6 @@
 \name{hap.div}
 \alias{hap.div}
+\alias{hap.div.haplotype}
 \alias{hap.div.DNAbin}
 \title{Haplotype Diversity}
 \description{

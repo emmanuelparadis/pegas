@@ -1,4 +1,4 @@
-## haplotype.R (2018-06-30)
+## haplotype.R (2018-07-07)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -848,7 +848,7 @@ haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, compress = TRUE,
 ### NOTE: trying to find identical rows first does not speed calculations
 
     ## initialise (works for all levels of ploidy)
-    nh <- getPloidy(x[, 1, drop = FALSE]) # the number of haplotypes
+    nh <- .checkPloidy(x[, 1, drop = FALSE]) # the number of haplotypes
     names(nh) <- NULL
     res <- matrix("", nloc, nh * n)
     class(x) <- "data.frame" # drop "loci"
@@ -992,7 +992,7 @@ LD2 <- function(x, locus = c(1, 2), details = TRUE)
     if (length(locus) != 2)
         stop("you must specify two loci to compute linkage disequilibrium")
     x <- x[, attr(x, "locicol")[locus]]
-    if (any(getPloidy(x) != 2))
+    if (any(.checkPloidy(x) != 2))
         stop("linkage disequilibrium with unphased genotypes works only for diploid data")
     n <- nrow(x)
     s <- summary(x)
