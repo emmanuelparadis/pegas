@@ -3,7 +3,10 @@
 
 NEW FEATURES
 
-    o  The new function dist.asd computes the allelic sharing distance
+    o The new generic function sw computes sliding window averages.
+      There is a method for "DNAbin" matrices with various options.
+
+    o The new function dist.asd computes the allelic sharing distance
       (ASD) for all diploid genotypes (phased or unphased, with two
       alleles or more).
 

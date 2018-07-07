@@ -8,7 +8,7 @@ export(alleles2loci, amova, as.igraph.haploNet, as.loci,
        hap.div, haplotype, heterozygosity, hw.test, is.phased, is.snp, LD, LD2,
        LDscan, LDmap, loci2genind, mjn, msn, mst, MMD, nuc.div, plotNetMDS,
        proba.genotype, R2.test, rangePOS, read.gtx, read.loci, read.vcf,
-       replot, rmst, rr.test, selectQUAL, site.spectrum, tajima.test,
+       replot, rmst, rr.test, selectQUAL, site.spectrum, sw, tajima.test,
        theta.h, theta.k, theta.msat, theta.s, unphase, theta.tree, VCFheader,
        VCFlabels, VCFloci, write.loci, write.pegas.amova)
 
@@ -48,6 +48,8 @@ S3method(is.snp, VCFinfo)
 
 S3method(nuc.div, DNAbin)
 S3method(nuc.div, haplotype)
+
+S3method(sw, DNAbin)
 
 S3method(theta.s, default)
 S3method(theta.s, DNAbin)
