@@ -17,7 +17,8 @@ Population and Evolutionary Genetics Analysis System
   \url{http://ape-package.ird.fr/pegas.html}.
 }
 \author{
-  Emmanuel Paradis, Alastair Potts, Klaus Schliep, David Winter
+  Emmanuel Paradis, Thibaut Jombart, Zhian N. Kamvar, Brian Knaus,
+  Alastair Potts, Klaus Schliep, David Winter
 
   Maintainer: Emmanuel Paradis
 }
