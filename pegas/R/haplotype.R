@@ -1,4 +1,4 @@
-## haplotype.R (2018-07-07)
+## haplotype.R (2018-07-18)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -787,11 +787,17 @@ subset.haplotype <- function(x, minfreq = 1, maxfreq = Inf, maxna = Inf,
     x
 }
 
+summary.haplotype <- function(object, ...)
+{
+    res <- sapply(attr(object, "index"), length)
+    names(res) <- rownames(object)
+    res
+}
+
 print.haplotype <- function(x, ...)
 {
     d <- dim(x)
-    DF <- sapply(attr(x, "index"), length)
-    names(DF) <- rownames(x)
+    DF <- summary.haplotype(x)
     cat("\nHaplotypes extracted from:", attr(x, "from"), "\n\n")
     cat("    Number of haplotypes:", d[1], "\n")
     cat("         Sequence length:", d[2], "\n\n")

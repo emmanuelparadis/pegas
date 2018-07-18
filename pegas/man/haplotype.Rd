@@ -5,6 +5,7 @@
 \alias{haplotype.numeric}
 \alias{plot.haplotype}
 \alias{print.haplotype}
+\alias{summary.haplotype}
 \alias{plot.haplotype}
 \alias{sort.haplotype}
 \alias{[.haplotype}
@@ -20,6 +21,7 @@ haplotype(x, ...)
 \method{haplotype}{numeric}(x, labels = NULL, ...)
 \method{plot}{haplotype}(x, xlab = "Haplotype", ylab = "Number", ...)
 \method{print}{haplotype}(x, ...)
+\method{summary}{haplotype}(object, ...)
 \method{sort}{haplotype}(x,
      decreasing = ifelse(what == "frequencies", TRUE, FALSE),
      what = "frequencies", ...)
@@ -28,6 +30,7 @@ haplotype(x, ...)
 \arguments{
   \item{x}{a set of DNA sequences (as an object of class
     \code{"DNAbin"}), or an object of class \code{"haplotype"}.}
+  \item{object}{an object of class \code{"haplotype"}.}
   \item{labels}{a vector of character strings used as names for the rows
     of the returned object. By default, Roman numerals are given.}
   \item{xlab, ylab}{labels for the x- and x-axes.}
