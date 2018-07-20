@@ -1,11 +1,10 @@
-\name{dist.snp}
-\alias{dist.snp}
+\name{dist.asd}
 \alias{dist.asd}
-\title{Allelic Sharing Distance with SNPs}
+\alias{dist.snp}
+\title{Allelic Sharing Distance}
 \description{
-  These two functions compute the allelic sharing distance
-  (ASD). \code{dist.snp} works with (strict) SNPs and is much faster
-  than \code{dist.asd} (see below).
+  This function computes the allelic sharing distance (ASD) for diploid
+  genotypes.
 }
 \usage{
 dist.asd(x, scaled = TRUE)
@@ -25,16 +24,16 @@ dist.snp(x, scaled = TRUE)
   \eqn{j}th locus: 0 if both genotypes are identical, 1 if they have one
   allele in common, or 2 if they have no allele in common.
 
-  \code{dist.snp} works only with biallelic, unphased, diploid
-  genotypes. (These do not actually need to be SNPs: for instance, they
-  could be A/A, A/a, and a/a). Note that the required conditions
-  are not checked by the present function: see the functions below.
-
   \code{dist.asd} works for all diploid genotypes (phased or unphased,
-  with two alleles or more).
+  with two alleles or more). Note that the required conditions are not
+  checked by the present function: see the functions below.
 }
 \value{
   an object of class \code{"dist"}.
+}
+\warning{
+  \code{dist.snp} will be removed soon; it currently calls
+  \code{dist.asd} with a warning.
 }
 \references{
   Gao, X. and Martin, E. R. (2009) Using allele sharing distance for

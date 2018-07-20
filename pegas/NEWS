@@ -6,6 +6,14 @@ NEW FEATURES
     o There is a new summary() method for the class "haplotype" that
       prints nicely the haplotype numbers (i.e., absolute frequencies).
 
+
+OTHER CHANGES
+
+    o dist.snp() will be removed in the next release: its code has
+      been incorporated in dist.asd(), and it now gives a warning.
+
+
+
 		CHANGES IN PEGAS VERSION 0.11
 
 
