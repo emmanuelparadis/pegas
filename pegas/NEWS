@@ -6,11 +6,22 @@ NEW FEATURES
     o There is a new summary() method for the class "haplotype" that
       prints nicely the haplotype numbers (i.e., absolute frequencies).
 
+    o There is a by() method for the class "loci" that by default
+      computes allele frequencies by population.
+
 
 OTHER CHANGES
 
     o dist.snp() will be removed in the next release: its code has
       been incorporated in dist.asd(), and it now gives a warning.
+
+    o The default of x[, 1] is now drop = FALSE.
+
+
+BUG FIXES
+
+    o loci2genind() dropped row and column labels when converting a
+      table with a single locus.
 
 
 

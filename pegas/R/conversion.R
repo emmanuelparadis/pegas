@@ -1,8 +1,8 @@
-## conversion.R (2017-12-17)
+## conversion.R (2018-07-21)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2017 Emmanuel Paradis
+## Copyright 2009-2018 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -27,7 +27,7 @@ loci2genind <- function(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
         x[[i]] <- z
     }
 
-    df2genind(as.matrix(x[, attr(x, "locicol")]), sep = "/",
+    df2genind(as.matrix(x[, attr(x, "locicol"), drop = FALSE]), sep = "/",
               pop = pop, ploidy = ploidy)
 }
 

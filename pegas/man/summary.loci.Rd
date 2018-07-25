@@ -13,7 +13,7 @@
 \method{print}{loci}(x, details = FALSE, ...)
 \method{summary}{loci}(object, ...)
 \method{print}{summary.loci}(x, ...)
-\method{[}{loci}(x, i, j, drop = TRUE)
+\method{[}{loci}(x, i, j, drop = FALSE)
 \method{plot}{summary.loci}(x, loci, what = "both", layout = 1, col = c("blue", "red"), ...)
 }
 \arguments{

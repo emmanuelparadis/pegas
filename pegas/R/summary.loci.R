@@ -1,4 +1,4 @@
-## summary.loci.R (2018-07-07)
+## summary.loci.R (2018-07-25)
 
 ##   Print and Summaries of Loci Objects
 
@@ -148,7 +148,7 @@ print.summary.loci <- function(x, ...)
     }
 }
 
-"[.loci" <- function (x, i, j, drop = TRUE)
+"[.loci" <- function (x, i, j, drop = FALSE)
 {
     oc <- oldClass(x)
     colnms.old <- names(x)
@@ -191,4 +191,27 @@ cbind.loci <- function(...)
     class(x) <- c("loci", "data.frame")
     attr(x, "locicol") <- unlist(LOCICOL)
     x
+}
+
+by.loci <- function(data, INDICES = data$population, FUN = NULL, ...,
+                    simplify = TRUE)
+{
+    if (is.null(INDICES))
+        stop("no 'population' column in ", sQuote(deparse(substitute(data))))
+    LOCI <- attr(data, "locicol")
+    p <- length(LOCI)
+    if (is.null(FUN))
+        FUN <- function(x) lapply(summary(x), "[[", 2)
+    INDICES <- factor(INDICES)
+    lv <- levels(INDICES)
+    nlv <- length(lv)
+    gr <- as.integer(INDICES)
+    tmp <- vector("list", nlv)
+    for (i in 1:nlv) tmp[[i]] <- FUN(data[gr == i, ])
+    names(tmp) <- lv
+    res <- vector("list", p)
+    for (i in 1:p)
+        res[[i]] <- do.call(rbind, lapply(tmp, "[[", i))
+    names(res) <- names(data)[LOCI]
+    res
 }

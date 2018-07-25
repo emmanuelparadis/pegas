@@ -9,7 +9,7 @@
 
 dist.snp <- function(x, scaled = TRUE)
 {
-    warning("dist.snp() will be removed very soon: dist.asd() was used.\nUpdate your code!")
+    warning("dist.snp() will be removed very soon: dist.asd() was used. Update your code!")
     dist.asd(x, scaled)
 }
 
@@ -22,8 +22,9 @@ dist.asd <- function(x, scaled = TRUE)
 
     ## check if all loci are diploid and biallelic
     ploidy <- getPloidy(x)
+    if (any(ploidy != 2)) stop("all genotypes must be diploid")
     alleles <- getAlleles(x)
-    FAST <- all(ploidy == 2) && all(lengths(alleles) == 2)
+    FAST <- all(lengths(alleles) == 2)
     if (FAST && any(is.phased(x))) x <- unphase(x)
 
     class(x) <- NULL # makes things MUCH faster
