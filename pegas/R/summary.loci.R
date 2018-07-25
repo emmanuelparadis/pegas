@@ -155,7 +155,7 @@ print.summary.loci <- function(x, ...)
     names(x) <- colnms.new <- as.character(seq_len(ncol(x)))
     loci.nms <- names(x)[attr(x, "locicol")]
     class(x) <- "data.frame"
-    x <- NextMethod("[")
+    x <- x[i, j, drop = drop]
     ## restore the class and the "locicol" attribute only if there
     ## is at least 1 col *and* at least one loci returned:
     if (class(x) == "data.frame") {
