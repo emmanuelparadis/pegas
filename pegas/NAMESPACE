@@ -64,7 +64,7 @@ S3method("[", haplotype)
 S3method(plot, haplotype)
 S3method(print, haplotype)
 S3method(sort, haplotype)
-S3method(summary, haplotype
+S3method(summary, haplotype)
 S3method(subset, haplotype)
 
 S3method(plot, haplotype.loci)

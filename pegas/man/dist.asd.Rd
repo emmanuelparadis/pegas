@@ -31,7 +31,7 @@ dist.snp(x, scaled = TRUE)
 \value{
   an object of class \code{"dist"}.
 }
-\warning{
+\note{
   \code{dist.snp} will be removed soon; it currently calls
   \code{dist.asd} with a warning.
 }
