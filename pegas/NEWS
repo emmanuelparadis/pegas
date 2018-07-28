@@ -17,6 +17,9 @@ OTHER CHANGES
 
     o The default of x[, 1] is now drop = FALSE.
 
+    o print.haplotype() now prints only the first 40 haplotype labels
+      and frequencies (see the new summary.haplotype() above).
+
 
 BUG FIXES
 

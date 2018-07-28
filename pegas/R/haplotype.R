@@ -1,4 +1,4 @@
-## haplotype.R (2018-07-18)
+## haplotype.R (2018-07-28)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -796,13 +796,17 @@ summary.haplotype <- function(object, ...)
 
 print.haplotype <- function(x, ...)
 {
-    d <- dim(x)
-    DF <- summary.haplotype(x)
+    n <- (d <- dim(x))[1]
+    DF <- pegas:::summary.haplotype(x)
     cat("\nHaplotypes extracted from:", attr(x, "from"), "\n\n")
-    cat("    Number of haplotypes:", d[1], "\n")
+    cat("    Number of haplotypes:", n, "\n")
     cat("         Sequence length:", d[2], "\n\n")
     cat("Haplotype labels and frequencies:\n\n")
-    print(DF)
+    if (n <= 40) print(DF)
+    else {
+        print(DF[1:40])
+        cat("...\n(use summary() to print all)\n")
+    }
 }
 
 "[.haplotype" <- function(x, ...)
