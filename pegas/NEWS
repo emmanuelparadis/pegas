@@ -26,6 +26,8 @@ BUG FIXES
     o loci2genind() dropped row and column labels when converting a
       table with a single locus.
 
+    o The 'dimnames' were not set correctly in sw().
+
 
 
 		CHANGES IN PEGAS VERSION 0.11

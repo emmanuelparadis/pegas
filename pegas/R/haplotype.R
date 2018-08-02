@@ -797,7 +797,7 @@ summary.haplotype <- function(object, ...)
 print.haplotype <- function(x, ...)
 {
     n <- (d <- dim(x))[1]
-    DF <- pegas:::summary.haplotype(x)
+    DF <- summary.haplotype(x)
     cat("\nHaplotypes extracted from:", attr(x, "from"), "\n\n")
     cat("    Number of haplotypes:", n, "\n")
     cat("         Sequence length:", d[2], "\n\n")

@@ -1,4 +1,4 @@
-## MMD.R (2018-07-07)
+## MMD.R (2018-08-01)
 
 ##   Sliding Windows
 
@@ -50,6 +50,6 @@ sw.DNAbin <- function(x, width = 100, step = 50, FUN = GC.content,
     b[b > s] <- s
     collabs <- paste0("[", a, ",", b, "]")
     if (rowAverage) names(res) <- collabs
-    else dimnames <- list(rownames(x), collabs)
+    else dimnames(res) <- list(rownames(x), collabs)
     res
 }
