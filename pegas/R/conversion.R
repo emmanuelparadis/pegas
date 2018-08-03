@@ -1,4 +1,4 @@
-## conversion.R (2018-07-21)
+## conversion.R (2018-08-03)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -10,7 +10,7 @@
 loci2genind <- function(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
 {
     ipop <- which(names(x) == "population")
-    pop <- if (length(ipop)) x[, ipop] else NULL
+    pop <- if (length(ipop)) x[[ipop]] else NULL
 
     if (unphase) x <- unphase(x)
 
