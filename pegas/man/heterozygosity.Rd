@@ -1,24 +1,27 @@
 \name{heterozygosity}
 \alias{heterozygosity}
 \alias{H}
+\alias{H.loci}
+\alias{H.default}
 \title{Heterozygosity at a Locus Using Gene Frequencies}
+\description{
+  Thes functions compute the mean heterozygosity(ies) from gene
+  frequencies, and return optionally the associated variance(s).
+}
 \usage{
+H(x, ...)
+\method{H}{loci}(x, variance = FALSE, observed = FALSE, ...)
+\method{H}{default}(x, variance = FALSE)
+
 heterozygosity(x, variance = FALSE)
-H(x, variance = FALSE)
 }
 \arguments{
-  \item{x}{a vector or a factor.}
+  \item{x}{an object of class \code{"loci"}, or vector or a factor.}
   \item{variance}{a logical indicating whether the variance of the
     estimated heterozygosity should be returned (\code{TRUE}), the
     default being \code{FALSE}.}
-}
-\description{
-  This function computes the mean heterozygosity from gene frequencies,
-  and returns optionally the associated variance.
-}
-\value{
-  A numeric vector of length one with the estimated mean heterozygosity
-  (the default), or of length two if the variance is returned.
+  \item{observed}{a logical specifying whether to calculate the observed
+    heterozygosity.}
 }
 \details{
   The argument \code{x} can be either a factor or a vector. If it is a
@@ -36,6 +39,15 @@ H(x, variance = FALSE)
   number of alleles, and \eqn{p_i} is the observed (relative) frequency
   of the \eqn{i}th allele.
 }
+\value{
+  For the default method: a numeric vector of length one with the
+  estimated mean heterozygosity (the default), or of length two if the
+  variance is returned.
+
+  For the \code{"loci"} method: a numeric matrix with one, two, or three
+  columns with a row for each locus and the values of heterozygosity as
+  columns.
+}
 \references{
   Nei, M. (1987) \emph{Molecular evolutionary genetics}. New York:
   Columbia University Press.
@@ -46,6 +58,8 @@ H(x, variance = FALSE)
 }
 \examples{
 data(jaguar)
+H(jaguar, TRUE, TRUE)
+## use the (old) default method:
 ## convert the data and compute frequencies:
 S <- summary(jaguar)
 ## compute H for all loci:

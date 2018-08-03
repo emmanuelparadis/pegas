@@ -32,6 +32,9 @@ S3method(as.loci, data.frame)
 S3method(as.loci,factor)
 S3method(as.loci, genind)
 
+S3method(H, default)
+S3method(H, loci)
+
 S3method(hap.div, DNAbin)
 S3method(hap.div, haplotype)
 

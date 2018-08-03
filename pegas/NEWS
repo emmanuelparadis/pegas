@@ -3,11 +3,14 @@
 
 NEW FEATURES
 
-    o There is a new summary() method for the class "haplotype" that
-      prints nicely the haplotype numbers (i.e., absolute frequencies).
+    o There is a new summary() method for the class "haplotype" to
+      extract haplotype numbers (i.e., absolute frequencies).
 
-    o There is a by() method for the class "loci" that by default
+    o There is a new by() method for the class "loci" that by default
       computes allele frequencies by population.
+
+    o H() is now generic with a default method (with the old code) and
+      "loci" method.
 
 
 OTHER CHANGES
