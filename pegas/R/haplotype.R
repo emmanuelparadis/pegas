@@ -969,7 +969,7 @@ LD <- function(x, locus = c(1, 2), details = TRUE)
 {
     if (length(locus) != 2)
         stop("you must specify two loci to compute linkage disequilibrium")
-    hap <- haplotype.loci(x, locus = locus)
+    hap <- haplotype.loci(x, locus = locus, quiet = TRUE)
     alleles1 <- unique(hap[1, ])
     alleles2 <- unique(hap[2, ])
     k <- length(alleles1)
