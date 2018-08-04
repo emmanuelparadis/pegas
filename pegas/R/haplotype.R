@@ -1,4 +1,4 @@
-## haplotype.R (2018-07-28)
+## haplotype.R (2018-08-05)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -1029,8 +1029,8 @@ LD2 <- function(x, locus = c(1, 2), details = TRUE)
 
     Delta <- r <- numeric()
 
-    x1 <- as.integer(x[, 1L])
-    x2 <- as.integer(x[, 2L])
+    x1 <- as.integer(x[, 1L, drop = TRUE])
+    x2 <- as.integer(x[, 2L, drop = TRUE])
 
     for (a in alleles1) {
         Pa <- P[[1]][a]
