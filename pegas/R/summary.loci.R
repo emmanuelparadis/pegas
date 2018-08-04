@@ -82,7 +82,7 @@ unphase <- function(x)
         x <- geno[x]
         factor(x)
     }
-    for (i in attr(x, "locicol")) x[, i] <- foo(x[, i])
+    for (i in attr(x, "locicol")) x[, i] <- foo(x[, i, drop = TRUE])
     x
 }
 
