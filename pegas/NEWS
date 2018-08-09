@@ -31,6 +31,9 @@ BUG FIXES
 
     o The 'dimnames' were not set correctly in sw().
 
+    o all.equal.haploNet() failed depending on the order of the
+      arguments.
+
 
 
 		CHANGES IN PEGAS VERSION 0.11

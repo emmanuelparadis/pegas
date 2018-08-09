@@ -1,4 +1,4 @@
-## haplotype.R (2018-08-05)
+## haplotype.R (2018-08-09)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -1219,8 +1219,8 @@ LDmap <- function(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
 
 all.equal.haploNet <- function(target, current, use.steps = TRUE, ...)
 {
-    nt1 <- deparse(substitute(target))
-    nt2 <- deparse(substitute(current))
+    nt1 <- sQuote(deparse(substitute(target)))
+    nt2 <- sQuote(deparse(substitute(current)))
     if (identical(target, current)) return(TRUE)
     ## function to build a list to make comparisons easier
     foo <- function(x) {
@@ -1238,7 +1238,7 @@ all.equal.haploNet <- function(target, current, use.steps = TRUE, ...)
     }
     ## function to arrange print of links:
     bar <- function(x) gsub("\r", "--", x)
-    ## another one to print comparison of link lenghts:
+    ## another one to print comparison of link lengths:
     bar2 <- function(x, y, z) paste0(bar(x), " (", y, ", ", z, ")")
 
     msg <- NULL
@@ -1281,7 +1281,7 @@ all.equal.haploNet <- function(target, current, use.steps = TRUE, ...)
                          bar2(links1[test], X1$step[test], tmp[test]))
         }
     } else {
-        msg <- c(msg, "Number of links different")
+        msg <- c(msg, "Number of links different.")
         comp21 <- match(links2, links1)
         if (anyNA(comp12))
             msg <- c(msg, paste0("Links in ", nt1, " not in ", nt2, ":"),
@@ -1290,8 +1290,13 @@ all.equal.haploNet <- function(target, current, use.steps = TRUE, ...)
             msg <- c(msg, paste0("Links in ", nt2, " not in ", nt1, ":"),
                      bar(links2[is.na(comp21)]))
         if (use.steps) {
-            tmp1 <- X1$step[!is.na(comp12)]
-            tmp2 <- X2$step[comp12]
+            if (length(links1) > length(links2)) {
+                tmp1 <- X1$step[!is.na(comp12)]
+                tmp2 <- X2$step[comp21]
+            } else {
+                tmp1 <- X1$step[comp12]
+                tmp2 <- X2$step[!is.na(comp21)]
+            }
             test <- tmp1 != tmp2
             if (any(test))
                 msg <- c(msg,

@@ -1,4 +1,4 @@
-## dist.asd.R (2018-07-20)
+## dist.asd.R (2018-08-10)
 
 ##   Allelic Sharing Distance
 
@@ -55,8 +55,8 @@ dist.asd <- function(x, scaled = TRUE)
     }
 
     if (FAST) {
-        y <- matrix(0L, n, p)
-        for (j in 1:p) {
+        y <- matrix(0L, n, nloc)
+        for (j in 1:nloc) {
             tmp <- x[[locicol[j]]]
             attributes(tmp) <- NULL
             y[, j] <- tmp
