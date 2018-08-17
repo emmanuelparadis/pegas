@@ -91,7 +91,7 @@ hw.test.loci <- function(x, B = 1000, ...)
         test.mc <- function(x, ploidy) {
             ## accept only diploids for the moment
             if (ploidy != 2) {
-                warning("no Monte Carlo test available for polyploids")
+                warning("Monte Carlo test available only if all individuals are diploid")
                 return(NA_real_)
             }
             n <- sum(x$genotype) # Nb of individuals
