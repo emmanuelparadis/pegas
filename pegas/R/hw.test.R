@@ -80,10 +80,8 @@ hw.test.loci <- function(x, B = 1000, ...)
     y <- summary.loci(x)
     ploidy <- .checkPloidy(x) # see summary.loci.R
     if (any(del <- !ploidy)) {
-        msg <- paste("The following loci were dropped (not the same ploidy for all individuals):",
-                     names(y)[del], sep = "\n")
-        y <- y[!del]
-        ploidy <- ploidy[!del]
+        msg <- if (sum(del) == 1) "The following locus was ignored: " else "The following loci were ignored: "
+        msg <- paste(msg, names(y)[del], "\n(not the same ploidy for all individuals, or too many missing data)", sep = "")
         warning(msg)
     }
     ans <- t(mapply(test.polyploid, y, ploidy = ploidy))
