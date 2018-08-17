@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.11-1
+		CHANGES IN PEGAS VERSION 0.11-2
 
 
 NEW FEATURES
@@ -10,7 +10,7 @@ NEW FEATURES
       computes allele frequencies by population.
 
     o H() is now generic with a default method (with the old code) and
-      "loci" method.
+      a "loci" method.
 
 
 OTHER CHANGES
@@ -33,6 +33,8 @@ BUG FIXES
 
     o all.equal.haploNet() failed depending on the order of the
       arguments.
+
+    o hw.test() failed if some loci were dropped.
 
 
 

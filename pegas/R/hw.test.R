@@ -1,8 +1,8 @@
-## hw.test.R (2017-11-21)
+## hw.test.R (2018-08-17)
 
 ##   Test of Hardy--Weinberg Equilibrium
 
-## Copyright 2009-2017 Emmanuel Paradis, 2015 Thibaut Jombart
+## Copyright 2009-2018 Emmanuel Paradis, 2015 Thibaut Jombart
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -83,6 +83,7 @@ hw.test.loci <- function(x, B = 1000, ...)
         msg <- paste("The following loci were dropped (not the same ploidy for all individuals):",
                      names(y)[del], sep = "\n")
         y <- y[!del]
+        ploidy <- ploidy[!del]
         warning(msg)
     }
     ans <- t(mapply(test.polyploid, y, ploidy = ploidy))
