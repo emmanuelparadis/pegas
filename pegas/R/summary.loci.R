@@ -150,15 +150,20 @@ print.summary.loci <- function(x, ...)
 
 "[.loci" <- function (x, i, j, drop = FALSE)
 {
-    oc <- oldClass(x)
+    ## From base-R [.data.frame
+    Narg  <- nargs()  # number of arg from x,i,j that were specified
+    oc    <- oldClass(x)
     colnms.old <- names(x)
     names(x) <- colnms.new <- as.character(seq_len(ncol(x)))
     loci.nms <- names(x)[attr(x, "locicol")]
-    class(x) <- "data.frame"
-    x <- x[i, j, drop = drop]
+    if (Narg > 2) { # More than two arguments indicates that they used matrix-like subset
+       x <- NextMethod("[", drop = drop)
+    } else { # Two or fewer arguments: list-like subsetting
+       x <- NextMethod("[")
+    }
     ## restore the class and the "locicol" attribute only if there
     ## is at least 1 col *and* at least one loci returned:
-    if (class(x) == "data.frame") {
+    if (inherits(x, "data.frame")) {
         locicol <- match(loci.nms, names(x))
         locicol <- locicol[!is.na(locicol)]
         if (length(locicol)) {
