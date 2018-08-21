@@ -38,10 +38,10 @@
 \details{
   Genotypes not observed in the data frame are not counted.
 
-  When using the \code{[} method, if only one column is extracted or if
-  the returned data frame has no `locus' column, then the class
-  \code{"loci"} is dropped. Use the option \code{drop = FALSE} to keep
-  the class (see examples).
+  When using the \code{[} method, if only one column is extracted and 
+  the option \code{drop = TRUE}, or if the returned data frame has no `locus' 
+  column, then the class \code{"loci"} is dropped. The option \code{drop = FALSE} 
+  (default) keeps the class (see examples).
 
   An object of class \code{"loci"} can be edited in the R data editor
   with, e.g., \code{fix(x)} or \code{x <- edit(x)}.
@@ -73,8 +73,9 @@ layout(1)
 ## compute the relative frequencies:
 rapply(s, function(x) x/sum(x), how = "replace")
 ## extract a single locus:
-jaguar[, 1] # returns a vector
-jaguar[, 1, drop = FALSE]
+jaguar[, 1]
+jaguar[, 1, drop = TRUE] # returns a vector
+jaguar[[1]]              # also returns a vector
 }
 \keyword{manip}
 \keyword{hplot}

@@ -11,7 +11,7 @@
 \usage{
 H(x, ...)
 \method{H}{loci}(x, variance = FALSE, observed = FALSE, ...)
-\method{H}{default}(x, variance = FALSE)
+\method{H}{default}(x, variance = FALSE, ...)
 
 heterozygosity(x, variance = FALSE)
 }
@@ -22,6 +22,7 @@ heterozygosity(x, variance = FALSE)
     default being \code{FALSE}.}
   \item{observed}{a logical specifying whether to calculate the observed
     heterozygosity.}
+  \item{...}{currently unused}
 }
 \details{
   The argument \code{x} can be either a factor or a vector. If it is a
