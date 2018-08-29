@@ -1,8 +1,8 @@
-## plotNetMDS.R (2017-05-02)
+## plotNetMDS.R (2018-08-29)
 
 ##   Plot Networks With MDS Layout
 
-## Copyright 2017 Emmanuel Paradis
+## Copyright 2017-2018 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -30,7 +30,7 @@ plotNetMDS <- function(net, d, k = 2, show.mutation = FALSE, col = NULL, font = 
     a <- mat[, 1]
     b <- mat[, 2]
     if (k == 2) {
-        plot.default(mds, type = "n", xlab = "MDS axis 1", ylab = "MDS axis 2", xaxt = "n")
+        plot.default(mds, type = "n", xlab = "MDS axis 1", ylab = "MDS axis 2")
         segments(mds[a, 1], mds[a, 2], mds[b, 1], mds[b, 2], col = col)
         if (show.mutation)
             .labelSegmentsHaploNet(mds[, 1], mds[, 2], mat[, 1:2], mat[, 3], 1, lwd = 1, col.link = "", 3)

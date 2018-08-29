@@ -36,6 +36,8 @@ BUG FIXES
 
     o hw.test() failed if some loci were dropped.
 
+    o plotNetMDS(, k = 2) did not display the x-axis.
+
 
 
 		CHANGES IN PEGAS VERSION 0.11
