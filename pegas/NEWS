@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.11-2
+		CHANGES IN PEGAS VERSION 0.11-3
 
 
 NEW FEATURES
@@ -11,6 +11,9 @@ NEW FEATURES
 
     o H() is now generic with a default method (with the old code) and
       a "loci" method.
+
+    o Fst() has the new option 'na.alleles' ("" by default) to specify
+      alleles coding for missing data.
 
 
 OTHER CHANGES

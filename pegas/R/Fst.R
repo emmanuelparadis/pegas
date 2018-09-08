@@ -1,4 +1,4 @@
-## Fst.R (2018-07-07)
+## Fst.R (2018-09-08)
 
 ##   F-Statistics
 
@@ -7,7 +7,7 @@
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-Fst <- function(x, pop = NULL, quiet = TRUE)
+Fst <- function(x, pop = NULL, quiet = TRUE, na.alleles = "")
 {
     if (any(.checkPloidy(x) != 2))
         stop("Fst() requires diploid data")
@@ -38,7 +38,7 @@ Fst <- function(x, pop = NULL, quiet = TRUE)
     for (j in 1:nloci) {
         if (!quiet) cat("\rAnalyzing locus", j, "/", nloci)
         Z <- x[, c(LOCI[j], ipop)]
-        Z <- na.omit(Z) # all n's are calculated locus-wise (2018-04-20)
+        Z <- na.omit(Z, na.alleles = na.alleles) # all n's are calculated locus-wise (2018-04-20)
         N <- nrow(Z)
         nBYpop <- tabulate(Z$pop)
         r <- length(nBYpop) # number of pops

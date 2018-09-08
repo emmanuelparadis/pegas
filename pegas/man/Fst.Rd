@@ -6,7 +6,7 @@
   \eqn{F_{IS}}{Fis} for each locus in the data.
 }
 \usage{
-Fst(x, pop = NULL, quiet = TRUE)
+Fst(x, pop = NULL, quiet = TRUE, na.alleles = "")
 }
 \arguments{
   \item{x}{an object of class \code{"loci"}.}
@@ -15,6 +15,9 @@ Fst(x, pop = NULL, quiet = TRUE)
     of \code{x} to use as population indicator. By default, the column
     labelled \code{"population"} is used.}
   \item{quiet}{a logical value: should calculations be quiet?}
+  \item{na.alleles}{by default, only genotypes coded as
+    \link[base]{\code{NA}} are considered as missing data. This option
+    is to specify if some alleles code for missing data.}
 }
 \details{
   The formulae in Weir and Cockerham (1984) are used for each allele,
