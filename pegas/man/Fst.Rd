@@ -16,7 +16,7 @@ Fst(x, pop = NULL, quiet = TRUE, na.alleles = "")
     labelled \code{"population"} is used.}
   \item{quiet}{a logical value: should calculations be quiet?}
   \item{na.alleles}{by default, only genotypes coded as
-    \link[base]{\code{NA}} are considered as missing data. This option
+    \link[base]{NA} are considered as missing data. This option
     is to specify if some alleles code for missing data.}
 }
 \details{

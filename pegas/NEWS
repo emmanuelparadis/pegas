@@ -1,10 +1,13 @@
-		CHANGES IN PEGAS VERSION 0.11-3
+		CHANGES IN PEGAS VERSION 0.11-4
 
 
 NEW FEATURES
 
+    o The new function loci2alleles does the reverse operation than
+      alleles2loci.
+
     o There is a new summary() method for the class "haplotype" to
-      extract haplotype numbers (i.e., absolute frequencies).
+      extract haplotype absolute frequencies.
 
     o There is a new by() method for the class "loci" that by default
       computes allele frequencies by population.
@@ -21,7 +24,7 @@ OTHER CHANGES
     o dist.snp() will be removed in the next release: its code has
       been incorporated in dist.asd(), and it now gives a warning.
 
-    o The default of x[, 1] is now drop = FALSE.
+    o The default of x[, 1] is now drop = FALSE for "loci" objects.
 
     o print.haplotype() now prints only the first 40 haplotype labels
       and frequencies (see the new summary.haplotype() above).

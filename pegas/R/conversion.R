@@ -1,4 +1,4 @@
-## conversion.R (2018-08-03)
+## conversion.R (2018-09-26)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -161,6 +161,25 @@ alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
     obj <- as.loci(obj)
     if (withPop) obj$population <- factor(pop)
     obj
+}
+
+loci2alleles <- function(x)
+{
+    ploidy <- .checkPloidy(x)
+    if (any(ploidy) == 0) stop("ploidy not homogeneous within some loci")
+    n <- nrow(x)
+    LOCI <- attr(x, "locicol")
+    x <- x[, LOCI]
+    fl <- tempfile()
+    on.exit(unlink(fl))
+    write.loci(x, fl, allele.sep = " ", quote = FALSE,
+               row.names = FALSE, col.names = FALSE)
+    res <- scan(fl, what = "", quiet = TRUE)
+    res <- matrix(res, n, length(res)/n, byrow = TRUE)
+    rownames(res) <- rownames(x)
+    colnames(res) <- paste(unlist(mapply(rep, colnames(x), each = ploidy)),
+                           unlist(mapply(":", 1, ploidy)), sep = ".")
+    res
 }
 
 na.omit.loci <- function(object, na.alleles = c("0", "."), ...)

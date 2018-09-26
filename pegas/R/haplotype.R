@@ -1,4 +1,4 @@
-## haplotype.R (2018-08-09)
+## haplotype.R (2018-09-24)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -767,6 +767,7 @@ subset.haplotype <- function(x, minfreq = 1, maxfreq = Inf, maxna = Inf,
                              na = c("N", "?"), ...)
 {
     oc <- oldClass(x)
+    from <- attr(x, "from")
     idx <- attr(x, "index")
     f <- sapply(idx, length)
     s <- f <= maxfreq & f >= minfreq
@@ -784,6 +785,7 @@ subset.haplotype <- function(x, minfreq = 1, maxfreq = Inf, maxna = Inf,
     x <- x[s, ]
     attr(x, "index") <- idx[s]
     class(x) <- oc
+    attr(x, "from") <- from
     x
 }
 
