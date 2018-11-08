@@ -1,4 +1,4 @@
-## theta.R (2015-10-27)
+## theta.R (2018-11-08)
 
 ##   Population Parameter THETA
 
@@ -8,7 +8,7 @@
 ## theta.tree: using a genealogy
 ## theta.msat: using micro-satellites
 
-## Copyright 2002-2015 Emmanuel Paradis
+## Copyright 2002-2018 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -72,12 +72,12 @@ theta.s.DNAbin <- function(x, variance = FALSE, ...)
 theta.tree <-
     function(phy, theta, fixed = FALSE, analytical = TRUE, log = TRUE)
 {
-    ## coalescent intervals from the oldest to most recent one:
-    x <- rev(diff(c(0, sort(branching.times(phy)))))
-    k <- 2:length(phy$tip.label)
-    K <- length(k)
-    tmp <- choose(k, 2)
-    tmp2 <- 2 * sum(x * tmp)
+    ## coalescent intervals from the most recent to the oldest one:
+    x <- diff(c(0, sort(branching.times(phy))))
+    k <- length(phy$tip.label):2 # c(n, ..., 2)
+    K <- length(k) # n - 1
+    tmp <- (k * (k - 1))/2 # choose(k, 2)
+    tmp2 <- sum(x * tmp)
     sltmp <- sum(log(tmp))
     if (fixed) {
         res <- sltmp - K * log(theta) - tmp2/theta

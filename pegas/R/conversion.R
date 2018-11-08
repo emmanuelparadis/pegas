@@ -1,4 +1,4 @@
-## conversion.R (2018-09-26)
+## conversion.R (2018-11-04)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -166,7 +166,7 @@ alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
 loci2alleles <- function(x)
 {
     ploidy <- .checkPloidy(x)
-    if (any(ploidy) == 0) stop("ploidy not homogeneous within some loci")
+    if (any(ploidy == 0)) stop("ploidy not homogeneous within some loci")
     n <- nrow(x)
     LOCI <- attr(x, "locicol")
     x <- x[, LOCI]
