@@ -30,7 +30,7 @@ geod(lon, lat = NULL, R = 6371)
 
   \url{http://en.wikipedia.org/wiki/Earth}
 }
-\seealso{geoTrans, as.dist}
+\seealso{\code{\link{geoTrans}}, \code{\link[stats]{as.dist}}}
 \examples{
 ## the distance between 0N 0E and 0N 180E...
 geod(c(0, 180), c(0, 0)) # ~ 20015.09 km

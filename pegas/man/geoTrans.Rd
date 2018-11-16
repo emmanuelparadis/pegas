@@ -36,7 +36,7 @@ geoTrans(x, degsym = NULL, minsym = "'", secsym = "\"")
   decimal values).
 }
 \author{Emmanuel Paradis}
-\seealso{geod}
+\seealso{\code{\link{geod}}}
 \examples{
 coord <- c("N 43°27'30\"", "N43°27'30\"", "43°27'30\"N",
            "43° 27' 30\" N", "43 ° 27 ' 30 \" N",
