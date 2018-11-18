@@ -12,12 +12,15 @@
   positions of the loci.
 }
 \usage{
-LDscan(x, quiet = FALSE)
+LDscan(x, depth = NULL, quiet = FALSE)
 LDmap(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
       angle = 0, asp = 1, cex = 1, scale.legend = 0.8, ...)
 }
 \arguments{
   \item{x}{an object of class \code{"loci"} with phased genotypes.}
+  \item{depth}{a vector of integers giving the the depth(s) (or lags) at
+    which the \eqn{r^2}'s are calculated. By default, all possible
+    depths are considered.}
   \item{quiet}{a logical: should the progress of the operation be
     printed?}
   \item{d}{a correlation matrix (can be an object of class \code{"dist"}).}
@@ -44,9 +47,15 @@ LDmap(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
 
   All levels of ploidy are accepted, but all loci should have the same
   ploidy level.
+
+  If \code{depth} is used, the \eqn{r^2}'s are calculated only for the
+  pairs of loci that are distant by these values in \code{x}, but
+  necessarily on the chromosome. The returned list has names set with
+  the values of \code{depth}.
 }
 \value{
-  an object of class \code{"dist"} for \code{LDscan}.
+  \code{LDscan} returns an object of class \code{"dist"} by default, or
+  a list if \code{depth} is used.
 }
 \author{Emmanuel Paradis}
 \seealso{\code{\link{LD}}, \code{\link{read.vcf}}}

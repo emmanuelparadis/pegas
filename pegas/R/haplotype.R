@@ -1,4 +1,4 @@
-## haplotype.R (2018-09-24)
+## haplotype.R (2018-11-18)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -1088,42 +1088,57 @@ LD2 <- function(x, locus = c(1, 2), details = TRUE)
     res
 }
 
-LDscan <- function(x, quiet = FALSE)
+LDscan <- function(x, depth = NULL, quiet = FALSE)
 {
-    nloci <- ncol(x)
-    hap <- haplotype.loci(x, seq_len(nloci), TRUE, FALSE)
-    .LD <- function (x, loc1, loc2) {
+    nloci <- length(attr(x, "locicol"))
+    if (!quiet) cat("Scanning haplotypes... ")
+    hap <- pegas:::haplotype.loci(x, seq_len(nloci), TRUE, FALSE, FALSE)
+    if (!quiet) cat("done.\n")
+    .LD <- function (hap, loc1, loc2) {
         nij <- table(hap[loc1, ], hap[loc2, ])
         N <- sum(nij)
         pij <- nij/N
-        pi <- rowSums(pij)
-        qj <- colSums(pij)
-        eij <- pi %o% qj * N
-        pi <- rep(pi, ncol(pij))
-        qj <- rep(qj, each = nrow(pij))
+        pi <- rep(rowSums(pij), 2)
+        qj <- rep(colSums(pij), each = 2)
         D <- pij - pi * qj
         rij <- D/sqrt(pi * (1 - pi) * qj * (1 - qj))
-        ## df <- (k - 1) * (m - 1)
-        ## T2 <- df * N * sum(rij^2)/(k * m)
-        ## res <- c(T2 = T2, df = df, `P-val` = pchisq(T2, df, lower.tail = FALSE))
         abs(rij[1])
     }
-    M <- nloci * (nloci - 1) / 2
-    ldx <- numeric(M)
-    k <- 0L
-    for (i in 1:(nloci - 1)) {
-        for (j in (i + 1):nloci) {
-            k <- k + 1L
-            ldx[k] <- .LD(x, i, j)
-            if (!quiet) cat("\r", round(100 * k / M), "%")
+    if (is.null(depth)) {
+        M <- nloci * (nloci - 1) / 2
+        ldx <- numeric(M)
+        k <- 0L
+        for (i in 1:(nloci - 1)) {
+            for (j in (i + 1):nloci) {
+                k <- k + 1L
+                ldx[k] <- .LD(hap, i, j)
+                if (!quiet) cat("\r", round(100 * k / M), "%")
+            }
         }
+        if (!quiet) cat("\n")
+        class(ldx) <- "dist"
+        attr(ldx, "Size") <- nloci
+        attr(ldx, "Labels") <- names(x)
+        attr(ldx, "Diag") <- attr(ldx, "Upper") <- FALSE
+        attr(ldx, "call") <- match.call()
+    } else {
+        depth <- as.integer(depth)
+        ldx <- vector("list", length(depth))
+        k <- 0L
+        for (o in depth) {
+            vec <- numeric(nloci - o)
+            j <- 0L
+            for (i in 1:(nloci - o)) {
+                j <- j + 1L
+                vec[j] <- .LD(hap, i, i + o)
+                if (!quiet) cat("\rScanning at depth", o, ":\t", round(100 * j / (nloci - o)), "%")
+            }
+            if (!quiet) cat("\n")
+            k <- k + 1L
+            ldx[[k]] <- vec
+        }
+        names(ldx) <- depth
     }
-    cat("\n")
-    class(ldx) <- "dist"
-    attr(ldx, "Size") <- nloci
-    attr(ldx, "Labels") <- names(x)
-    attr(ldx, "Diag") <- attr(ldx, "Upper") <- FALSE
-    attr(ldx, "call") <- match.call()
     ldx
 }
 
