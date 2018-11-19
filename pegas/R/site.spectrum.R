@@ -1,13 +1,15 @@
-## site.spectrum.R (2014-01-22)
+## site.spectrum.R (2018-11-19)
 
 ##   Site Frequency Spectrum
 
-## Copyright 2009-2014 Emmanuel Paradis
+## Copyright 2009-2018 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-site.spectrum <- function(x, folded = TRUE, outgroup = 1)
+site.spectrum <- function(x, ...) UseMethod("site.spectrum")
+
+site.spectrum.DNAbin <- function(x, folded = TRUE, outgroup = 1, ...)
 {
     if (is.list(x)) x <- as.matrix(x)
     n <- dim(x)[1]
@@ -55,4 +57,37 @@ plot.spectrum <- function(x, col = "red", main = NULL, ...)
     }
 
     barplot(as.numeric(x), names.arg = 1:length(x), col = col, main = main, ...)
+}
+
+site.spectrum.loci <- function(x, folded = TRUE, ancestral = NULL, ...)
+{
+    nonsnp <- !is.snp(x)
+    p <- length(nonsnp)
+    if (!folded) {
+        if (is.null(ancestral))
+            stop("need a vector of ancestral alleles to compute the unfolded spectrum")
+        if (length(ancestral) != p)
+            stop("length of 'ancestral' not equal to number of loci")
+    }
+    if (any(nonsnp)) {
+        if (all(nonsnp)) stop("no SNP loci in x")
+        d <- attr(x, "locicol")[nonsnp]
+        ld <- length(d)
+        x <- x[, -d]
+        warning(paste(ld, "non-SNP loci were dropped"))
+        p <- p - ld
+        if (!folded) ancestral <- ancestral[-d]
+    }
+    s <- summary(x) # works in all situations
+    if (folded) {
+        f <- sapply(s, function(x) min(x[[2]]), USE.NAMES = FALSE)
+        res <- tabulate(f, floor(nrow(x)/2))
+    } else {
+        f <- numeric(p)
+        for (i in 1:p) f[i] <- s[[i]][[2]][ancestral[i]]
+        res <- tabulate(f, nrow(x) - 1)
+    }
+    class(res) <- "spectrum"
+    attr(res, "folded") <- folded
+    res
 }

@@ -9,6 +9,9 @@ NEW FEATURES
     o The new function loci2alleles does the reverse operation than
       alleles2loci.
 
+    o site.spectrum() is now generic with methods for "DNAbin" (old
+      code) and for "loci" (new code).
+
     o There is a new summary() method for the class "haplotype" to
       extract haplotype absolute frequencies.
 

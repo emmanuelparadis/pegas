@@ -174,9 +174,7 @@ print.VCFinfo <- function(x, ...)
     }
 }
 
-is.snp <- function(x, ...) UseMethod("is.snp")
-
-is.snp.VCFinfo <- function(x, ...)
+is.snp.VCFinfo <- function(x)
 {
     REF <- x$REF
     if (is.null(REF)) stop("no REF allele(s)")

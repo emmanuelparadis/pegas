@@ -5,6 +5,7 @@
 \alias{expand.genotype}
 \alias{proba.genotype}
 \alias{is.snp}
+\alias{is.snp.loci}
 \alias{is.phased}
 \alias{unphase}
 \title{Utily Functions for pegas}
@@ -24,6 +25,7 @@ getGenotypes(x)
 expand.genotype(n, alleles = NULL, ploidy = 2, matrix = FALSE)
 proba.genotype(alleles = c("1", "2"), p, ploidy = 2)
 is.snp(x)
+\method{is.snp}{loci}(x)
 is.phased(x)
 unphase(x)
 }

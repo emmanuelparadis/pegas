@@ -29,7 +29,7 @@ S3method(print, amova)
 
 S3method(as.loci, character)
 S3method(as.loci, data.frame)
-S3method(as.loci,factor)
+S3method(as.loci, factor)
 S3method(as.loci, genind)
 
 S3method(H, default)
@@ -51,6 +51,9 @@ S3method(is.snp, VCFinfo)
 
 S3method(nuc.div, DNAbin)
 S3method(nuc.div, haplotype)
+
+S3method(site.spectrum, DNAbin)
+S3method(site.spectrum, loci)
 
 S3method(sw, DNAbin)
 

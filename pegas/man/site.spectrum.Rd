@@ -1,13 +1,17 @@
 \name{site.spectrum}
 \alias{site.spectrum}
+\alias{site.spectrum.DNAbin}
+\alias{site.spectrum.loci}
 \alias{plot.spectrum}
 \title{Site Frequency Spectrum}
 \description{
   \code{site.spectrum} computes the (un)folded site frequency spectrum
-  of a set of aligned DNA sequences.
+  of a set of aligned DNA sequences or SNPs.
 }
 \usage{
-site.spectrum(x, folded = TRUE, outgroup = 1)
+site.spectrum(x, ...)
+\method{site.spectrum}{DNAbin}(x, folded = TRUE, outgroup = 1, ...)
+\method{site.spectrum}{loci}(x, folded = TRUE, ancestral = NULL, ...)
 \method{plot}{spectrum}(x, col = "red", main = NULL, ...)
 }
 \arguments{
@@ -18,10 +22,14 @@ site.spectrum(x, folded = TRUE, outgroup = 1)
     \code{folded = FALSE}.}
   \item{outgroup}{a single integer value giving which sequence is
     ancestral; ignored if \code{folded = TRUE}.}
+  \item{ancestral}{a vector of ancestral alleles (required if
+    \code{folded = FALSE}), typically from an output of
+    \code{\link{VCFloci}}.}
   \item{col}{the colour of the barplot (red by default).}
   \item{main}{a character string for the title of the plot; a generic
     title is given by default (use \code{main = ""} to have no title).}
-  \item{\dots}{further arguments passed to \code{\link[graphics]{barplot}}.}
+  \item{\dots}{further arguments passed to
+    \code{\link[graphics]{barplot}}, or to other mehods.}
 }
 \details{
   Under the infinite sites model of mutation, mutations occur on
@@ -43,6 +51,9 @@ site.spectrum(x, folded = TRUE, outgroup = 1)
   external sequence are ignored and a warning is returned giving how
   many were found. Note that it is not checked if some sites have more
   than two states.
+
+  If \code{x} is an object of class \code{"loci"}, the loci which are
+  not biallelic (e.g., SNPs) are dropped with a warning.
 }
 \value{
   \code{site.spectrum} returns an object of class \code{"spectrum"}
