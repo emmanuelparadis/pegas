@@ -1,5 +1,4 @@
-\name{F234}
-\alias{F234}
+\name{F4}
 \alias{F2}
 \alias{F3}
 \alias{F4}

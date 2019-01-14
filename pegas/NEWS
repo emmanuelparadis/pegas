@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.11-4
+		CHANGES IN PEGAS VERSION 0.11-5
 
 
 NEW FEATURES
@@ -9,8 +9,12 @@ NEW FEATURES
     o The new function loci2alleles does the reverse operation than
       alleles2loci.
 
+    o The new function theta.tree.hetero estimates THETA from a
+      non-ultrametric tree.
+
     o site.spectrum() is now generic with methods for "DNAbin" (old
-      code) and for "loci" (new code).
+      code) and for "loci" (new code). The return objects have now an
+      attribute "sample.size" (useful with folded spectra).
 
     o There is a new summary() method for the class "haplotype" to
       extract haplotype absolute frequencies.

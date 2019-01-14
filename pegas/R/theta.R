@@ -1,4 +1,4 @@
-## theta.R (2018-11-08)
+## theta.R (2019-01-13)
 
 ##   Population Parameter THETA
 
@@ -6,6 +6,7 @@
 ## theta.k: using expected number of alleles
 ## theta.s: using segregating sites in DNA sequences
 ## theta.tree: using a genealogy
+## theta.tree.hetero: using a genealogy with heterochronous dates
 ## theta.msat: using micro-satellites
 
 ## Copyright 2002-2018 Emmanuel Paradis
@@ -106,6 +107,34 @@ theta.tree <-
 ### I prefered nlminb() because it is slightly faster and in most cases
 ### the hessian-based estimate of SE(theta) are not needed
     res
+}
+
+theta.tree.hetero <- function(phy, theta, fixed = FALSE, log = TRUE)
+{
+    n <- length(phy$tip.label)
+    ROOT <- n + 1L
+    times <- dist.nodes(phy)[, ROOT]
+    ## rescale so the most recent sample has t=0 and the root has t=max(t):
+    times <- max(times) - times
+    o <- order(times)
+    isSamp <- o <= n
+    isCoal <- !isSamp
+    trans <- as.integer(isSamp)
+    trans[isCoal] <- -1L
+    x <- cumsum(trans)
+    coal.times <- c(0, times[o][isCoal]) # sorted
+    x.coal <- x[which(isCoal) - 1] # number of lineages before the coalescence
+    coal.ints <- diff(coal.times)
+    tmp <- x.coal * (x.coal - 1)/2
+    if (fixed) {
+        res <- sum(lchoose(x.coal, 2) - log(theta) - tmp * coal.ints/theta)
+        if (log) res else exp(res)
+    } else {
+        theta <- sum(tmp * coal.ints)/(n - 1)
+        se <- sqrt(-1/((n - 1)/theta^2 - 2 * sum(tmp * coal.ints)/theta^3))
+        logLik <- sum(lchoose(x.coal, 2) - log(theta) - tmp * coal.ints/theta)
+        list(theta = theta, se = se, logLik = logLik)
+    }
 }
 
 theta.msat <- function(x)

@@ -1,4 +1,4 @@
-## site.spectrum.R (2018-11-19)
+## site.spectrum.R (2018-11-21)
 
 ##   Site Frequency Spectrum
 
@@ -13,8 +13,8 @@ site.spectrum.DNAbin <- function(x, folded = TRUE, outgroup = 1, ...)
 {
     if (is.list(x)) x <- as.matrix(x)
     n <- dim(x)[1]
-    if (n == 1 || is.vector(x))
-        stop("only one sequence in the data set")
+    if (n == 1 || is.null(n))
+        stop("only one sequence in data set")
 
     ss <- seg.sites(x)
 
@@ -42,9 +42,10 @@ site.spectrum.DNAbin <- function(x, folded = TRUE, outgroup = 1, ...)
             ss <- ss[outgroup.state]
         }
         spectrum <- apply(x[, ss], 2, function(y) sum(y[outgroup] != y[-outgroup]))
-        spectrum <- tabulate(spectrum, nrow(x) - 1)
+        spectrum <- tabulate(spectrum, n - 1)
     }
     class(spectrum) <- "spectrum"
+    attr(spectrum, "sample.size") <- n
     attr(spectrum, "folded") <- folded
     spectrum
 }
@@ -70,7 +71,7 @@ site.spectrum.loci <- function(x, folded = TRUE, ancestral = NULL, ...)
             stop("length of 'ancestral' not equal to number of loci")
     }
     if (any(nonsnp)) {
-        if (all(nonsnp)) stop("no SNP loci in x")
+        if (all(nonsnp)) stop("no SNP loci in data set")
         d <- attr(x, "locicol")[nonsnp]
         ld <- length(d)
         x <- x[, -d]
@@ -78,16 +79,18 @@ site.spectrum.loci <- function(x, folded = TRUE, ancestral = NULL, ...)
         p <- p - ld
         if (!folded) ancestral <- ancestral[-d]
     }
+    n <- nrow(x)
     s <- summary(x) # works in all situations
     if (folded) {
         f <- sapply(s, function(x) min(x[[2]]), USE.NAMES = FALSE)
-        res <- tabulate(f, floor(nrow(x)/2))
+        res <- tabulate(f, floor(n/2))
     } else {
         f <- numeric(p)
         for (i in 1:p) f[i] <- s[[i]][[2]][ancestral[i]]
-        res <- tabulate(f, nrow(x) - 1)
+        res <- tabulate(f, n - 1)
     }
     class(res) <- "spectrum"
+    attr(spectrum, "sample.size") <- n
     attr(res, "folded") <- folded
     res
 }

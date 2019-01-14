@@ -1092,7 +1092,7 @@ LDscan <- function(x, depth = NULL, quiet = FALSE)
 {
     nloci <- length(attr(x, "locicol"))
     if (!quiet) cat("Scanning haplotypes... ")
-    hap <- pegas:::haplotype.loci(x, seq_len(nloci), TRUE, FALSE, FALSE)
+    hap <- haplotype.loci(x, seq_len(nloci), TRUE, FALSE, FALSE)
     if (!quiet) cat("done.\n")
     .LD <- function (hap, loc1, loc2) {
         nij <- table(hap[loc1, ], hap[loc2, ])

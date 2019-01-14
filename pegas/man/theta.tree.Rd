@@ -1,14 +1,16 @@
 \name{theta.tree}
 \alias{theta.tree}
+\alias{theta.tree.hetero}
 \title{
   Population Parameter THETA Using Genealogy
 }
 \description{
-  This function estimates the population parameter \eqn{\theta}{THETA}
+  These functions estimate the population parameter \eqn{\Theta}{THETA}
   from a genealogy (coded a as phylogenetic tree) under the coalescent.
 }
 \usage{
 theta.tree(phy, theta, fixed = FALSE, analytical = TRUE, log = TRUE)
+theta.tree.hetero(phy, theta, fixed = FALSE, analytical = TRUE, log = TRUE)
 }
 \arguments{
   \item{phy}{an object of class \code{"phylo"}.}
@@ -24,13 +26,17 @@ theta.tree(phy, theta, fixed = FALSE, analytical = TRUE, log = TRUE)
     log scale (the default); ignored if \code{fixed = FALSE}.}
 }
 \details{
-  The tree \code{phy} is considered as a genealogy, and therefore should
-  be ultrametric. By default, \eqn{\theta}{THETA} is estimated by
-  maximum likelihood and the value given in \code{theta} is used as
-  starting value for the minimisation function (if several values are
-  given as a vector the first one is used). If \code{fixed = TRUE},
-  then the [log-]likelihood values are returned corresponding to each
-  value in \code{theta}.
+  With \code{theta.tree}, the tree \code{phy} is considered as a
+  genealogy with contemporaneous samples, and therefore should be
+  ultrametric. With \code{theta.tree.hetero}, the samples may be
+  heterochronous so \code{phy} can be non-ultrametric. If \code{phy} is
+  ultrametric, both functions return the same results.
+
+  By default, \eqn{\theta}{THETA} is estimated by maximum likelihood and
+  the value given in \code{theta} is used as starting value for the
+  minimisation function (if several values are given as a vector the
+  first one is used). If \code{fixed = TRUE}, then the [log-]likelihood
+  values are returned corresponding to each value in \code{theta}.
 
   The present implementation does a numerical optimisation of the
   log-likelihood function (with \code{\link[stats]{nlminb}}) with the
@@ -41,7 +47,7 @@ theta.tree(phy, theta, fixed = FALSE, analytical = TRUE, log = TRUE)
 \value{
   If \code{fixed = FALSE}, a list with two elements:
 
-  \item{theta}{the maximum likelihood estimate of \eqn{\theta}{THETA};}
+  \item{theta}{the maximum likelihood estimate of \eqn{\Theta}{THETA};}
   \item{logLik}{the log-likelihood at its maximum.}
 
   If \code{fixed = TRUE}, a numeric vector with the [log-]likelihood

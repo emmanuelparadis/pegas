@@ -58,8 +58,8 @@ site.spectrum(x, ...)
 \value{
   \code{site.spectrum} returns an object of class \code{"spectrum"}
   which is a vector of integers (some values may be equal to zero) with
-  the attribute \code{"folded"} (a logical value) indicating which
-  version of the spectrum has been computed.
+  the attributes \code{"sample.size"} and \code{"folded"} (a logical
+  value) indicating which version of the spectrum has been computed.
 }
 \author{Emmanuel Paradis}
 \references{

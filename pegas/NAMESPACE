@@ -9,7 +9,8 @@ export(alleles2loci, amova, as.igraph.haploNet, as.loci,
        loci2genind, mjn, msn, mst, MMD, nuc.div, plotNetMDS,
        proba.genotype, R2.test, rangePOS, read.gtx, read.loci, read.vcf,
        replot, rmst, rr.test, selectQUAL, site.spectrum, sw, tajima.test,
-       theta.h, theta.k, theta.msat, theta.s, unphase, theta.tree, VCFheader,
+       theta.h, theta.k, theta.msat, theta.s, unphase, theta.tree,
+       theta.tree.hetero, VCFheader,
        VCFlabels, VCFloci, write.loci, write.pegas.amova)
 
 importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
