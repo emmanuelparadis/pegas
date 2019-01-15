@@ -11,7 +11,7 @@ stairway <- function(x, epoch = NULL, step.min = 1e-6, step.max = 1e-3)
 ### "Your stairway lies on the whispering wind" (R. Plant)
 {
     if (!inherits(x, "spectrum"))
-        stop("x should of class \"spectrum\"")
+        stop("x should be of class \"spectrum\"")
     if (!attr(x, "folded"))
         stop("site spectrum should be folded")
 
@@ -119,7 +119,7 @@ plot.stairway <- function(x, type = "s", xlab = "Coalescent intervals",
                           ylab = expression(Theta), ...)
 {
     y <- c(1, x$estimates)[x$epoch]
-    plot(1:length(y), rev(y), type = type, xaxt = "n",
+    plot(1:length(y), y, type = type, xaxt = "n",
          xlab = xlab, ylab = ylab, ...)
     xx <- pretty(1:length(y))
     axis(1, at = xx, labels = rev(xx))
@@ -128,5 +128,5 @@ plot.stairway <- function(x, type = "s", xlab = "Coalescent intervals",
 lines.stairway <- function(x, type = "s", ...)
 {
     y <- c(1, x$estimates)[x$epoch]
-    lines.default(1:length(y), rev(y), type = type, ...)
+    lines.default(1:length(y), y, type = type, ...)
 }

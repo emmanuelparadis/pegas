@@ -1,8 +1,8 @@
-## site.spectrum.R (2018-11-21)
+## site.spectrum.R (2019-01-15)
 
 ##   Site Frequency Spectrum
 
-## Copyright 2009-2018 Emmanuel Paradis
+## Copyright 2009-2019 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -89,8 +89,8 @@ site.spectrum.loci <- function(x, folded = TRUE, ancestral = NULL, ...)
         for (i in 1:p) f[i] <- s[[i]][[2]][ancestral[i]]
         res <- tabulate(f, n - 1)
     }
-    class(res) <- "spectrum"
-    attr(spectrum, "sample.size") <- n
+    attr(res, "sample.size") <- n
     attr(res, "folded") <- folded
+    class(res) <- "spectrum"
     res
 }
