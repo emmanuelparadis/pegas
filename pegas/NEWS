@@ -6,6 +6,11 @@ NEW FEATURES
     o The new functions F2, F3, and F4 implement the F-statistics
       developed by Patterson et al. (2012, Genetics, 192:1065).
 
+    o The new function stairway implements the method from Polanski
+      and Kimmel (2003, Genetics, 165:427) quantifying changes in
+      population size from the site frequency spectrum (SFS). It has a
+      plot() method.
+
     o The new function loci2alleles does the reverse operation than
       alleles2loci.
 
