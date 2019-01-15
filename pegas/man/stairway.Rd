@@ -13,9 +13,9 @@
 }
 \usage{
 stairway(x, epoch = NULL, step.min = 1e-6, step.max = 1e-3)
-\method{plot}{stairway}(x, type = "s", xlab = "Coalescent intervals",
+\method{plot}{stairway}(x, type = "S", xlab = "Coalescent intervals",
              ylab = expression(Theta), \dots)
-\method{lines}{stairway}(x, type = "s", \dots)
+\method{lines}{stairway}(x, type = "S", \dots)
 }
 \arguments{
   \item{x}{an object of class \code{\link{site.spectrum}} or of class
