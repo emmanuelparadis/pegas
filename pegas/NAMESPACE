@@ -88,6 +88,7 @@ S3method(summary, loci)
 
 S3method(plot, spectrum)
 
+S3method(lines, stairway)
 S3method(plot, stairway)
 
 S3method(plot, summary.loci)

@@ -1,30 +1,43 @@
 \name{stairway}
 \alias{stairway}
 \alias{plot.stairway}
-\title{
-The Stairway Plot
-}
+\alias{lines.stairway}
+\title{The Stairway Plot}
 \description{
-This function fits a model of population change using the site frequency spectrum (SFS). The default assumes \eqn{\Theta=1}{THETA = 1}. A model of population change estimates the temporal changes in \eqn{\Theta}{THETA} with respect to the value of this parameter at present time. The model is specified by the user with the option \code{epoch}.
+  This function fits a model of population change using the site
+  frequency spectrum (SFS). The default assumes \eqn{\Theta=1}{THETA =
+    1}. A model of population change estimates the temporal changes in
+  \eqn{\Theta}{THETA} with respect to the value of this parameter at
+  present time. The model is specified by the user with the option
+  \code{epoch}.
 }
 \usage{
 stairway(x, epoch = NULL, step.min = 1e-6, step.max = 1e-3)
-\method{plot}{stairway}(x, xlab = "Coalescent intervals",
+\method{plot}{stairway}(x, type = "s", xlab = "Coalescent intervals",
              ylab = expression(Theta), \dots)
+\method{lines}{stairway}(x, type = "s", \dots)
 }
 \arguments{
-  \item{x}{an object of class \code{\link{site.spectrum}} or of class \code{stairway}.}
-  \item{epoch}{an optional vector of integers giving the periods of time (or epochs) with distinct \eqn{\Theta}{THETA}.}
-  \item{step.min}{a single numeric value giving the smallest step size used during optimization.}
-  \item{step.max}{id. for the largest step size (see \code{\link[stats]{nlminb}}).}
+  \item{x}{an object of class \code{\link{site.spectrum}} or of class
+    \code{stairway}.}
+  \item{epoch}{an optional vector of integers giving the periods of time
+    (or epochs) with distinct \eqn{\Theta}{THETA}.}
+  \item{step.min}{a single numeric value giving the smallest step size
+    used during optimization.}
+  \item{step.max}{id. for the largest step size (see
+    \code{\link[stats]{nlminb}}).}
+  \item{type}{the type of lines.}
   \item{xlab, ylab}{the default labels on the axes.}
-  \item{\dots}{further arguments passed to \code{\link[graphics]{plot.default}}.}
+  \item{\dots}{further arguments passed to other methods.}
 }
 \details{
-The basic method implemented in this function is similar to Polanski and Kimmel (2003). The temporal model with ``epochs'' is from Liu and Fu (2015).
+  The basic method implemented in this function is similar to Polanski
+  and Kimmel (2003). The temporal model with ``epochs'' is from Liu and
+  Fu (2015).
 }
 \value{
-By default, a single numeric value with the null deviance. If \code{epoch} is used, a list with the following components:
+  By default, a single numeric value with the null deviance. If
+  \code{epoch} is used, a list with the following components:
 
 \item{estimates}{the maximum likelihood estimates.}
 \item{deviance}{the deviance of the fitted model.}
@@ -45,4 +58,3 @@ sp <- site.spectrum(woodmouse)
 stairway(sp, c(1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2))
 }
 \keyword{models}
-

@@ -115,12 +115,18 @@ stairway <- function(x, epoch = NULL, step.min = 1e-6, step.max = 1e-3)
     res
 }
 
-plot.stairway <- function(x, xlab = "Coalescent intervals",
+plot.stairway <- function(x, type = "s", xlab = "Coalescent intervals",
                           ylab = expression(Theta), ...)
 {
     y <- c(1, x$estimates)[x$epoch]
-    plot(1:length(y), rev(y), type = "s", xaxt = "n",
+    plot(1:length(y), rev(y), type = type, xaxt = "n",
          xlab = xlab, ylab = ylab, ...)
     xx <- pretty(1:length(y))
     axis(1, at = xx, labels = rev(xx))
+}
+
+lines.stairway <- function(x, type = "s", ...)
+{
+    y <- c(1, x$estimates)[x$epoch]
+    lines.default(1:length(y), rev(y), type = type, ...)
 }
