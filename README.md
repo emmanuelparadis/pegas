@@ -2,7 +2,7 @@
 
 pegas is an R package for the analysis of population genetic data. It is distributed on CRAN:
 
-http://cran.r-project.org/web/packages/pegas/index.html
+http://cran.r-project.org/package=pegas
 
 This repository contains:
 - the current development (next to be on CRAN) version of pegas (-> pegas/).
