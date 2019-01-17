@@ -1,4 +1,4 @@
-## stairway.R (2019-01-15)
+## stairway.R (2019-01-17)
 
 ##   Stairway Plot
 
@@ -119,7 +119,7 @@ plot.stairway <- function(x, type = "S", xlab = "Coalescent intervals",
                           ylab = expression(Theta), ...)
 {
     y <- c(1, x$estimates)[x$epoch]
-    plot(0:length(y), c(NA, y), type = type, xaxt = "n",
+    plot(0:length(y), c(NA, rev(y)), type = type, xaxt = "n",
          xlab = xlab, ylab = ylab, ...)
     xx <- pretty(1:length(y))
     axis(1, at = xx, labels = rev(xx))
@@ -128,5 +128,5 @@ plot.stairway <- function(x, type = "S", xlab = "Coalescent intervals",
 lines.stairway <- function(x, type = "S", ...)
 {
     y <- c(1, x$estimates)[x$epoch]
-    lines.default(0:length(y), c(NA, y), type = type, ...)
+    lines.default(0:length(y), c(NA, rev(y)), type = type, ...)
 }
