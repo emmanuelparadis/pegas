@@ -1,4 +1,4 @@
-## haplotype.R (2018-11-18)
+## haplotype.R (2019-01-21)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -1155,7 +1155,8 @@ LDmap <- function(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
     m <- nloci * n /2
     nl <- if (is.null(col)) 10 else length(col) # Nb of colour levels
     if (is.null(breaks)) {
-        breaks <- seq(min(d), max(d), length.out = nl + 1)
+        rgd <- range(d, na.rm = TRUE)
+        breaks <- seq(rgd[1], rgd[2], length.out = nl + 1)
     } else {
         nl <- length(breaks) - 1
         if (!is.null(col))

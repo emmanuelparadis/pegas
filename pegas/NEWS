@@ -15,7 +15,7 @@ NEW FEATURES
       alleles2loci().
 
     o The new function theta.tree.hetero estimates THETA from a
-      non-ultrametric tree.
+      non-ultrametric coalescent tree.
 
     o site.spectrum() is now generic with methods for "DNAbin" (old
       code) and for "loci" (new code). The returned object now has an
@@ -50,20 +50,22 @@ OTHER CHANGES
 
 BUG FIXES
 
-    o loci2genind() dropped row and column labels when converting a
-      table with a single locus.
+    o loci2genind() dropped row and column labels when converting an
+      object with a single locus.
 
     o The 'dimnames' were not set correctly in sw().
 
     o all.equal.haploNet() failed depending on the order of the
       arguments.
 
-    o hw.test() failed if some loci were dropped.
+    o hw.test() failed if some loci were ignored.
 
     o plotNetMDS(, k = 2) did not display the x-axis.
 
     o A bug was fixed in theta.tree() which multiplied the estimates
       of THETA by two.
+
+    o LDmap() failed if there were NA's in the output from LDscan().
 
 
 
