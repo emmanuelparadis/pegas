@@ -10,7 +10,7 @@
 }
 \usage{
 theta.tree(phy, theta, fixed = FALSE, analytical = TRUE, log = TRUE)
-theta.tree.hetero(phy, theta, fixed = FALSE, analytical = TRUE, log = TRUE)
+theta.tree.hetero(phy, theta, fixed = FALSE, log = TRUE)
 }
 \arguments{
   \item{phy}{an object of class \code{"phylo"}.}

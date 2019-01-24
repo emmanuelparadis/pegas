@@ -14,16 +14,16 @@ export(alleles2loci, amova, as.igraph.haploNet, as.loci,
        theta.tree.hetero, VCFheader,
        VCFlabels, VCFloci, write.loci, write.pegas.amova)
 
-importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna,
+importFrom(ape, BOTHlabels, branching.times, base.freq, dist.dna, dist.nodes,
            floating.pie.asp, GC.content, perm.rowscols, polar2rect, rcoal,
            rect2polar, seg.sites)
 importFrom(adegenet, df2genind, genind2df)
-importFrom(graphics, abline, barplot, hist, lines, locator, mtext, par,
-           polygon, plot, plot.default, rect, segments, strheight, symbols,
-           text, xinch)
+importFrom(graphics, abline, axis, barplot, hist, lines, lines.default, locator,
+           mtext, par, polygon, plot, plot.default, rect, segments,
+           strheight, symbols, text, xinch)
 importFrom(grDevices, colorRampPalette, dev.cur, devAskNewPage, rainbow, rgb)
 importFrom(stats, as.dist, cmdscale, cophenetic, density, dist, integrate,
-           na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois,
+           na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois, sd,
            uniroot, weighted.mean)
 importFrom(utils, as.roman, combn, edit, read.table, write.csv, write.table)
 
@@ -50,6 +50,9 @@ S3method(hw.test, genind)
 
 S3method(is.snp, loci)
 S3method(is.snp, VCFinfo)
+
+S3method(LDscan, DNAbin)
+S3method(LDscan, loci)
 
 S3method(nuc.div, DNAbin)
 S3method(nuc.div, haplotype)

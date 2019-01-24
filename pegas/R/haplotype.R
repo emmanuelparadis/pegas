@@ -1,8 +1,8 @@
-## haplotype.R (2019-01-21)
+## haplotype.R (2019-01-24)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
-## Copyright 2009-2018 Emmanuel Paradis, 2013 Klaus Schliep
+## Copyright 2009-2019 Emmanuel Paradis, 2013 Klaus Schliep
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -1088,7 +1088,47 @@ LD2 <- function(x, locus = c(1, 2), details = TRUE)
     res
 }
 
-LDscan <- function(x, depth = NULL, quiet = FALSE)
+LDscan <- function(x, ...) UseMethod("LDscan")
+
+LDscan.DNAbin <- function(x, quiet = FALSE, ...)
+{
+    if (!quiet) cat("Scanning haplotypes... ")
+    ss <- seg.sites(x)
+    nloci <- length(ss)
+    hap <- t(as.character(x[, ss]))
+    hap[hap == "n"] <- NA_character_
+    if (!quiet) cat("done.\n")
+    .LD <- function (hap, loc1, loc2) {
+        nij <- table(hap[loc1, ], hap[loc2, ])
+        if (any(dim(nij) != 2)) return(NA_real_)
+        N <- sum(nij)
+        pij <- nij/N
+        pi <- rep(rowSums(pij), 2)
+        qj <- rep(colSums(pij), each = 2)
+        D <- pij - pi * qj
+        rij <- D/sqrt(pi * (1 - pi) * qj * (1 - qj))
+        abs(rij[1])
+    }
+    M <- nloci * (nloci - 1) / 2
+    ldx <- numeric(M)
+    k <- 0L
+    for (i in 1:(nloci - 1)) {
+        for (j in (i + 1):nloci) {
+            k <- k + 1L
+            ldx[k] <- .LD(hap, i, j)
+            if (!quiet) cat("\r", round(100 * k / M), "%")
+        }
+    }
+    if (!quiet) cat("\n")
+    class(ldx) <- "dist"
+    attr(ldx, "Size") <- nloci
+    attr(ldx, "Labels") <- names(x)
+    attr(ldx, "Diag") <- attr(ldx, "Upper") <- FALSE
+    attr(ldx, "call") <- match.call()
+    ldx
+}
+
+LDscan.loci <- function(x, depth = NULL, quiet = FALSE, ...)
 {
     nloci <- length(attr(x, "locicol"))
     if (!quiet) cat("Scanning haplotypes... ")

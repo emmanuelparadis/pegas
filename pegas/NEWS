@@ -33,8 +33,9 @@ NEW FEATURES
     o Fst() has the new option 'na.alleles' ("" by default) to specify
       alleles coding for missing data.
 
-    o LDscan() has a new option, depth, to specify at what depth(s)
-      (or lags) to compute r^2 values.
+    o LDscan() is now generic with methods for classes "DNAbin" (new
+      code) and "loci" (old code). The latter has a new option, depth,
+      to specify at what depth(s) (or lags) to compute r^2 values.
 
 
 OTHER CHANGES
