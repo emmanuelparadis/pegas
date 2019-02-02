@@ -1,4 +1,4 @@
-## haplotype.R (2019-01-24)
+## haplotype.R (2019-02-02)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -344,10 +344,12 @@ print.haploNet <- function(x, ...)
     xa1 <- xx[altlink[s, 2]]
     ya1 <- yy[altlink[s, 2]]
     segments(xa0, ya0, xa1, ya1, col = "grey", lty = 2)
-    if (show.mutation)
+    if (show.mutation) {
+        n <- length(xx)
         .labelSegmentsHaploNet(xx, yy, altlink[s, 1:2, drop = FALSE],
-                               altlink[s, 3, drop = FALSE], NULL, 1, NULL,
-                               show.mutation)
+                               altlink[s, 3, drop = FALSE], rep(1, n),
+                               1, "black", show.mutation)
+    }
 }
 
 .mutationRug <- function(x0, y0, x1, y1, n, space = 0.05, length = 0.2)
@@ -405,8 +407,8 @@ print.haploNet <- function(x, ...)
             pc <- ((1:ld1[i]) / (ld1[i] + 1) * ld2[i] + size[l1[i]]/2) / (ld2[i] + (size[l1[i]] + size[l2[i]])/2)
             xr <- pc * (xx[l2[i]] - xx[l1[i]]) +  xx[l1[i]]
             yr <- pc * (yy[l2[i]] - yy[l1[i]]) +  yy[l1[i]]
-            symbols(xr, yr, circles = rep(lwd/15, length(xr)), inches = FALSE, add = TRUE,
-                    fg = col.link, bg = col.link)
+            symbols(xr, yr, circles = rep(lwd/15, length(xr)), inches = FALSE,
+                    add = TRUE, fg = col.link, bg = col.link)
         }
     }, {
         x <- (xx[l1] + xx[l2])/2
@@ -473,7 +475,7 @@ replot <- function(xy = NULL, ...)
         if (show.mutation)
             .labelSegmentsHaploNet(xx, yy, cbind(l1, l2), step, size, lwd,
                                    col.link, as.numeric(show.mutation))
-        if (!is.null(altlink) && !identical(threshold, 0))
+        if (!is.null(altlink) && !identical(as.numeric(threshold), 0))
             .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation)
         .drawSymbolsHaploNet(xx, yy, size, col, bg, pie)
         if (is.character(labels))
@@ -688,7 +690,7 @@ plot.haploNet <-
 
     ## draw alternative links
     altlink <- attr(x, "alter.links")
-    if (!is.null(altlink) && !identical(threshold, 0))
+    if (!is.null(altlink) && !identical(as.numeric(threshold), 0))
         .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation)
 
     if (show.mutation) {

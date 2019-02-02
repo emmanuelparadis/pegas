@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.11-5
+		CHANGES IN PEGAS VERSION 0.11-7
 
 
 NEW FEATURES
@@ -67,6 +67,9 @@ BUG FIXES
       of THETA by two.
 
     o LDmap() failed if there were NA's in the output from LDscan().
+
+    o plot.haploNet(, show.mutation = 2) failed if the network had
+      reticulations.
 
 
 
