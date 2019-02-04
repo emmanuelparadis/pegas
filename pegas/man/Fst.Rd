@@ -1,12 +1,15 @@
 \name{Fst}
 \alias{Fst}
+\alias{Rst}
 \title{F-Statistics}
 \description{
-  This function computes the \eqn{F_{IT}}{Fit}, \eqn{F_{ST}}{Fst} and
-  \eqn{F_{IS}}{Fis} for each locus in the data.
+  \code{Fst} computes the \eqn{F_{IT}}{Fit}, \eqn{F_{ST}}{Fst} and
+  \eqn{F_{IS}}{Fis} for each locus in the data. \code{Rst} computes the
+  \eqn{R_{ST}}{Rst} for microsatellites.
 }
 \usage{
 Fst(x, pop = NULL, quiet = TRUE, na.alleles = "")
+Rst(x, pop = NULL, quiet = TRUE, na.alleles = "")
 }
 \arguments{
   \item{x}{an object of class \code{"loci"}.}
@@ -20,15 +23,21 @@ Fst(x, pop = NULL, quiet = TRUE, na.alleles = "")
     is to specify if some alleles code for missing data.}
 }
 \details{
-  The formulae in Weir and Cockerham (1984) are used for each allele,
-  and then averaged within each locus over the different alleles as
-  suggested by these authors.
+  \code{Fst} uses the formulae in Weir and Cockerham (1984) for each
+  allele, and then averaged within each locus over the different alleles
+  as suggested by these authors.
+
+  \code{Rst} uses the formulae in Slatkin (1995).
 }
 \value{
   A matrix with genes (loci) as rows and the three \emph{F}-statistics
   as columns.
 }
 \references{
+  Slatkin, M. (1995) A measure of population subdivision based on
+  microsatellite allele frequencies.  \emph{Genetics}, \bold{139},
+  457--462.
+
   Weir, B. S. and Cockerham, C. C. (1984) Estimating \emph{F}-statistics
   for the analysis of population structure. \emph{Evolution}, \bold{38},
   1358--1370.
@@ -48,5 +57,6 @@ Fst(x, pop = NULL, quiet = TRUE, na.alleles = "")
 \examples{
 data(jaguar)
 Fst(jaguar)
+Rst(jaguar)
 }
 \keyword{htest}
