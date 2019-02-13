@@ -17,7 +17,7 @@ loci2alleles(x)
   \item{ploidy}{an integer specifying the level of ploidy.}
   \item{rownames}{an integer giving the column number to be used as
     rownames of the output.}
-  \item{population}{an integer giving the column number to be as
+  \item{population}{an integer giving the column number to be used as
     population (if any).}
   \item{phased}{a logical specifying whether the genotypes should be
     output as phased. By default, they are unphased.}

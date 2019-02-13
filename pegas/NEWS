@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.11-7
+		CHANGES IN PEGAS VERSION 0.11-8
 
 
 NEW FEATURES
@@ -72,6 +72,8 @@ BUG FIXES
 
     o plot.haploNet(, show.mutation = 2) failed if the network had
       reticulations.
+
+    o alleles2loci(, ploidy = 1) failed.
 
 
 

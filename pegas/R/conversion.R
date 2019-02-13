@@ -1,8 +1,8 @@
-## conversion.R (2018-11-04)
+## conversion.R (2019-02-13)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2018 Emmanuel Paradis
+## Copyright 2009-2019 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -134,7 +134,7 @@ alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
     x <- as.data.frame(x)
     if (is.null(rownames)) {
         idx <- rownames(x)
-        if (is.null(idx)) idx <- as.character(seq_len(d[1]))
+        if (is.null(idx)) idx <- as.character(seq_len(nrow(x)))
     } else {
         idx <- as.character(x[[rownames]])
         x[[rownames]] <- NULL
@@ -143,19 +143,25 @@ alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
     }
     if (withPop) {
         pop <- x[, population]
-        x <- x[, -population]
+        x <- x[, -population, drop = FALSE]
     }
-    d <- dim(x)
-    if (d[2] %% ploidy) stop("number of columns not a multiple of ploidy")
-    nloci <- d[2] / ploidy
-    start <- seq(1, by = ploidy, length.out = nloci)
-    end <- start + ploidy - 1
-    loci.nms <- colnames(x)[start]
-    obj <- vector("list", nloci)
-    sep <- if (phased) "|" else "/"
-    foo <- function(...) paste(..., sep = sep)
-    for (i in seq_len(nloci))
-        obj[[i]] <- factor(do.call(foo, x[, start[i]:end[i]]))
+    p <- ncol(x)
+    if (ploidy == 1) {
+        loci.nms <- colnames(x)
+        obj <- vector("list", p)
+        for (i in 1:p) obj[[i]] <- factor(x[, i])
+    } else {
+        if (p %% ploidy) stop("number of columns not a multiple of ploidy")
+        nloci <- p / ploidy
+        start <- seq(1, by = ploidy, length.out = nloci)
+        end <- start + ploidy - 1
+        loci.nms <- colnames(x)[start]
+        obj <- vector("list", nloci)
+        sep <- if (phased) "|" else "/"
+        foo <- function(...) paste(..., sep = sep)
+        for (i in seq_len(nloci))
+            obj[[i]] <- factor(do.call(foo, x[, start[i]:end[i], drop = FALSE]))
+    }
     names(obj) <- loci.nms
     obj <- as.data.frame(obj, row.names = idx)
     obj <- as.loci(obj)
