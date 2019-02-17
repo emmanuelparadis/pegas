@@ -1,4 +1,4 @@
-## conversion.R (2019-02-13)
+## conversion.R (2019-02-18)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -77,7 +77,7 @@ genind2loci <- function(x) as.loci.genind(x)
     }
 
     for (k in attr(x, "locicol")) {
-        y <- x[, k]
+        y <- x[[k]]
         if (is.numeric(y)) { # haploid with alleles coded with numerics
             x[, k] <- factor(y)
             next
