@@ -65,28 +65,45 @@ genind2loci <- function(x) as.loci.genind(x)
 
 .check.order.alleles <- function(x)
 {
+    locale <- Sys.getlocale("LC_COLLATE")
+    if (!identical(locale, "C")) {
+        Sys.setlocale("LC_COLLATE", "C")
+        on.exit(Sys.setlocale("LC_COLLATE", locale))
+    }
+
     reorder.alleles <- function(x) {
+        ALLOK <- TRUE
         for (i in seq_along(x)) {
             y <- x[i]
             if (!length(grep("/", y))) next # phased genotype (mixed with unphased ones)
-            y <- unlist(strsplit(y, "/"))
-            y <- paste(.sort.alleles(y), collapse = "/")
-            x[i] <- y
+            y <- strsplit(y, "/")[[1L]]
+            z <- paste0(y[sort.list(y)], collapse = "/")
+            if (!identical(y, z)) {
+                ALLOK <- FALSE
+                x[i] <- z
+            }
         }
+        if (ALLOK) return(ALLOK)
         x
     }
 
-    for (k in attr(x, "locicol")) {
+    LOCI <- attr(x, "locicol")
+    if (is.null(LOCI)) return(x)
+    oc <- oldClass(x)
+    class(x) <- NULL
+
+    for (k in LOCI) {
         y <- x[[k]]
         if (is.numeric(y)) { # haploid with alleles coded with numerics
-            x[, k] <- factor(y)
+            x[[k]] <- factor(y)
             next
         }
-        lv <- levels(y)
+        lv <- levels(y) # get the genotypes of the k-th genotype
         if (!length(grep("/", lv))) next # if haploid or phased genotype
         a <- reorder.alleles(lv) # works with all levels of ploidy > 1
-        if (!identical(a, lv)) levels(x[, k]) <- a
+        if (!is.logical(a)) x[[k]] <- factor(a[as.numeric(y)])
     }
+    class(x) <- oc
     x
 }
 
