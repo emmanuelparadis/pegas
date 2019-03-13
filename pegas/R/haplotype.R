@@ -1,4 +1,4 @@
-## haplotype.R (2019-02-02)
+## haplotype.R (2019-03-13)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -818,6 +818,68 @@ print.haplotype <- function(x, ...)
     y <- NextMethod("[")
     class(y) <- "DNAbin"
     y
+}
+
+as.phylo.haploNet <- function(x, quiet = FALSE, ...)
+{
+    if (!is.null(attr(x, "alter.links")) && !quiet)
+        warning("some links (edges) were dropped because of reticulations")
+
+    foo <- function(xx) {
+        NODES <<- c(NODES, xx)
+        W <- which(mat == xx, TRUE)
+        for (i in 1:nrow(W)) {
+            k <- W[i, 1]
+            if (DONE[k]) next
+            DONE[k] <<- TRUE
+            link <- mat[k, ]
+            if (link[1] != xx) link <- rev(link)
+            edge[ie, ] <<- link
+            el[ie] <<- x[k, 3]
+            ie  <<- ie + 1L
+            neigh <- link[2]
+            if (deg[neigh] == 1L) TIPS <<- c(TIPS, neigh) else foo(neigh)
+        }
+    }
+
+    LABS <- attr(x, "labels")
+    n <- length(LABS) # number of haplotype nodes
+    mat <- x[, 1:2]
+    deg <- tabulate(mat, n) # get the degree of each node
+    deg1 <- deg == 1
+    ntip <- sum(deg1)
+
+    TIPS <- integer()
+    NODES <- integer()
+    edge <- mat
+    edge[] <- 0L
+    el <- numeric(nrow(mat))
+    ie <- 1L
+    DONE <- logical(nrow(mat))
+    ROOT <- which(!deg1)[1]
+    foo(ROOT)
+    TIPNODE <- c(TIPS, NODES)
+    edge <- match(edge, TIPNODE)
+    dim(edge) <- dim(mat)
+    phy <- list(edge = edge, edge.length = el, tip.label = LABS[TIPS],
+                Nnode = length(NODES), node.label = LABS[NODES])
+    class(phy) <- "phylo"
+    phy
+}
+
+as.evonet.haploNet <- function(x, ...)
+{
+    res <- as.phylo.haploNet(x, quiet = TRUE)
+    alt <- attr(x, "alter.links")
+    if (!is.null(alt)) {
+        LABS <- attr(x, "labels")
+        o <- match(LABS, c(res$tip.label, res$node.label))
+        alt <- o[alt[, 1:2]]
+        dim(alt) <- c(length(alt)/2, 2)
+        res$reticulation <- alt
+        class(res) <- c("evonet", "phylo")
+    }
+    res
 }
 
 if (getRversion() >= "2.15.1") utils::globalVariables(c("network", "network.vertex.names<-"))

@@ -19,6 +19,9 @@ NEW FEATURES
 
     o The new function Rst computes the R_ST index for microsatellites.
 
+    o There are two new methods as.phylo() and as.evonet() for the
+      class "haploNet".
+
     o site.spectrum() is now generic with methods for "DNAbin" (old
       code) and for "loci" (new code). The returned object now has an
       attribute "sample.size" (useful for folded spectra).

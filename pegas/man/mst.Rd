@@ -50,5 +50,18 @@ data(woodmouse)
 d <- dist.dna(woodmouse, "n")
 (r <- mst(d))
 plot(r)
+
+## a case where the RMST and the MJN are identical:
+x <- c(">A", "TAAGTGCAT", ">B", "TAAATGCAT", ">C", "TAGGTGCAT", ">D", "TAAGTACAT",
+       ">E", "TAAGTGTAT", ">F", "TAAGTACAC", ">G", "TAAGTACGT", ">H", "CAAGTACAC",
+       ">I", "CAAGCACAC", ">J", "CAAGTACAT", ">K", "CGAGTACAT", ">L", "TAAGTACGC",
+       ">M", "CAAGCACAT")
+fl <- tempfile()
+cat(x, file = fl, sep = "\n")
+x <- read.dna(fl, "f")
+tr <- rmst(dist.dna(x, "n"))
+ts <- mjn(x)
+stopifnot(all.equal(tr, ts))
+unlink(fl)
 }
 \keyword{models}

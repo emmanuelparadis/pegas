@@ -4,6 +4,8 @@
 \alias{plot.haploNet}
 \alias{as.network.haploNet}
 \alias{as.igraph.haploNet}
+\alias{as.phylo.haploNet}
+\alias{as.evonet.haploNet}
 \title{Haplotype Networks}
 \description{
   \code{haploNet} computes a haplotype network. There is a plot method
@@ -20,6 +22,8 @@ haploNet(h, d = NULL, getProb = TRUE)
 \method{as.network}{haploNet}(x, directed = FALSE, altlinks = TRUE, ...)
 \method{as.igraph}{haploNet}(x, directed = FALSE, use.labels = TRUE,
         altlinks = TRUE, ...)
+\method{as.phylo}{haploNet}(x, quiet, ...)
+\method{as.evonet}{haploNet}(x, ...)
 }
 \arguments{
   \item{h}{an object of class \code{"haplotype"}.}
@@ -74,6 +78,8 @@ haploNet(h, d = NULL, getProb = TRUE)
     labels in the returned network.}
   \item{altlinks}{whether to output the alternative links when
     converting to another class; \code{TRUE} by default.}
+  \item{quiet}{whether to give a warning when reticulations are dropped
+    when converting a network into a tree.}
   \item{\dots}{further arguments passed to \code{plot}.}
 }
 \details{

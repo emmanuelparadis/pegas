@@ -1,4 +1,4 @@
-## Fst.R (2010-02-04)
+## Fst.R (2019-02-25)
 
 ##   F-Statistics
 
@@ -105,7 +105,7 @@ Rst <- function(x, pop = NULL, quiet = TRUE, na.alleles = "")
     storage.mode(Z) <- "double"
     if (all(is.na(Z))) stop("no allele interpretable as number of repeats")
 
-    ploidy <- pegas:::.checkPloidy(x)
+    ploidy <- .checkPloidy(x)
 
     K <- length(unique(pop)) # Nb of pops
     one2K <- 1:K
