@@ -1,8 +1,8 @@
-## summary.loci.R (2018-07-25)
+## summary.loci.R (2019-05-02)
 
 ##   Print and Summaries of Loci Objects
 
-## Copyright 2009-2018 Emmanuel Paradis
+## Copyright 2009-2019 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -117,10 +117,10 @@ summary.loci <- function(object, ...)
     names(ans) <- names(object)[L]
     ii <- 1L
     for (i in L) {
-        geno <- levels.default(object[[i]])
+        geno <- attr(object[[i]], "levels")
         ng <- length(geno)
         alle <- strsplit(geno, "[/|]")
-        unialle <- sort(unique(unlist(alle)))
+        unialle <- sort.int(unique.default(unlist(alle)))
         l <- tabulate(object[[i]], ng)
         names(l) <- geno
         tab <- matrix(0L, length(unialle), ng,
@@ -139,7 +139,7 @@ print.summary.loci <- function(x, ...)
 {
     nms <- names(x)
     for (i in 1:length(x)) {
-        cat("Locus", nms[i], ":\n")
+        cat("Locus ", nms[i], ":\n", sep = "")
         cat("-- Genotype frequencies:\n")
         print(x[[i]][[1]])
         cat("-- Allele frequencies:\n")

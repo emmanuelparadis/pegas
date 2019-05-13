@@ -25,8 +25,8 @@ MMD(x, xlab = "Distance", main = "", rug = TRUE, legend = TRUE,
 \details{
   The histogram shows the observed distribution of pairwise
   distances. The lines show an empirical density estimate (in blue) and
-  the expected distribution under stable population population (Rogers
-  and Harpending 1992).
+  the expected distribution under stable population (Rogers and
+  Harpending 1992).
 }
 \author{Emmanuel Paradis and David Winter}
 \references{
