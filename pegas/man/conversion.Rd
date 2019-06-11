@@ -6,6 +6,7 @@
 \alias{as.loci.character}
 \alias{genind2loci}
 \alias{loci2genind}
+\alias{loci2SnpMatrix}
 \title{Conversion Among Allelic Data Classes}
 \description{
   These functions do conversion among different allelic data classes.
@@ -18,11 +19,12 @@ genind2loci(x)
 loci2genind(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
 \method{as.loci}{factor}(x, allele.sep = "/|", ...)
 \method{as.loci}{character}(x, allele.sep = "/|", ...)
+loci2SnpMatrix(x, checkSNP = TRUE)
 }
 \arguments{
   \item{x}{an object of class \code{"loci"} or \code{"genind"}, a data
     frame, a factor, or a vector of mode character.}
-    \item{allele.sep}{the character(s) separating the alleles for each locus
+  \item{allele.sep}{the character(s) separating the alleles for each locus
     in the data file (a forward slash by default).}
   \item{col.pop}{specifies whether one of the column of the data file
     identifies the population; default \code{NULL}, otherwise an integer
@@ -37,6 +39,9 @@ loci2genind(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
   \item{unphase}{a logical value; by default, the genotypes are unphased
     before conversion (this should not be changed).}
   \item{\dots}{further arguments to be passed to or from other methods.}
+  \item{checkSNP}{a logical value. If you are sure that all data in the
+    \code{"loci"} object are SNPs, using \code{checkSNP = FALSE} makes
+    it faster.}
 }
 \details{
   The main objectives of these functions is to provide easy conversion
@@ -57,7 +62,8 @@ loci2genind(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
 \value{
   An object of class \code{c("loci", "data.frame")} for \code{as.loci}
   and \code{genind2loci}; an object of class \code{"genind"} for
-  \code{loci2genind}.
+  \code{loci2genind}; an object of class \code{"SnpMatrix"} for
+  \code{loci2SnpMatrix}.
 }
 \author{Emmanuel Paradis}
 \seealso{

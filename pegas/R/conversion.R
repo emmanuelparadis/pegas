@@ -1,4 +1,4 @@
-## conversion.R (2019-02-18)
+## conversion.R (2019-06-11)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -6,6 +6,55 @@
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
+
+loci2SnpMatrix <- function(x, checkSNP = TRUE)
+{
+    library(snpStats)
+    LOCI <- attr(x, "locicol")
+    p <- length(LOCI)
+    n <- nrow(x)
+    if (checkSNP) {
+        SNP <- is.snp(x)
+        nonSNP <- !SNP
+        NnonSNP <- sum(nonSNP)
+        if (NnonSNP == p) {
+            warning("no SNP found: returning NULL")
+            return(NULL)
+        }
+        if (NnonSNP) {
+            msg <- ifelse(NnonSNP == 1, "locus is not SNP: it was dropped",
+                          "loci are not SNPs: they were dropped")
+            warning(paste(NnonSNP, msg))
+            LOCI <- LOCI[SNP]
+            p <- length(LOCI)
+        }
+    }
+
+    res <- matrix(as.raw(0), n, p)
+    rownames(res) <- row.names(x)
+    colnames(res) <- names(x)[LOCI]
+    class(x) <- NULL
+    for (j in 1:p) {
+        y <- x[[LOCI[j]]]
+        geno <- levels(y)
+        ngeno <- length(geno)
+        map <- integer(ngeno)
+        ## take arbitrarily the first allele as the REF allele:
+        REF <- charToRaw(geno[1])[1]
+        for (i in 1:ngeno) {
+            tmp <- charToRaw(geno[i])
+            a1 <- tmp[1]
+            a2 <- tmp[3]
+            if (a1 != a2) {
+                map[i] <- 2L
+            } else {
+                map[i] <- if (a1 == REF) 1L else 3L
+            }
+        }
+        res[, j] <- as.raw(map[y])
+    }
+    new("SnpMatrix", res)
+}
 
 loci2genind <- function(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
 {

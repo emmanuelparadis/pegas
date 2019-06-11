@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.11-9
+		CHANGES IN PEGAS VERSION 0.11-11
 
 
 NEW FEATURES
@@ -18,6 +18,10 @@ NEW FEATURES
       non-ultrametric coalescent tree.
 
     o The new function Rst computes the R_ST index for microsatellites.
+
+    o The new function loci2SnpMatrix converts SNPs from a "loci"
+      object into the S4 class "SnpMatrix" of the BioConductor package
+      snpStats.
 
     o There are two new methods as.phylo() and as.evonet() for the
       class "haploNet".
@@ -52,6 +56,8 @@ OTHER CHANGES
 
     o print.haplotype() now prints only the first 40 haplotype labels
       and frequencies (see the new summary.haplotype() above).
+
+    o The BioConductor package snpStats is now suggested.
 
 
 BUG FIXES
