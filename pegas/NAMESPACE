@@ -20,7 +20,7 @@ importFrom(ape, as.evonet, as.phylo, BOTHlabels, branching.times,
            seg.sites)
 importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, abline, axis, barplot, hist, lines, lines.default, locator,
-           mtext, par, polygon, plot, plot.default, rect, segments,
+           matplot, mtext, par, polygon, plot, plot.default, rect, segments,
            strheight, symbols, text, xinch)
 importFrom(grDevices, colorRampPalette, dev.cur, devAskNewPage, rainbow, rgb)
 importFrom(stats, as.dist, cmdscale, cophenetic, density, dist, integrate,
@@ -61,6 +61,7 @@ S3method(nuc.div, haplotype)
 S3method(site.spectrum, DNAbin)
 S3method(site.spectrum, loci)
 
+S3method(sw, default)
 S3method(sw, DNAbin)
 
 S3method(theta.s, default)
@@ -99,5 +100,7 @@ S3method(plot, stairway)
 
 S3method(plot, summary.loci)
 S3method(print, summary.loci)
+
+S3method(plot, sw)
 
 S3method(print, VCFinfo)

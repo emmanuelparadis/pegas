@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.11-11
+		CHANGES IN PEGAS VERSION 0.11-12
 
 
 NEW FEATURES
@@ -22,6 +22,10 @@ NEW FEATURES
     o The new function loci2SnpMatrix converts SNPs from a "loci"
       object into the S4 class "SnpMatrix" of the BioConductor package
       snpStats.
+
+    o There is a new default method sw() which can use genomic
+      positions. sw() now returns an object of class "sw" for which
+      there is a plot() method.
 
     o There are two new methods as.phylo() and as.evonet() for the
       class "haploNet".

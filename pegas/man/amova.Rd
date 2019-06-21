@@ -40,12 +40,12 @@ write.pegas.amova(x, file = "")
 
   It is assumed that the rows of the distance matrix are in the same
   order than the hierarchical levels (which may be checked by the user).
-  
+
   The function \code{getPhi()} is a convenience function for extracting a
-  table of hierarchical Phi-statistics for reporting. This will be an N+1 
+  table of hierarchical Phi-statistics for reporting. This will be an N+1
   by N matrix where N is the number of hierarchcial levels and GLOBAL is
   always the first row of the matrix. The matrix can read as COLUMN in ROW.
-  
+
   If the variance components passed to getPhi() are not named, they will
   be reported as "level 1", "level 2", etc.
 }
