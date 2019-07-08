@@ -51,19 +51,6 @@ NEW FEATURES
       to specify at what depth(s) (or lags) to compute r^2 values.
 
 
-OTHER CHANGES
-
-    o dist.snp() will be removed in the next release: its code has
-      been incorporated in dist.asd(), and it now gives a warning.
-
-    o The default of x[, 1] is now drop = FALSE for "loci" objects.
-
-    o print.haplotype() now prints only the first 40 haplotype labels
-      and frequencies (see the new summary.haplotype() above).
-
-    o The BioConductor package snpStats is now suggested.
-
-
 BUG FIXES
 
     o loci2genind() dropped row and column labels when converting an
@@ -87,6 +74,22 @@ BUG FIXES
       reticulations.
 
     o alleles2loci(, ploidy = 1) failed.
+
+    o H.loci() did not use the correct values of 'n' (number of
+      alleles; number of individuals was used before).
+
+
+OTHER CHANGES
+
+    o dist.snp() will be removed in the next release: its code has
+      been incorporated in dist.asd(), and it now gives a warning.
+
+    o The default of x[, 1] is now drop = FALSE for "loci" objects.
+
+    o print.haplotype() now prints only the first 40 haplotype labels
+      and frequencies (see the new summary.haplotype() above).
+
+    o The BioConductor package snpStats is now suggested.
 
 
 

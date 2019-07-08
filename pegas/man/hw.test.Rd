@@ -26,8 +26,9 @@ hw.test(x, B = 1000, \dots)
   of the test are available: the classical \eqn{\chi^2}{chi^2}-test based
   on the expected genotype frequencies calculated from the allelic
   frequencies, and an exact test based on Monte Carlo permutations of
-  alleles. For the moment, the latter version is available only for
-  diploids. Set \code{B = 0} if you want to skip the second test.
+  alleles (Guo and Thompson 1992). For the moment, the latter version is
+  available only for diploids. Set \code{B = 0} if you want to skip the
+  second test.
 }
 \value{
   A matrix with three or four columns with the \eqn{\chi^2}{chi^2}-value,
@@ -38,6 +39,11 @@ hw.test(x, B = 1000, \dots)
 \author{
   Main code by Emmanuel Paradis; wrapper for \linkS4class{genind}
   objects by Thibaut Jombart.
+}
+\references{
+  Guo, S. W. and Thompson, E. A. (1992) Performing the exact test of
+  Hardy--Weinberg proportion for multiple alleles. \emph{Biometrics},
+  \bold{48}, 361--372.
 }
 \examples{
 \dontrun{

@@ -1,4 +1,4 @@
-## heterozygosity.R (2018-08-03)
+## heterozygosity.R (2019-07-08)
 
 ##   Heterozygosity at a Locus Using Gene Frequencies
 
@@ -16,10 +16,9 @@ H.loci <- function(x, variance = FALSE, observed = FALSE, ...)
     n <- nrow(x)
     LOCI <- attr(x, "locicol")
     nloci <- length(LOCI)
-    res <- numeric(nloci)
     s <- summary(x)
     class(s) <- NULL
-    a <- n/(n - 1)
+    a <- 2*n/(2*n - 1)
     ## get allele sample size for all loci:
     na <- unlist(lapply(s, function(x) sum(x$allele, na.rm = TRUE)))
     ## get sum of pi_^2 for all loci:
@@ -29,12 +28,12 @@ H.loci <- function(x, variance = FALSE, observed = FALSE, ...)
         p[[j]] <- pj <- s[[j]][[2]]/na[j]
         sp2[j] <- sum(pj * pj, na.rm = TRUE)
     }
-    for (j in 1:nloci) res[j] <- a * (1 - sp2[j])
+    res <- a * (1 - sp2)
     dim(res) <- c(nloci, 1)
     colnames(res) <- "Hs"
 
     if (variance) {
-        b <- 2 * (n - 2)
+        b <- 2 * (2*n - 2)
         v <- numeric(nloci)
         for (j in 1:nloci) {
             sp3 <- sum(p[[j]]^3, na.rm = TRUE)
