@@ -1,4 +1,4 @@
-/* summary_loci_pegas.c    2019-10-03 */
+/* summary_loci_pegas.c    2019-10-04 */
 
 /* Copyright 2019 Emmanuel Paradis */
 
@@ -108,7 +108,7 @@ SEXP summary_loci_pegas(SEXP x, SEXP LOCI)
 	NA_count = 0;
 	for (k = 0; k < n; k++) {
 	    a = xp[k];
-	    (ISNA(a) || a == 0) ? NA_count++ : ++gp[a - 1]; // O's and NA's are counted together
+	    (a == 0 || a == NA_INTEGER) ? NA_count++ : ++gp[a - 1]; // O's and NA's are counted together
 	}
 	// NOTE: for the moment, NA_count is not output
 
