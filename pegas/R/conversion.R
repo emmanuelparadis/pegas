@@ -1,4 +1,4 @@
-## conversion.R (2019-06-11)
+## conversion.R (2019-10-03)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -9,7 +9,6 @@
 
 loci2SnpMatrix <- function(x, checkSNP = TRUE)
 {
-    library(snpStats)
     LOCI <- attr(x, "locicol")
     p <- length(LOCI)
     n <- nrow(x)
@@ -53,6 +52,7 @@ loci2SnpMatrix <- function(x, checkSNP = TRUE)
         }
         res[, j] <- as.raw(map[y])
     }
+    requireNamespace("snpStats")
     new("SnpMatrix", res)
 }
 
@@ -76,15 +76,15 @@ loci2genind <- function(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
         x[[i]] <- z
     }
 
-    df2genind(as.matrix(x[, attr(x, "locicol"), drop = FALSE]), sep = "/",
-              pop = pop, ploidy = ploidy)
+    adegenet::df2genind(as.matrix(x[, attr(x, "locicol"), drop = FALSE]),
+                        sep = "/", pop = pop, ploidy = ploidy)
 }
 
 as.loci <- function(x, ...) UseMethod("as.loci")
 
 as.loci.genind <- function(x, ...)
 {
-    obj <- genind2df(x, sep = "/")
+    obj <- adegenet::genind2df(x, sep = "/")
     icol <- 1:ncol(obj)
     pop <- which(names(obj) == "pop")
     if (length(pop)) {

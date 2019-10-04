@@ -1,18 +1,19 @@
 useDynLib(pegas, .registration = TRUE)
 
-export(alleles2loci, amova, as.igraph.haploNet, as.loci,
-       as.network.haploNet, diffHaplo, dist.hamming,
+export(alleles2loci, allelicrichness, amova, as.igraph.haploNet,
+       as.loci, as.network.haploNet, diffHaplo, dist.hamming,
        dist.haplotype.loci, dist.asd, dist.snp, expand.genotype, F2,
        F3, F4, Fst, genind2loci, geod, geoTrans, getAlleles,
        getGenotypes, getINFO, getPloidy, getPhi, H, haploNet,
        haploFreq, hap.div, haplotype, heterozygosity, hw.test,
        is.phased, is.snp, LD, LD2, LDscan, LDmap, loci2alleles,
        loci2genind, loci2SnpMatrix, mjn, msn, mst, MMD, nuc.div,
-       plotNetMDS, proba.genotype, R2.test, rangePOS, read.gtx,
-       read.loci, read.vcf, replot, rmst, rr.test, Rst, selectQUAL,
-       site.spectrum, stairway, sw, tajima.test, theta.h, theta.k,
-       theta.msat, theta.s, unphase, theta.tree, theta.tree.hetero,
-       VCFheader, VCFlabels, VCFloci, write.loci, write.pegas.amova)
+       plotNetMDS, proba.genotype, R2.test, rangePOS, rarefactionplot,
+       read.gtx, read.loci, read.vcf, replot, rhost, rmst, rr.test,
+       Rst, selectQUAL, site.spectrum, stairway, sw, tajima.test,
+       theta.h, theta.k, theta.msat, theta.s, unphase, theta.tree,
+       theta.tree.hetero, VCFheader, VCFlabels, VCFloci, write.loci,
+       write.pegas.amova)
 
 importFrom(ape, as.evonet, as.phylo, BOTHlabels, branching.times,
            base.freq, dist.dna, dist.nodes, floating.pie.asp,
@@ -22,11 +23,13 @@ importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, abline, axis, barplot, hist, lines, lines.default, locator,
            matplot, mtext, par, polygon, plot, plot.default, rect, segments,
            strheight, symbols, text, xinch)
-importFrom(grDevices, colorRampPalette, dev.cur, devAskNewPage, rainbow, rgb)
+importFrom(grDevices, colorRampPalette, dev.cur, devAskNewPage,
+           deviceIsInteractive, rainbow, rgb)
 importFrom(stats, as.dist, cmdscale, cophenetic, density, dist, integrate,
            na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois, sd,
            uniroot, weighted.mean)
 importFrom(utils, as.roman, combn, edit, read.table, write.csv, write.table)
+importFrom(methods, new)
 
 S3method(print, amova)
 

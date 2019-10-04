@@ -2,6 +2,7 @@
 \alias{sw}
 \alias{sw.default}
 \alias{sw.DNAbin}
+\alias{plot.sw}
 \title{Sliding Windows}
 \description{
   Applies a function over a matrix or a vector using sliding

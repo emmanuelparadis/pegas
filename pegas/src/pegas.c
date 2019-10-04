@@ -1,6 +1,6 @@
-/* pegas.c    2016-12-06 */
+/* pegas.c    2019-10-03 */
 
-/* Copyright 2015-2016 Emmanuel Paradis */
+/* Copyright 2015-2019 Emmanuel Paradis */
 
 /* This file is part of the R-package `pegas'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -117,6 +117,7 @@ SEXP findEOL_C(SEXP x, SEXP SKIP, SEXP HOP);
 SEXP extract_POS(SEXP x, SEXP EOL, SEXP nTABtoSKIP);
 SEXP extract_REF(SEXP x, SEXP EOL, SEXP nTABtoSKIP);
 SEXP build_factor_loci(SEXP x, SEXP N);
+SEXP summary_loci_pegas(SEXP x, SEXP LOCI);
 
 static R_CallMethodDef Call_entries[] = {
     {"read_bin_pegas", (DL_FUNC) &read_bin_pegas, 3},
@@ -125,6 +126,7 @@ static R_CallMethodDef Call_entries[] = {
     {"extract_REF", (DL_FUNC) &extract_REF, 3},
     {"build_factor_loci", (DL_FUNC) &build_factor_loci, 2},
     {"unique_haplotype_loci", (DL_FUNC) &unique_haplotype_loci, 3},
+    {"summary_loci_pegas", (DL_FUNC) &summary_loci_pegas, 2},
     {NULL, NULL, 0}
 };
 

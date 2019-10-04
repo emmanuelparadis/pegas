@@ -1,6 +1,6 @@
-/* readVCFbin.c    2016-01-19 */
+/* readVCFbin.c    2019-10-03 */
 
-/* Copyright 2015-2016 Emmanuel Paradis */
+/* Copyright 2015-2019 Emmanuel Paradis */
 
 /* This file is part of the R-package `pegas'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -15,7 +15,7 @@ SEXP read_bin_pegas(SEXP FILENAME, SEXP SIZE, SEXP SKIP)
     SEXP res;
     const char *filename;
     FILE *fl;
-    int sz;
+    int sz, retval;
     double skip;
     unsigned char *p;
 
@@ -29,7 +29,7 @@ SEXP read_bin_pegas(SEXP FILENAME, SEXP SIZE, SEXP SKIP)
     p = RAW(res);
     fl = fopen(filename, "r");
     fseek(fl, (long)skip, SEEK_SET);
-    fread(p, 1, sz, fl);
+    retval = fread(p, 1, sz, fl);
     fclose(fl);
     UNPROTECT(4);
     return res;

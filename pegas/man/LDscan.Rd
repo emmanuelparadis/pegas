@@ -15,8 +15,10 @@
 }
 \usage{
 LDscan(x, ...)
+
 \method{LDscan}{DNAbin}(x, quiet = FALSE, ...)
 \method{LDscan}{loci}(x, depth = NULL, quiet = FALSE, ...)
+
 LDmap(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
       angle = 0, asp = 1, cex = 1, scale.legend = 0.8, ...)
 }
