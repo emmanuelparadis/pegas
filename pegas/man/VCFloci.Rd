@@ -105,7 +105,7 @@ getINFO(x, what = "DP", as.is = FALSE)
   \code{getINFO} returns a vector of mode character or numeric (see above).
 }
 \references{
-  \url{http://www.1000genomes.org/node/101}
+  \url{https://www.internationalgenome.org/wiki/Analysis/vcf4.0}
 
   \url{https://github.com/samtools/hts-specs}
 }

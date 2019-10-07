@@ -39,7 +39,7 @@ read.vcf(file, from = 1, to = 10000, which.loci = NULL, quiet = FALSE)
 }
 \author{Emmanuel Paradis}
 \references{
-  \url{http://www.1000genomes.org/node/101}
+  \url{https://www.internationalgenome.org/wiki/Analysis/vcf4.0}
 
   \url{https://github.com/samtools/hts-specs}
 }
