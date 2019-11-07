@@ -1,4 +1,13 @@
-		CHANGES IN PEGAS VERSION 0.11-14
+		CHANGES IN PEGAS VERSION 0.12-1
+
+
+BUG FIXES
+
+    o VCFloci() crashed if a relative path starting with "~" was used.
+
+
+
+		CHANGES IN PEGAS VERSION 0.12
 
 
 NEW FEATURES

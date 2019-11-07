@@ -1,14 +1,15 @@
-## VCFloci.R (2018-03-12)
+## VCFloci.R (2019-11-07)
 
 ##   Handling VCF Files
 
-## Copyright 2015-2018 Emmanuel Paradis
+## Copyright 2015-2019 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
 .VCFconnection <- function(file)
 {
+    file <- path.expand(file) # fix by Frederic Michaud
     remote <- if (length(grep("^(ht|f)tp(s|):", file))) TRUE else FALSE
     GZ <- if (length(grep("\\.gz$", file))) TRUE else FALSE
     if (GZ) {
