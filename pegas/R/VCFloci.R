@@ -1,4 +1,4 @@
-## VCFloci.R (2019-11-07)
+## VCFloci.R (2019-11-15)
 
 ##   Handling VCF Files
 
@@ -22,36 +22,29 @@
     file
 }
 
-.getMETAvcf <- function(x, position.only = FALSE)
-{
-    CHROM <- charToRaw("#CHROM")
-    LF <-  charToRaw("\n")
-    i <- 1L
-    while (!identical(x[i + 0:5], CHROM)) i <- i + 1L
-    j <- i + 6L
-    while (x[j] != LF) j <- j + 1L
-    if (position.only) return(j)
-    list(HEADER = rawToChar(x[1:(i - 1)]),
-         LABELS = rawToChar(x[i:(j - 1)]), # avoid returning the last "\n"
-         position = j)
-}
-
-VCFheader <- function(file)
+.getMETAvcf <- function(file)
 {
     f <- .VCFconnection(file)
-    x <- readBin(f, "raw", 1e6)
-    .getMETAvcf(x)$HEADER
+    HEADER <- character(0)
+    skip <- 0L
+    repeat {
+        x <- scan(file, "", sep = "\n", n = 1L, skip = skip, quiet = TRUE)
+        if (substr(x, 1, 6) == "#CHROM") break
+        skip <- skip + 1L
+        HEADER <- c(HEADER, x)
+    }
+    HEADER <- paste(paste0(HEADER, "\n"), collapse = "")
+    j <- nchar(HEADER, "bytes") + 1L + nchar(x, "bytes")
+    list(HEADER = HEADER, LABELS = x, position = j)
 }
 
-VCFlabels <- function(file)
-{
-    f <- .VCFconnection(file)
-    x <- readBin(f, "raw", 1e6)
-    strsplit(.getMETAvcf(x)$LABELS, "\t")[[1]][-(1:9)]
-}
+VCFheader <- function(file) .getMETAvcf(file)$HEADER
+
+VCFlabels <- function(file) strsplit(.getMETAvcf(file)$LABELS, "\t")[[1]][-(1:9)]
 
 VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
 {
+    meta <- .getMETAvcf(file)
     f <- .VCFconnection(file)
     GZ <- if (inherits(f, "connection")) TRUE else FALSE
 
@@ -102,7 +95,6 @@ VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
         ncycle <- ncycle + 1L
 
         if (ncycle == 1) {
-            meta <- .getMETAvcf(Y)
             skip <- meta$position - 3L
             nCol <- length(gregexpr("\t", meta$LABELS)[[1]]) + 1L
         } else skip <- 0L

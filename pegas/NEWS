@@ -5,6 +5,8 @@ BUG FIXES
 
     o VCFloci() crashed if a relative path starting with "~" was used.
 
+    o VCF files with large header (> 1MB) failed to be read.
+
 
 
 		CHANGES IN PEGAS VERSION 0.12
