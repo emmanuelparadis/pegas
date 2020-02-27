@@ -16,7 +16,8 @@
 }
 \usage{
 haplotype(x, ...)
-\method{haplotype}{DNAbin}(x, labels = NULL, ...)
+\method{haplotype}{DNAbin}(x, labels = NULL, strict = FALSE,
+                  trailingGapsAsN = TRUE, ...)
 \method{haplotype}{character}(x, labels = NULL, ...)
 \method{haplotype}{numeric}(x, labels = NULL, ...)
 \method{plot}{haplotype}(x, xlab = "Haplotype", ylab = "Number", ...)
@@ -33,6 +34,10 @@ haplotype(x, ...)
   \item{object}{an object of class \code{"haplotype"}.}
   \item{labels}{a vector of character strings used as names for the rows
     of the returned object. By default, Roman numerals are given.}
+\item{strict}{a logical value; if \code{TRUE} ambiguities in the
+sequences are ignored.}
+\item{trailingGapsAsN}{a logical value; if \code{TRUE} (the default) the
+leading and trailing alignment gaps are considered as unknown bases.}
   \item{xlab, ylab}{labels for the x- and x-axes.}
   \item{\dots}{further arguments passed to
     \code{\link[graphics]{barplot}} (unused in \code{print} and
@@ -45,6 +50,11 @@ haplotype(x, ...)
     \code{"labels"}, or an unambiguous abbreviation of these.}
 }
 \details{
+The way ambiguities in the sequences are taken into account is explained
+in a post to r-sig-phylo:
+
+\url{https://www.mail-archive.com/r-sig-phylo@r-project.org/msg05541.html}
+
 The \code{sort} method sorts the haplotypes in decreasing frequencies
 (the default) or in alphabetical order of their labels (if \code{what =
 "labels"}). Note that if these labels are Roman numerals (as assigned by

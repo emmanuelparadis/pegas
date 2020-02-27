@@ -157,36 +157,23 @@ mst <- function(d)
     m
 }
 
-.TempletonProb <- function(j, S, b = 2, r = 1)
-{
-    br <- b * r
-    P <- numeric(max(j))
-    L_jm <- function(q, j, m) {
-        jm1 <- j - 1
-        qonbr <- q/br
-        (2*q)^jm1 * (1 - q)^(2*m + 1) * (1 - qonbr) *
-            (2 - q*(br + 1)/br)^jm1 *
-                (1 - 2*q*(1 - qonbr))
-    }
-    for (i in seq_along(P)) {
-        M <- S - i
-        denom <- integrate(L_jm, 0, 1, j = i, m = M)$value
-        ## eq.7 from Templeton et al. 1992:
-        out <- integrate(function(q) q*L_jm(q, j = i, m = M), 0, 1)$value/denom
-        P[i] <- 1 - out
-    }
-    cumprod(P)[j]
-}
-
 haplotype <- function(x, ...) UseMethod("haplotype")
 
-haplotype.DNAbin <- function(x, labels = NULL, ...)
+haplotype.DNAbin <- function(x, labels = NULL, strict = FALSE,
+                             trailingGapsAsN = TRUE, ...)
 {
     nms.x <- deparse(substitute(x))
     if (is.list(x)) x <- as.matrix(x)
     n <- nrow(x)
     s <- ncol(x)
-    h <- .C(haplotype_DNAbin, x, n, s, integer(n), NAOK = TRUE)[[4]]
+    res <- .C(haplotype_DNAbin, x, n, s, integer(n), 0L, 0L,
+              as.integer(strict), as.integer(trailingGapsAsN),
+              NAOK = TRUE)
+    if (res[[5]])
+        warning("some sequences of different lengths were assigned to the same haplotype")
+    if (res[[6]])
+        warning("some sequences were not assigned to the haplotypes because of ambiguities")
+    h <- res[[4]]
     u <- h == 0
     h[u] <- i <- which(u)
     obj <- x[i, ]
@@ -248,6 +235,27 @@ diffHaplo <- function(h, a = 1, b = 2)
     cat("\n", dist.dna(x, "TS"), "transitions,",
         dist.dna(x, "TV"), "transversions\n\n")
     data.frame(pos = s, toupper(t(as.character(x))))
+}
+
+.TempletonProb <- function(j, S, b = 2, r = 1)
+{
+    br <- b * r
+    P <- numeric(max(j))
+    L_jm <- function(q, j, m) {
+        jm1 <- j - 1
+        qonbr <- q/br
+        (2*q)^jm1 * (1 - q)^(2*m + 1) * (1 - qonbr) *
+            (2 - q*(br + 1)/br)^jm1 *
+                (1 - 2*q*(1 - qonbr))
+    }
+    for (i in seq_along(P)) {
+        M <- S - i
+        denom <- integrate(L_jm, 0, 1, j = i, m = M)$value
+        ## eq.7 from Templeton et al. 1992:
+        out <- integrate(function(q) q*L_jm(q, j = i, m = M), 0, 1)$value/denom
+        P[i] <- 1 - out
+    }
+    cumprod(P)[j]
 }
 
 haploNet <- function(h, d = NULL, getProb = TRUE)

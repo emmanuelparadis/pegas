@@ -1,6 +1,6 @@
-/* pegas.c    2019-10-03 */
+/* pegas.c    2020-02-27 */
 
-/* Copyright 2015-2019 Emmanuel Paradis */
+/* Copyright 2015-2020 Emmanuel Paradis */
 
 /* This file is part of the R-package `pegas'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -9,41 +9,133 @@
 #include <R_ext/Rdynload.h>
 #include <Rinternals.h>
 
+/* returns 8 if the base is known surely, 0 otherwise */
+#define KnownBase(a) (a & 8)
+
 /* returns 1 if both bases are different surely, 0 otherwise */
 #define DifferentBase(a, b) (a & b) < 16
 
-void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo)
-{
-    int i1, i2, s1, s2, flag, k;
+/*
+  https://www.mail-archive.com/r-sig-phylo@r-project.org/msg05541.html
+*/
 
-    i1 = 0;
-    while (i1 < *n - 1) {
-	if (!haplo[i1]) {
-	    i2 = i1 + 1;
-	    while (i2 < *n) {
-		if (!haplo[i2]) {
-		    s1 = i1;
-		    s2 = i2;
-		    k = 0;
-		    flag = 1; /* initially the two sequences are considered identical */
-		    while (k < *s) {
-			if (x[s1] != x[s2] && x[s1] > 0x07 && x[s2] > 0x07) { /* fix the fact that a and b could be gaps (-) or completely missing (?) */
-			    if (DifferentBase(x[s1], x[s2])) {
-				flag = 0;
-				break;
-			    }
-			}
-			s1 += *n;
-			s2 += *n;
-			k++;
-		    }
-		    if (flag) haplo[i2] = i1 + 1;
-		}
-		i2++;
+int identical_seqs(unsigned char *x, int i, int j, int n, int s)
+{
+    int k = i + n * (s - 1);
+    for (;;) {
+	if (x[i] != x[j]) return 0;
+	i += n;
+	j += n;
+	if (i > k) break;
+    }
+    return 1;
+}
+
+void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo, int *warn1, int *warn2,
+		      int *strict, int *trailingGapsAsN)
+{
+    int i, j, k, *ihap, Nhaplo, new_haplo;
+    /* i: index of the sequence, j: index of the haplotype */
+
+    /* step 1 */
+    ihap = (int *)R_alloc(*n, sizeof(int)); /* safe allocation */
+    ihap[0] = 0; /* the 1st sequence is always the 1st haplotype */
+    Nhaplo = 1;
+
+    for (i = 1; i < *n; i++) { /* start with the 2nd sequence */
+	new_haplo = 1;
+	for (k = 0; k < Nhaplo; k++) { /* loop among the haplotypes */
+	    j = ihap[k];
+	    if (identical_seqs(x, i, j, *n, *s)) {
+		haplo[i] = j + 1;
+		new_haplo = 0;
+		break;
 	    }
 	}
-	i1++;
+	if (new_haplo) {
+	    ihap[Nhaplo] = i;
+	    Nhaplo++;
+	}
     }
+
+if (!*strict) {
+if (*trailingGapsAsN) { /* step 2 */
+    for (i = 0; i < Nhaplo; i++) { /* leading gaps */
+	j = ihap[i]; /* start of the seq */
+	k = j + *n * (*s - 1); /* last site of seq j */
+	while (x[j] == 4 && j <= k) {
+	    x[j] = 240; /* - -> N */
+	    j += *n;
+	}
+    }
+    for (i = 0; i < Nhaplo; i++) { /* trailing gaps */
+	k = ihap[i]; /* start of the seq */
+	j = k + *n * (*s - 1); /* the last site of seq j */
+	while (x[j] == 4 && j >= k) {
+	    x[j] = 240; /* - -> N */
+	    j -= *n;
+	}
+    }
+}
+
+    /* step 3 */
+    int *D, ii, jj, S;
+    D = (int *)R_alloc(Nhaplo*Nhaplo, sizeof(int));
+    int goforward = 0;
+    for (i = 0; i < Nhaplo - 1; i++) {
+	for (j = i + 1; j < Nhaplo; j++) {
+	    ii = ihap[i];
+	    jj = ihap[j];
+	    S = 0;
+	    k = ii + *n * (*s - 1); /* the last site of seq i */
+	    while (ii <= k && S == 0) { /* no need to compute the real distance, just need to know if it is > 0 */
+		if (DifferentBase(x[ii], x[jj])) S++;
+		ii += *n;
+		jj += *n;
+	    }
+	    if (!S) goforward = 1;
+	    D[i + Nhaplo * j] = D[j + Nhaplo * i] = S;
+	}
+    }
+
+    /* step 4 */
+if (goforward) {
+    int *NknownBases;
+    NknownBases = (int *)R_alloc(Nhaplo, sizeof(int));
+    memset(NknownBases, 0, Nhaplo * sizeof(int));
+    for (i = 0; i < Nhaplo; i++) {
+	j = ihap[i];
+	k = j + *n * (*s - 1);
+	while (j <= k) {
+	    if (KnownBase(x[j])) (NknownBases[i])++;
+	    j += *n;
+	}
+    }
+    int *index;
+    index = (int *)R_alloc(Nhaplo, sizeof(int));
+    rsort_with_index ((double*)NknownBases, index, Nhaplo);
+    int NdistZero, lastZero;
+    for (i = 0; i < Nhaplo; i++) {
+	k = ihap[index[i]]; /* haplotypes ordered with the larger numbers of missing data */
+	NdistZero = 0;
+	for (j = 0; j < Nhaplo; j++) {
+	    jj = ihap[j];
+	    if (k == jj) continue; /* avoid the (uninitialized) diagonal */
+	    if (!D[k + Nhaplo * jj]) {
+		NdistZero++;
+		lastZero = jj;
+	    }
+	}
+	if (NdistZero) {
+	    if (NdistZero == 1) {
+		for (ii = 0; ii < *n; ii++)
+		    if (haplo[ii] == k) haplo[ii] = lastZero;
+		*warn1 = 1;
+	    } else *warn2 = 1;
+	}
+    }
+}
+}
 }
 
 void distDNA_pegas(unsigned char *x, int *n, int *s, double *d)
