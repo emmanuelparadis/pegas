@@ -11,7 +11,8 @@ read.loci <-
     function(file, header = TRUE, loci.sep = "", allele.sep = "/|",
              col.pop = NULL, col.loci = NULL, ...)
 {
-    res <- read.table(file = file, header = header, sep = loci.sep, ...)
+    res <- read.table(file = file, header = header, sep = loci.sep,
+                      stringsAsFactors = TRUE, ...)
 ### the lines below are in case 'row.names' is used so the col#'s
 ### must be, possibly, decremented by one
     ddd <- list(...)

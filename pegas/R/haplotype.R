@@ -1,8 +1,8 @@
-## haplotype.R (2019-03-13)
+## haplotype.R (2020-03-04)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
-## Copyright 2009-2019 Emmanuel Paradis, 2013 Klaus Schliep
+## Copyright 2009-2020 Emmanuel Paradis, 2013 Klaus Schliep
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -166,13 +166,13 @@ haplotype.DNAbin <- function(x, labels = NULL, strict = FALSE,
     if (is.list(x)) x <- as.matrix(x)
     n <- nrow(x)
     s <- ncol(x)
-    res <- .C(haplotype_DNAbin, x, n, s, integer(n), 0L, 0L,
+    res <- .C(haplotype_DNAbin, x, n, s, integer(n), c(0L, 0L),
               as.integer(strict), as.integer(trailingGapsAsN),
               NAOK = TRUE)
-    if (res[[5]])
+    if (res[[5]][1])
         warning("some sequences of different lengths were assigned to the same haplotype")
-    if (res[[6]])
-        warning("some sequences were not assigned to the haplotypes because of ambiguities")
+    if (res[[5]][2])
+        warning("some sequences were not assigned to the same haplotype because of ambiguities")
     h <- res[[4]]
     u <- h == 0
     h[u] <- i <- which(u)

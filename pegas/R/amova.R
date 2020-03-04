@@ -1,8 +1,8 @@
-## amova.R (2018-07-07)
+## amova.R (2020-03-02)
 
 ##   Analysis of Molecular Variance
 
-## Copyright 2010-2018 Emmanuel Paradis, 2018 Zhian N. Kamvar, 2018 Brian Knaus
+## Copyright 2010-2020 Emmanuel Paradis, 2018 Zhian N. Kamvar, 2018 Brian Knaus
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -22,7 +22,7 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
         warning("elements in the rhs of the formula are not all factors")
 
     ## fix by Zhian Kamvar (2015-04-30)
-    gr <- as.data.frame(sapply(gr.nms, get, envir = data.env))
+    gr <- as.data.frame(sapply(gr.nms, get, envir = data.env), stringsAsFactors = TRUE)
     y <- get(y.nms, envir = environment(formula))
     if (any(is.na(y)))
         warning("at least one missing value in the distance object.")

@@ -1,14 +1,17 @@
-		CHANGES IN PEGAS VERSION 0.12-2
+		CHANGES IN PEGAS VERSION 0.13
 
 
 NEW FEATURES
 
-    o haplotype.loci() ...........
+    o haplotype.DNA() now handles ambiguities and gaps in an improved
+      way (see the reference in ?haplotype.DNA). Two options have been
+      added to control the behaviour of these analyses: strict = FALSE
+      and trailingGapsAsN = TRUE.
 
 
 BUG FIXES
 
-    o VCFloci() crashed if a relative path starting with "~" was used.
+    o VCFloci() crashed if a path starting with "~" was used.
 
     o VCF files with large header (> 1 MB) failed to be read.
 

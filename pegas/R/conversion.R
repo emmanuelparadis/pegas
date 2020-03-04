@@ -1,8 +1,8 @@
-## conversion.R (2019-10-03)
+## conversion.R (2020-03-02)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2019 Emmanuel Paradis
+## Copyright 2009-2020 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -197,7 +197,7 @@ alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
                          phased = FALSE)
 {
     withPop <- !is.null(population)
-    x <- as.data.frame(x)
+    x <- as.data.frame(x, stringsAsFactors = TRUE)
     if (is.null(rownames)) {
         idx <- rownames(x)
         if (is.null(idx)) idx <- as.character(seq_len(nrow(x)))
@@ -229,7 +229,7 @@ alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
             obj[[i]] <- factor(do.call(foo, x[, start[i]:end[i], drop = FALSE]))
     }
     names(obj) <- loci.nms
-    obj <- as.data.frame(obj, row.names = idx)
+    obj <- as.data.frame(obj, row.names = idx, stringsAsFactors = TRUE)
     obj <- as.loci(obj)
     if (withPop) obj$population <- factor(pop)
     obj
