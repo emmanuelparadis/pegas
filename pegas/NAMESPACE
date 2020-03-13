@@ -3,7 +3,7 @@ useDynLib(pegas, .registration = TRUE)
 export(alleles2loci, allelicrichness, amova, as.igraph.haploNet,
        as.loci, as.network.haploNet, diffHaplo, dist.hamming,
        dist.haplotype.loci, dist.asd, dist.snp, expand.genotype, F2,
-       F3, F4, Fst, genind2loci, geod, geoTrans, getAlleles,
+       F3, F4, Fst, genind2loci, geod, geoTrans, geoTrans2, getAlleles,
        getGenotypes, getINFO, getPloidy, getPhi, H, haploNet,
        haploFreq, hap.div, haplotype, heterozygosity, hw.test,
        is.phased, is.snp, LD, LD2, LDscan, LDmap, loci2alleles,

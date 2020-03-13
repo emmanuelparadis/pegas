@@ -8,6 +8,10 @@ NEW FEATURES
       added to control the behaviour of these analyses: strict = FALSE
       and trailingGapsAsN = TRUE.
 
+    o The new functions geoTrans2 transforms latitudes and longitudes
+      from values in decimal degree to character strings (optionally
+      with LaTeX format).
+
 
 BUG FIXES
 

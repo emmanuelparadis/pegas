@@ -1,8 +1,8 @@
-## geo.R (2014-11-17)
+## geo.R (2020-03-05)
 
 ##   Tools for Geographic Data
 
-## Copyright 2014 Emmanuel Paradis
+## Copyright 2014-2020 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -20,6 +20,46 @@ geoTrans <- function(x, degsym = NULL, minsym = "'", secsym = "\"")
     }
     res <- sapply(x, foo)
     if (length(sow)) res[sow] <- -res[sow]
+    res
+}
+
+geoTrans2 <- function(lon, lat = NULL, degsym = NULL, minsym = "'",
+                      secsym = "\"", dropzero = FALSE, digits = 3, latex = FALSE)
+{
+    if (is.null(lat)) {
+        nc <- ncol(lon)
+        if (is.null(nc) || nc < 2)
+            stop("if 'lat' is not given, 'lon' should have at least 2 columns")
+        lat <- lon[, 2]
+        lon <- lon[, 1]
+    } else {
+        if (length(lon) != length(lat))
+            stop("'lat' and 'lon' should have the same length")
+    }
+    if (is.null(degsym)) degsym <- "\u00b0"
+    foo <- function(x) {
+        d <- floor(x)
+        m2 <- (x - d) * 60
+        m <- floor(m2)
+        s <- round(60 * (m2 - m), digits = digits)
+        if (dropzero) {
+            m <- ifelse(m == 0 & s == 0, "", paste0(m, minsym))
+            s <- ifelse(s == 0, "", paste0(s, secsym))
+        } else {
+            m <- paste0(m, minsym)
+            s <- paste0(s, secsym)
+        }
+        d <- paste0(d, degsym)
+        paste0(d, m, s)
+    }
+    x <- foo(lon)
+    y <- foo(lat)
+    res <- paste0(ifelse(lat < 0, "S ", "N "), y, ", ", ifelse(lon < 0, "W ", "E "), x)
+    if (latex) {
+        res <- gsub(degsym, "\\\\textdegree ", res)
+        res <- gsub("'", "$'$", res)
+        res <- gsub("\"", "$''$", res)
+    }
     res
 }
 
