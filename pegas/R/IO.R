@@ -69,12 +69,12 @@ read.vcf <- function(file, from = 1, to = 1e4, which.loci = NULL, quiet = FALSE)
     for (k in seq_len(nChunks)) {
         sel <- match(which.loci, FROM[k]:TO[k])
         sel <- sel[!is.na(sel)]
-        ck <- cache$CHUNCK.SIZES[k]
+        ck <- cache$CHUNK.SIZES[k]
         if (GZ) Y <- readBin(f, "raw", ck)
         if (!length(sel)) next
 
         if (!GZ) {
-            skip <- if (k == 1) 0L else sum(cache$CHUNCK.SIZES[1L:(k - 1L)])
+            skip <- if (k == 1) 0L else sum(cache$CHUNK.SIZES[1L:(k - 1L)])
             Y <- .Call(read_bin_pegas, file, ck, skip)
         }
 

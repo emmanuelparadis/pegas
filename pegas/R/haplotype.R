@@ -1,4 +1,4 @@
-## haplotype.R (2020-03-04)
+## haplotype.R (2020-05-14)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -159,23 +159,28 @@ mst <- function(d)
 
 haplotype <- function(x, ...) UseMethod("haplotype")
 
-haplotype.DNAbin <- function(x, labels = NULL, strict = FALSE,
-                             trailingGapsAsN = TRUE, ...)
+haplotype.DNAbin <- function(x, labels = NULL, strict = FALSE, trailingGapsAsN = TRUE, ...)
 {
     nms.x <- deparse(substitute(x))
     if (is.list(x)) x <- as.matrix(x)
     n <- nrow(x)
-    s <- ncol(x)
-    res <- .C(haplotype_DNAbin, x, n, s, integer(n), c(0L, 0L),
-              as.integer(strict), as.integer(trailingGapsAsN),
-              NAOK = TRUE)
-    if (res[[5]][1])
-        warning("some sequences of different lengths were assigned to the same haplotype")
-    if (res[[5]][2])
-        warning("some sequences were not assigned to the same haplotype because of ambiguities")
-    h <- res[[4]]
-    u <- h == 0
-    h[u] <- i <- which(u)
+    if (trailingGapsAsN) x <- latag2n(x)
+    segs <- seg.sites(x, strict = strict, trailingGapsAsN = FALSE)
+    if (length(segs)) {
+        xb <- x[, segs]
+        s <- ncol(xb)
+        res <- .C(haplotype_DNAbin, xb, n, s, integer(n), c(0L, 0L),
+                  as.integer(strict), NAOK = TRUE)
+        if (res[[5]][1]) warning("some sequences of different lengths were assigned to the same haplotype")
+        if (res[[5]][2]) warning("some sequences were not assigned to the same haplotype because of ambiguities")
+        h <- res[[4]]
+        u <- h == 0
+        h[u] <- i <- which(u)
+    } else {
+        i <- 1L
+        h <- rep.int(1L, n)
+        warning("no segregating site detected with these options")
+    }
     obj <- x[i, ]
     if (is.null(labels))
         labels <- as.character(as.roman(seq_along(i)))
@@ -1162,8 +1167,9 @@ LD2 <- function(x, locus = c(1, 2), details = TRUE)
 
 LDscan <- function(x, ...) UseMethod("LDscan")
 
-LDscan.DNAbin <- function(x, quiet = FALSE, ...)
+LDscan.DNAbin <- function(x, quiet = FALSE, what = c("r", "Dprime"), ...)
 {
+    what <- match.arg(what)
     if (!quiet) cat("Scanning haplotypes... ")
     ss <- seg.sites(x)
     nloci <- length(ss)
@@ -1178,6 +1184,11 @@ LDscan.DNAbin <- function(x, quiet = FALSE, ...)
         pi <- rep(rowSums(pij), 2)
         qj <- rep(colSums(pij), each = 2)
         D <- pij - pi * qj
+        if (what == "Dprime") {
+            D <- D[1]
+            denom <- if (D > 0) min(-pi[1] * qj[3], -pi[2] * qj[1]) else max(-pi[1] * qj[1], -pi[2] * qj[2])
+            return(D/denom)
+        }
         rij <- D/sqrt(pi * (1 - pi) * qj * (1 - qj))
         abs(rij[1])
     }
@@ -1200,8 +1211,9 @@ LDscan.DNAbin <- function(x, quiet = FALSE, ...)
     ldx
 }
 
-LDscan.loci <- function(x, depth = NULL, quiet = FALSE, ...)
+LDscan.loci <- function(x, depth = NULL, quiet = FALSE, what = c("r", "Dprime"), ...)
 {
+    what <- match.arg(what)
     nloci <- length(attr(x, "locicol"))
     if (!quiet) cat("Scanning haplotypes... ")
     hap <- haplotype.loci(x, seq_len(nloci), TRUE, FALSE, FALSE)
@@ -1213,6 +1225,13 @@ LDscan.loci <- function(x, depth = NULL, quiet = FALSE, ...)
         pi <- rep(rowSums(pij), 2)
         qj <- rep(colSums(pij), each = 2)
         D <- pij - pi * qj
+        if (what == "Dprime") {
+            D <- D[1]
+            denom <-
+                if (D > 0) min(-pi[1] * qj[3], -pi[2] * qj[1])
+                else max(-pi[1] * qj[1], -pi[2] * qj[2])
+            return(D/denom)
+        }
         rij <- D/sqrt(pi * (1 - pi) * qj * (1 - qj))
         abs(rij[1])
     }

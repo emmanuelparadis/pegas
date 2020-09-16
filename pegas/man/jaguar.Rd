@@ -32,7 +32,7 @@ data(jaguar)
   \code{\link{loci}}, \code{\link{alleles2loci}}
 
   The vignette \dQuote{ReadingFiles} explains how to read data like
-  these from Dryad (\url{http://datadryad.org}).
+  these from Dryad (\url{https://datadryad.org/stash}).
 }
 \examples{
 data(jaguar)

@@ -13,7 +13,7 @@
   select which loci to read with \code{\link{read.vcf}}.
 }
 \usage{
-VCFloci(file, what = "all", chunck.size = 1e9, quiet = FALSE)
+VCFloci(file, what = "all", chunk.size = 1e9, quiet = FALSE)
 \method{print}{VCFinfo}(x, \dots)
 VCFheader(file)
 VCFlabels(file)
@@ -26,7 +26,7 @@ getINFO(x, what = "DP", as.is = FALSE)
   \item{file}{file name of the VCF file.}
   \item{what}{a character specifying the information to be extracted
     (see details).}
-  \item{chunck.size}{the size of data in bytes read at once.}
+  \item{chunk.size}{the size of data in bytes read at once.}
   \item{quiet}{a logical: should the progress of the operation be printed?}
   \item{x}{an object of class \code{"VCFinfo"}.}
   \item{from, to}{integer values giving the range of position values.}

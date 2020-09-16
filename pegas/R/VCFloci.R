@@ -1,8 +1,8 @@
-## VCFloci.R (2019-11-15)
+## VCFloci.R (2020-05-11)
 
 ##   Handling VCF Files
 
-## Copyright 2015-2019 Emmanuel Paradis
+## Copyright 2015-2020 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -42,7 +42,7 @@ VCFheader <- function(file) .getMETAvcf(file)$HEADER
 
 VCFlabels <- function(file) strsplit(.getMETAvcf(file)$LABELS, "\t")[[1]][-(1:9)]
 
-VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
+VCFloci <- function(file, what = "all", chunk.size = 1e9, quiet = FALSE)
 {
     meta <- .getMETAvcf(file)
     f <- .VCFconnection(file)
@@ -68,19 +68,19 @@ VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
     ncycle <- 0L
     FROM <- integer()
     TO <- integer()
-    CHUNCK.SIZES <- numeric()
+    CHUNK.SIZES <- numeric()
 
     repeat {
         if (!GZ) {
-            if (left.to.scan > chunck.size) {
-                left.to.scan <- left.to.scan - chunck.size
+            if (left.to.scan > chunk.size) {
+                left.to.scan <- left.to.scan - chunk.size
             } else {
-                chunck.size <- left.to.scan
+                chunk.size <- left.to.scan
                 left.to.scan <- 0L
             }
-            Y <- .Call(read_bin_pegas, file, chunck.size, scanned)
+            Y <- .Call(read_bin_pegas, file, chunk.size, scanned)
         } else {
-            Y <- readBin(f, "raw", chunck.size)
+            Y <- readBin(f, "raw", chunk.size)
             if (!length(Y)) break
         }
 
@@ -126,7 +126,7 @@ VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
         to <- from + nEOL - 2L + extra.locus
         FROM <- c(FROM, from)
         TO <- c(TO, to)
-        CHUNCK.SIZES <- c(CHUNCK.SIZES, ck)
+        CHUNK.SIZES <- c(CHUNK.SIZES, ck)
 
         ## we assume there are no extra blank line!
 
@@ -144,7 +144,7 @@ VCFloci <- function(file, what = "all", chunck.size = 1e9, quiet = FALSE)
     else if (!quiet) cat("\r", scanned/1e6, "/", sz/1e6, "Mb")
     if (!quiet) cat("\nDone.\n")
 
-    assign(file, data.frame(FROM = FROM, TO = TO, CHUNCK.SIZES = CHUNCK.SIZES),
+    assign(file, data.frame(FROM = FROM, TO = TO, CHUNK.SIZES = CHUNK.SIZES),
            envir = .cacheVCF)
 
     names(obj) <- FIELDS

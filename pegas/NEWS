@@ -1,3 +1,27 @@
+		CHANGES IN PEGAS VERSION 0.14
+
+
+NEW FEATURES
+
+    o LDscan() gains the option 'what' with two possible choices: "r"
+      (the default and previously only choice) and "Dprime".
+
+
+BUG FIXES
+
+    o haplotype.DNAbin() failed to assign correctly haplotypes in some
+      situations with ambiguous bases. This is fixed and the code,
+      which now relies on ape::seg.sites, is now 2 to 3 times faster
+      if there are a few haplotypes in the data.
+
+
+OTHER CHANGES
+
+    o In VCFloci(), the option 'chunck.size' has been renamed
+      'chunk.size'.
+
+
+
 		CHANGES IN PEGAS VERSION 0.13
 
 

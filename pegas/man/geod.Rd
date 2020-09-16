@@ -26,9 +26,9 @@ geod(lon, lat = NULL, R = 6371)
 }
 \author{Emmanuel Paradis}
 \references{
-  \url{http://en.wikipedia.org/wiki/Great-circle_distance}
+  \url{https://en.wikipedia.org/wiki/Great-circle_distance}
 
-  \url{http://en.wikipedia.org/wiki/Earth}
+  \url{https://en.wikipedia.org/wiki/Earth}
 }
 \seealso{\code{\link{geoTrans}}, \code{\link[stats]{as.dist}}}
 \examples{

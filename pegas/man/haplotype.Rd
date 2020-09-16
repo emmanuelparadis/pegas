@@ -38,7 +38,7 @@ haplotype(x, ...)
     the sequences are ignored.}
   \item{trailingGapsAsN}{a logical value; if \code{TRUE} (the default),
     the leading and trailing alignment gaps are considered as unknown
-    bases (i.e., N).}
+    bases (i.e., N). This option has no effect if \code{strict = TRUE}.}
   \item{xlab, ylab}{labels for the x- and x-axes.}
   \item{\dots}{further arguments passed to
     \code{\link[graphics]{barplot}} (unused in \code{print} and
@@ -63,7 +63,19 @@ The \code{sort} method sorts the haplotypes in decreasing frequencies
 one (e.g., IX is alphabetically before VIII).
 
 From \pkg{pegas} 0.7, \code{haplotype} extracts haplotypes taking into
-account base ambiguities.
+account base ambiguities (see Note below).
+}
+\note{
+The presence of ambiguous bases and/or alignment gaps in DNA sequences
+can make the interpretation of haplotypes difficult. It is recommended
+to check their distributions with \code{\link[ape]{image.DNAbin}} and
+\code{\link[ape]{base.freq}} (using the options in both functions).
+
+Comparing the results obtained playing with the options \code{strict}
+and \code{trailingGapsAsN} of \code{haplotype.DNAbin} may be useful.
+Note that the \pkg{ape} function \code{\link[ape]{seg.sites}} has the
+same two options (as from \pkg{ape} 5.4) which may be useful to find the
+relevant sites in the sequence alignment.
 }
 \value{
   \code{haplotype} returns an object of class \code{c("haplotype",
@@ -83,6 +95,12 @@ account base ambiguities.
 
   The \code{haplotype} method for objects of class \code{"loci"} is
   documented separately: \code{\link{haplotype.loci}}.
+}
+\note{
+  There are cases where the algorithm that pools the different sequences
+  into haplotypes has difficulties, although it seems to require a
+  specific configuration of missing/ambiguous data. The last example
+  below is one of them.
 }
 \examples{
 ## generate some artificial data from 'woodmouse':
@@ -114,7 +132,7 @@ haplotype(x)
 ## the same 3 haplotypes without warning:
 haplotype(x, strict = TRUE)
 
-## if we remove the last sequence there is, by default, a single haplotype with a warning:
+## if we remove the last sequence there is, by default, a single haplotype:
 haplotype(x[-4, ])
 
 ## to get two haplotypes separately as with the complete data:
@@ -125,6 +143,19 @@ y <- as.DNAbin(matrix(c("A", "A", "A", "A", "R", "-"), 3))
 haplotype(y) # 1 haplotype
 haplotype(y, strict = TRUE) # 3 haplotypes
 haplotype(y, trailingGapsAsN = FALSE) # 2 haplotypes
+
+## a tricky example with 4 sequences and 1 site:
+z <- as.DNAbin(matrix(c("Y", "A", "R", "N"), 4))
+alview(z, showpos = FALSE)
+
+## a single haplotype is identified:
+haplotype(z)
+## 'Y' has zero-distance with (and only with) 'N', so they are pooled
+## together; at a later iteration of this pooling step, 'N' has
+## zero-distance with 'R' (and ultimately with 'A') so they are pooled
+
+## if the sequences are ordered differently, 'Y' and 'A' are separated:
+haplotype(z[c(4, 1:3), ])
 }
 \keyword{manip}
 \keyword{hplot}

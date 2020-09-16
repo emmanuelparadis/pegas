@@ -6,7 +6,7 @@
 \title{Multi-Locus Linkage Disequilibrium}
 \description{
   \code{LDscan} computes a matrix of pairwise linkage disequilibrium (LD)
-  coefficients (\eqn{r^2}) from a set of loci (which must be bi-allelic;
+  coefficients (\eqn{|r|}) from a set of loci (which must be bi-allelic;
   if not, the results are not guaranteed to be meaningful). The
   genotypes must be phased.
 
@@ -16,8 +16,9 @@
 \usage{
 LDscan(x, ...)
 
-\method{LDscan}{DNAbin}(x, quiet = FALSE, ...)
-\method{LDscan}{loci}(x, depth = NULL, quiet = FALSE, ...)
+\method{LDscan}{DNAbin}(x, quiet = FALSE, what = c("r", "Dprime"), ...)
+\method{LDscan}{loci}(x, depth = NULL, quiet = FALSE,
+        what = c("r", "Dprime"), ...)
 
 LDmap(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
       angle = 0, asp = 1, cex = 1, scale.legend = 0.8, ...)
@@ -25,10 +26,13 @@ LDmap(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
 \arguments{
   \item{x}{an object of class \code{"loci"} with phased genotypes.}
   \item{depth}{a vector of integers giving the the depth(s) (or lags) at
-    which the \eqn{r^2}'s are calculated. By default, all possible
+    which the \eqn{r}'s are calculated. By default, all possible
     depths are considered.}
   \item{quiet}{a logical: should the progress of the operation be
     printed?}
+  \item{what}{the quantity to be computed. Two choices are possible:
+      \code{"r"} (the default) for the absolute value of the correlation
+      between alleles and \code{"Dprime"} for the (scaled) coefficients.}
   \item{d}{a correlation matrix (can be an object of class \code{"dist"}).}
   \item{POS}{an optional vector of locus positions (e.g., from a VCF
     file; see examples).}
@@ -48,17 +52,19 @@ LDmap(d, POS = NULL, breaks = NULL, col = NULL, border = NA,
     \code{plot.default} (\code{LDmap}).}
 }
 \details{
-  The LD coefficient \eqn{r^2} is well defined when the two loci have
+  The LD coefficient \eqn{r} is well defined when the two loci have
   only two alleles. In other cases, LD is well defined (see
-  \code{\link{LD}}) but the definition of \eqn{r^2} is not clear.
+  \code{\link{LD}}) but the definition of \eqn{r} is not clear.
 
   All levels of ploidy are accepted, but all loci should have the same
   ploidy level.
 
-  If \code{depth} is used, the \eqn{r^2}'s are calculated only for the
+  If \code{depth} is used, the \eqn{r}'s are calculated only for the
   pairs of loci that are distant by these values in \code{x}, but
   necessarily on the chromosome. The returned list has names set with
   the values of \code{depth}.
+
+  The value returned is actually \eqn{|r|} (not \eqn{r^2}).
 }
 \value{
   \code{LDscan} returns an object of class \code{"dist"} by default, or
@@ -80,11 +86,10 @@ fl <- "global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.maf.05.recode.vcf.gz"
 
 info.fly <- VCFloci(fl)
 
-bks <- seq(0, 1, 0.2)
-
 ## LD map from the first 100 loci:
 x <- read.vcf(fl, to = 100) # read only 100 loci
 res <- LDscan(x)
+bks <- seq(0, 1, 0.2)
 LDmap(res, info.fly$POS[1:100], bks, scale.legend = 3)
 
 ## check the chromosomes:

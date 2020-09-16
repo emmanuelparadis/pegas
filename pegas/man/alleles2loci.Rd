@@ -48,7 +48,7 @@ loci2alleles(x)
   \code{\link{read.loci}}, \code{\link{as.loci}}
 
   The vignette \dQuote{ReadingFiles} explains how to read such a data
-  set from Dryad (\url{http://datadryad.org}).
+  set from Dryad (\url{https://datadryad.org/stash}).
 }
 \examples{
 x <- matrix(c("A", "A", "A", "a"), 2)

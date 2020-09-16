@@ -1,4 +1,4 @@
-/* pegas.c    2020-03-04 */
+/* pegas.c    2020-05-14 */
 
 /* Copyright 2015-2020 Emmanuel Paradis */
 
@@ -27,6 +27,7 @@ int identical_seqs(unsigned char *x, int i, int j, int n, int s)
     return 1;
 }
 
+/* *index must be initialised with 0's; on output contains the indices (1, ... n) of decreasing values of *x */
 void order_int(int *x, int *index, int n)
 {
     int i, k, m = 1;
@@ -63,14 +64,19 @@ void update_dist_mat(int *D, int n, int j)
 
 /* Description of the algorihm:
    https://www.mail-archive.com/r-sig-phylo@r-project.org/msg05541.html */
-void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo, int *warn, int *strict, int *trailingGapsAsN)
+void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo, int *warn, int *strict)
 {
     int i, j, k, *ihap, Nhaplo, new_haplo;
     /* i: index of the sequence, j: index of the haplotype */
 
     /* step 1 */
     ihap = (int *)R_alloc(*n, sizeof(int)); /* safe allocation */
-    ihap[0] = 0; /* the 1st sequence is always the 1st haplotype */
+    /* ihap stores the C-indices of the haplotype sequences:
+       ihap[i] = j means that the sequence of the i-th haplotype
+       is given by the j-th sequence of x */
+
+    /* the 1st sequence is always the 1st haplotype */
+    ihap[0] = 0;
     Nhaplo = 1;
 
     for (i = 1; i < *n; i++) { /* start with the 2nd sequence */
@@ -91,24 +97,7 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo, int *warn, i
 
     if (*strict) return;
 
-    if (*trailingGapsAsN) { /* step 2 */
-	for (i = 0; i < Nhaplo; i++) { /* leading gaps */
-	    j = ihap[i]; /* start of the seq */
-	    k = j + *n * (*s - 1); /* last site of seq j */
-	    while (x[j] == 4 && j <= k) {
-		x[j] = 240; /* - -> N */
-		j += *n;
-	    }
-	}
-	for (i = 0; i < Nhaplo; i++) { /* trailing gaps */
-	    k = ihap[i]; /* start of the seq */
-	    j = k + *n * (*s - 1); /* the last site of seq j */
-	    while (x[j] == 4 && j >= k) {
-		x[j] = 240; /* - -> N */
-		j -= *n;
-	    }
-	}
-    }
+    /* step 2 is already processed at the R level */
 
     /* step 3 */
     int *D, ii, jj, S, Ndist = Nhaplo*Nhaplo;
@@ -124,8 +113,11 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo, int *warn, i
 	    k = ii + *n * (*s - 1); /* the last site of seq i */
 	    /* no need to compute the real distance,
 	       just need to know if it is > 0 */
-	    while (ii <= k && S == 0) {
-		if (DifferentBase(x[ii], x[jj])) S++;
+	    while (ii <= k) {
+		if (DifferentBase(x[ii], x[jj])) {
+		    S++;
+		    break;
+		}
 		ii += *n;
 		jj += *n;
 	    }
@@ -133,7 +125,7 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo, int *warn, i
 	}
     }
 
-    if (!anyElementZero(D, Ndist)) return;
+    if (! anyElementZero(D, Ndist)) return;
 
     int *NknownBases;
     NknownBases = (int *)R_alloc(Nhaplo, sizeof(int));
@@ -161,21 +153,25 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo, int *warn, i
     for (;;) {
 	for (i = 0; i < Nhaplo; i++) {
 	    ii = 0;
-	    /* find the haplotypes with the largest number of missing data */
+	    /* find the haplotypes with the largest number of missing data first */
 	    while (index[ii] - 1 != i) ii++;
 	    NdistZero = 0;
+	    /* compare this haplotype (ii) with all the others */
 	    for (j = 0; j < Nhaplo; j++) {
 		if (j == ii) continue; /* skip the diagonal */
 		if (!D[ii + Nhaplo * j]) {
 		    buf[NdistZero] = j;
+		    /* buf stores the haplotype indices that have 0-dist
+		       with haplotype ii */
 		    NdistZero++;
 		}
 	    }
+	    /* step 5 */
 	    if (NdistZero > 1) {
 /* check that the 2+ haplotypes with dist=0 to 'ii' don't have also dist=0 among them;
    if yes then all are pooled in the same haplotype, if no keep all separate */
 		int allOthersZero = 1;
-		/* use 'j' and 'k' to store the indices of the haplotype pair */
+		/* use 'j' and 'k' for the indices of the haplotype pair */
 		for (jj = 0; jj < NdistZero - 1; jj++) {
 		    j = buf[jj];
 		    for (S = jj + 1; S < NdistZero; S++) {
@@ -184,15 +180,16 @@ void haplotype_DNAbin(unsigned char *x, int *n, int *s, int *haplo, int *warn, i
 		    }
 		}
 		if (allOthersZero) NdistZero = 1; else warn[1] = 1;
-/* no need to keep all these haplotypes now, just set NdistZero = 1 and the haplotypes will be pooled together at a later iteration */
+/* just set NdistZero = 1 and the haplotypes will be pooled together at a later iteration */
 	    }
 	    if (NdistZero == 1) {
-		int z = buf[0] + 1;
+		int z = ihap[buf[0]] + 1;
 		warn[0] = 1;
-		k = ihap[ii] + 1;
+		k = ihap[ii];
+		haplo[k] = z;
+		k++;
 		for (jj = 0; jj < *n; jj++)
 		    if (haplo[jj] == k) haplo[jj] = z;
-		haplo[ii] = z;
 	    }
 	    update_dist_mat(D, Nhaplo, ii);
 	    if (!anyElementZero(D, Ndist)) return;
@@ -261,7 +258,7 @@ SEXP unique_haplotype_loci(SEXP x, SEXP NROW, SEXP NCOL)
 }
 
 static R_CMethodDef C_entries[] = {
-    {"haplotype_DNAbin", (DL_FUNC) &haplotype_DNAbin, 7},
+    {"haplotype_DNAbin", (DL_FUNC) &haplotype_DNAbin, 6},
     {"distDNA_pegas", (DL_FUNC) &distDNA_pegas, 4},
     {NULL, NULL, 0}
 };

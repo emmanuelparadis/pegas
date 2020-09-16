@@ -17,8 +17,8 @@ export(alleles2loci, allelicrichness, amova, as.igraph.haploNet,
 
 importFrom(ape, as.evonet, as.phylo, BOTHlabels, branching.times,
            base.freq, dist.dna, dist.nodes, floating.pie.asp,
-           GC.content, perm.rowscols, polar2rect, rcoal, rect2polar,
-           seg.sites)
+           GC.content, latag2n, perm.rowscols, polar2rect, rcoal,
+           rect2polar, seg.sites)
 importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, abline, axis, barplot, hist, lines, lines.default, locator,
            matplot, mtext, par, polygon, plot, plot.default, rect, segments,

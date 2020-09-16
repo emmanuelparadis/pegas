@@ -67,7 +67,7 @@ loci2SnpMatrix(x, checkSNP = TRUE)
 }
 \author{Emmanuel Paradis}
 \seealso{
-  \code{\link{read.loci}}, \code{\link[adegenet]{genind}},
+  \code{\link{read.loci}}, \code{\link[adegenet:genind-class]{genind}},
   \code{\link[adegenet]{df2genind}} for converting data frames to
   \code{"genind"}, \code{\link{alleles2loci}}
 }

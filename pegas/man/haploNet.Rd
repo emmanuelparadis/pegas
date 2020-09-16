@@ -134,7 +134,7 @@ plot(net)
 ## symbol sizes equal to haplotype sizes:
 plot(net, size = attr(net, "freq"), fast = TRUE)
 plot(net, size = attr(net, "freq"))
-plot(net, size=attr(net, "freq"), scale.ratio = 2, cex = 0.8)
+plot(net, size = attr(net, "freq"), scale.ratio = 2, cex = 0.8)
 }
 \keyword{models}
 \keyword{hplot}
