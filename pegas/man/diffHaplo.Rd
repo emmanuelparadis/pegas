@@ -6,18 +6,21 @@
   differences.
 }
 \usage{
-diffHaplo(h, a = 1, b = 2)
+diffHaplo(h, a = 1, b = 2, strict = FALSE, trailingGapsAsN = TRUE)
 }
 \arguments{
   \item{h}{an object of class \code{"haplotype"}.}
   \item{a, b}{two integers (or character strings) giving the indices (or
     labels) of the two haplotypes to be compared.}
+  \item{strict}{a logical value; if \code{TRUE}, ambiguities and gaps in
+    the sequences are ignored and treated as separate characters.}
+  \item{trailingGapsAsN}{a logical value; if \code{TRUE} (the default),
+    the leading and trailing alignment gaps are considered as unknown
+    bases (i.e., N). This option has no effect if \code{strict = TRUE}.}
 }
 \details{
-  This function prints the number of transitions and transversions
-  between both sequences, and returns a data frame with three columns
-  giving the positions of the differences and the nucleotides in each
-  sequence at these positions.
+  The options \code{strict} and \code{trailingGapsAsN} are passed to
+  \code{\link[ape]{seg.sites}}.
 }
 \value{
   a data frame with three columns named \code{pos} (position of the

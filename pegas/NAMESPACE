@@ -3,31 +3,32 @@ useDynLib(pegas, .registration = TRUE)
 export(alleles2loci, allelicrichness, amova, as.igraph.haploNet,
        as.loci, as.network.haploNet, diffHaplo, dist.hamming,
        dist.haplotype.loci, dist.asd, dist.snp, expand.genotype, F2,
-       F3, F4, Fst, genind2loci, geod, geoTrans, geoTrans2, getAlleles,
-       getGenotypes, getINFO, getPloidy, getPhi, H, haploNet,
-       haploFreq, hap.div, haplotype, heterozygosity, hw.test,
-       is.phased, is.snp, LD, LD2, LDscan, LDmap, loci2alleles,
-       loci2genind, loci2SnpMatrix, mjn, msn, mst, MMD, nuc.div,
-       plotNetMDS, proba.genotype, R2.test, rangePOS, rarefactionplot,
-       read.gtx, read.loci, read.vcf, replot, rhost, rmst, rr.test,
-       Rst, selectQUAL, site.spectrum, stairway, sw, tajima.test,
-       theta.h, theta.k, theta.msat, theta.s, unphase, theta.tree,
-       theta.tree.hetero, VCFheader, VCFlabels, VCFloci, write.loci,
-       write.pegas.amova)
+       F3, F4, Fst, genind2loci, geod, geoTrans, geoTrans2,
+       getAlleles, getGenotypes, getHaploNetOptions, getINFO,
+       getPloidy, getPhi, H, haploNet, haploFreq, hap.div, haplotype,
+       heterozygosity, hw.test, is.phased, is.snp, LD, LD2, LDscan,
+       LDmap, loci2alleles, loci2genind, loci2SnpMatrix, mjn, msn,
+       mst, MMD, mutations, nuc.div, plotNetMDS, proba.genotype,
+       R2.test, rangePOS, rarefactionplot, read.gtx, read.loci,
+       read.vcf, replot, rhost, rmst, rr.test, Rst, selectQUAL,
+       setHaploNetOptions, setHaploNetTheme, site.spectrum, stairway,
+       sw, tajima.test, theta.h, theta.k, theta.msat, theta.s,
+       unphase, theta.tree, theta.tree.hetero, VCFheader, VCFlabels,
+       VCFloci, write.loci, write.pegas.amova)
 
 importFrom(ape, as.evonet, as.phylo, BOTHlabels, branching.times,
-           base.freq, dist.dna, dist.nodes, floating.pie.asp,
+           base.freq, dist.dna, dist.nodes, fancyarrows, floating.pie.asp,
            GC.content, latag2n, perm.rowscols, polar2rect, rcoal,
            rect2polar, seg.sites)
 importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, abline, axis, barplot, hist, lines, lines.default, locator,
-           matplot, mtext, par, polygon, plot, plot.default, rect, segments,
-           strheight, symbols, text, xinch)
+           matplot, mtext, par, points, polygon, plot, plot.default, rect,
+           segments, strheight, strwidth, symbols, text, xinch)
 importFrom(grDevices, colorRampPalette, dev.cur, devAskNewPage,
            deviceIsInteractive, rainbow, rgb)
 importFrom(stats, as.dist, cmdscale, cophenetic, density, dist, integrate,
-           na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois, sd,
-           uniroot, weighted.mean)
+           median, na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois,
+           sd, uniroot, weighted.mean)
 importFrom(utils, as.roman, combn, edit, read.table, write.csv, write.table)
 importFrom(methods, new)
 
@@ -75,6 +76,7 @@ S3method(theta.s, DNAbin)
 S3method(all.equal, haploNet)
 S3method(as.phylo, haploNet)
 S3method(as.evonet, haploNet)
+S3method(cophenetic, haploNet)
 S3method(plot, haploNet)
 S3method(print, haploNet)
 
@@ -95,6 +97,8 @@ S3method(na.omit, loci)
 S3method(print, loci)
 S3method(rbind, loci)
 S3method(summary, loci)
+
+S3method(plot, mjn)
 
 S3method(plot, spectrum)
 

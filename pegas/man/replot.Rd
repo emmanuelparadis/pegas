@@ -6,11 +6,12 @@
   network interactively or with specified coordinates.
 }
 \usage{
-replot(xy = NULL, ...)
+replot(xy = NULL, col.identifier = "purple", ...)
 }
 \arguments{
   \item{xy}{an optional list with vectors names \code{x} and \code{y}
     (or \code{xx} and \code{yy}) giving the coordinates of the nodes.}
+  \item{col.identifier}{the colour used to identify the node to be moved.}
   \item{\dots}{further arguments passed to \code{plot}.}
 }
 \details{
@@ -24,6 +25,11 @@ replot(xy = NULL, ...)
   The second possible use is to specify the new coordinates of the nodes
   with the argument \code{xy}, typically, from a previous call to
   \code{replot} (see examples).
+
+  Since \pkg{pegas} 1.0, these coordinates can be used directly in
+  \code{\link{plot.haploNet}} making possible to combine networks with
+  other graphics (which not possible with \code{replot} because the
+  network is replotted).
 }
 \value{
   a named list with two numeric vertors (\code{x} and \code{y}).

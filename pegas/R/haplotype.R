@@ -1,4 +1,4 @@
-## haplotype.R (2020-05-14)
+## haplotype.R (2020-10-12)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -7,34 +7,112 @@
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-rmst <- function(d, B = 100)
-{
-    if (!is.matrix(d) && !inherits(d, "dist"))
-        stop("'d' must be a matrix or a 'dist' object")
-    D <- as.matrix(d)
-    n <- nrow(D)
-    MAT <- matrix(NA_character_, 0, 2)
-    for (rep in 1:B) {
-        if (rep == B) d <- D
-        else {
-            ri <- sample(n)
-            d <- D[ri, ri]
+getAllCombs <- function(n) {
+
+    foo <- function(set, i) {
+        if (j > K) return()
+        for (z in set) {
+            v[i] <<- z
+            if (i == n) {
+                res[, j] <<- v
+                j <<- j + 1L
+
+            } else {
+                foo(set[set != z], i + 1)
+            }
         }
-        d <- as.dist(d)
-        rnt <- mst(d)
+    }
+
+    res <- matrix(NA_integer_, n, K <- factorial(n))
+    j <- 1L
+    v <- integer(n)
+    foo(1:n, 1L)
+    res
+}
+
+rmst <- function(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
+                 quiet = FALSE)
+{
+    updateMat <- function(mat, rep) {
+        i <- match(mat, MAT)
+        Nnew <- length(inew <- which(is.na(i)))
+        if (Nnew) {
+            TAB <<- c(TAB, rep(1L, Nnew))
+            MAT <<- c(MAT, mat[inew])
+            NOnew <<- 0L
+            if (Nnew < n - 1) {
+                i <- i[-inew]
+                TAB[i] <<- TAB[i] + 1L
+            }
+        } else {
+            TAB[i] <<- TAB[i] + 1L
+            NOnew <<- NOnew + 1L
+        }
+    }
+
+    ## do MST and return vector of mode character with the labelled-links
+    foo <- function(d) {
+        d <<- as.dist(d)
+        rnt <<- rnt <- mst(d)
         m <- rnt[, 1:2]
         dm <- dim(m)
         mat <- attr(rnt, "labels")[m]
         dim(mat) <- dm
-        MAT <- rbind(MAT, t(apply(mat, 1, sort)))
+        mat <- apply(mat, 1, sort)
+        paste(mat[1, ], mat[2, ], sep = "\r")
     }
-    X <- paste(MAT[, 1], MAT[, 2], sep = "\r")
-    tab <- table(X)
-    if (length(tab) == n - 1) {
+
+    if (!is.matrix(d) && !inherits(d, "dist"))
+        stop("'d' must be a matrix or a 'dist' object")
+    D <- as.matrix(d)
+    n <- nrow(D)
+    randomize <- TRUE
+    if (n < 6 && is.null(B)) {
+        B <- factorial(n)
+        COMBS <- getAllCombs(n)
+        randomize <- FALSE
+        if (!quiet)
+            cat("Less than 6 observations: doing complete enumeration.\n")
+    }
+    MAT <- character()
+    TAB <- integer()
+    NOnew <- 0L # number of iterations without new links
+    if (is.null(B)) {
+        rep <- 1L
+        if (is.null(stop.criterion)) stop.criterion <- ceiling(sqrt(n))
+        repeat {
+            if (rep >= iter.lim) {
+                B <- rep
+                break
+            }
+            ri <- sample(n)
+            d <- D[ri, ri]
+            mat <- foo(d)
+            updateMat(mat, rep)
+            if (!quiet)
+                cat("\rIteration:", rep, "  Number of links:", length(MAT))
+            if (NOnew >= stop.criterion)  {
+                B <- rep
+                break
+            }
+            rep <- rep + 1L
+        }
+    } else {
+        for (rep in 1:B) {
+            if (!quiet) cat("\rIteration:", rep)
+            ri <- if (randomize) sample(n) else COMBS[, rep]
+            d <- D[ri, ri]
+            mat <- foo(d)
+            updateMat(mat, rep)
+        }
+    }
+    if (!quiet) cat("\n")
+    if (length(TAB) == n - 1) {
         attr(rnt, "weight") <- rep(B, n - 1)
         return(rnt)
     }
-    links <- names(tab)
+    links <- names(TAB) <- MAT
+
     ## define the alternative links wrt the last MST:
     labs <- attr(rnt, "labels")
     MST.str <- labs[rnt[, 1:2]]
@@ -43,7 +121,7 @@ rmst <- function(d, B = 100)
     MST.str <- paste(MST.str[1, ], MST.str[2, ], sep = "\r")
     k <- match(links, MST.str)
     nak <- is.na(k)
-    tab <- c(tab[match(MST.str, links)], tab[nak])
+    TAB <- c(TAB[match(MST.str, links)], TAB[nak])
     alt <- unlist(strsplit(links[nak], "\r"))
     alt <- match(alt, labs)
     alt <- matrix(alt, length(alt)/2, 2, byrow = TRUE)
@@ -54,8 +132,8 @@ rmst <- function(d, B = 100)
     alt <- cbind(alt, d[k])
     colnames(alt) <- c("", "", "step")
     attr(rnt, "alter.links") <- alt
-    names(tab) <- gsub("\r", "--", names(tab))
-    attr(rnt, "weight") <- tab
+    names(TAB) <- gsub("\r", "--", names(TAB))
+    attr(rnt, "weight") <- TAB
     rnt
 }
 
@@ -233,12 +311,11 @@ haploFreq <- function(x, fac, split = "_", what = 2, haplo = NULL)
     res
 }
 
-diffHaplo <- function(h, a = 1, b = 2)
+diffHaplo <- function(h, a = 1, b = 2, strict = FALSE, trailingGapsAsN = TRUE)
 {
-    s <- seg.sites(h[c(a, b), ])
+    s <- seg.sites(h[c(a, b), ], strict = strict,
+                   trailingGapsAsN = trailingGapsAsN)
     x <- h[c(a, b), s]
-    cat("\n", dist.dna(x, "TS"), "transitions,",
-        dist.dna(x, "TV"), "transversions\n\n")
     data.frame(pos = s, toupper(t(as.character(x))))
 }
 
@@ -335,16 +412,132 @@ print.haploNet <- function(x, ...)
     cat("Use print.default() to display all elements.\n")
 }
 
-.drawSymbolsHaploNet <- function(xx, yy, size, col, bg, pie)
+circle <- function(x, y, size, col = "black", pie = NULL, bg = NULL, ...)
 {
-    if (is.null(pie))
-        symbols(xx, yy, circles = size/2, inches = FALSE,
+    if (is.null(pie)) {
+        symbols(x, y, circles = size / 2, inches = FALSE,
                 add = TRUE, fg = col, bg = bg)
-    else {
-        nc <- ncol(pie)
-        co <- if (length(bg) == 1 && bg == "white") rainbow(nc) else rep(bg, length.out = nc)
-        for (i in seq_along(xx))
-            floating.pie.asp(xx[i], yy[i], pie[i, ], radius = size[i]/2, col = co)
+    } else {
+        n <- length(pie)
+        co <- if (length(bg) == 1 && bg == "white") rainbow(n) else rep(bg, length.out = n)
+        floating.pie.asp(x, y, pie, radius = size / 2, col = co)
+    }
+}
+
+.squarePegas <- function(x, y, size, pie = NULL)
+{
+    l <- size * sqrt(pi) / 4
+    left <- x - l
+    bottom <- y - l
+    right <- x + l
+    top <- y + l
+    res <- list(c(left, bottom, right, top))
+    if (is.null(pie)) return(res)
+    n <- length(pie)
+    pie <- pie / sum(pie)
+    m <- matrix(NA_real_, 4, n)
+    area <- l * l * 4
+    TOP <- TRUE
+    y2 <- top
+    x1 <- left
+    x2 <- right
+    for (i in 1:n) {
+        if (TOP) {
+            y1 <- y2 - pie[i] * area / (x2 - x1)
+        } else {
+            x2 <- pie[i] * area / (y2 - y1) + x1
+        }
+        m[, i] <- c(x1, y1, x2, y2)
+        if (TOP) {
+            y2 <- y1
+            y1 <- bottom
+        } else {
+            x1 <- x2
+            x2 <- right
+        }
+        TOP <- !TOP
+    }
+    c(res, list(m))
+}
+
+square <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
+{
+    XY <- .squarePegas(x, y, size, pie = pie)
+    if (!is.null(pie)) {
+        n <- length(pie)
+        co <- if (length(bg) == 1 && bg == "white") rainbow(n) else rep(bg, length.out = n)
+        for (i in 1:n) {
+            s <- XY[[2]][, i]
+            rect(s[1], s[2], s[3], s[4], col = co[i])
+        }
+        co <- NULL
+    } else co <- bg
+    s <- XY[[1]]
+    rect(s[1], s[2], s[3], s[4], col = co, border = col, ...)
+}
+
+.rotateSquares <- function(XY)
+{
+    ROT <- pi / 4
+    foo <- function(rec) {
+        x <- rec[c(1, 3, 3, 1)] - x0
+        y <- rec[c(2, 2, 4, 4)] - y0
+        tmp <- rect2polar(x, y)
+        o <- polar2rect(tmp$r, tmp$angle + ROT)
+        o$x <- o$x + x0
+        o$y <- o$y + y0
+        o
+    }
+    rec <- XY[[1]]
+    x0 <- (rec[1] + rec[3]) / 2
+    y0 <- (rec[2] + rec[4]) / 2
+    res <- list(foo(rec))
+    if (length(XY) > 1)
+        res[[2]] <- apply(XY[[2]], 2, foo)
+    res
+}
+
+diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
+{
+    XY <- .squarePegas(x, y, size, pie = pie)
+    XY <- .rotateSquares(XY)
+    if (!is.null(pie)) {
+        n <- length(pie)
+        co <- if (length(bg) == 1 && bg == "white") rainbow(n) else rep(bg, length.out = n)
+        for (i in 1:n) {
+            xy <- XY[[2]][[i]]
+            polygon(xy$x, xy$y, col = co[i])
+        }
+        co <- NULL
+    } else co <- bg
+    xy <- XY[[1]]
+    polygon(xy$x, xy$y, border = col, col = co, ...)
+}
+
+.drawSymbolsHaploNet <- function(xx, yy, size, col, bg, shape, pie)
+{
+    if (length(shape) == 1 && is.null(pie) && shape == "circles") {
+        ## the only case with vectorised arguments
+        symbols(xx, yy, circles = size / 2, inches = FALSE,
+                add = TRUE, fg = col, bg = bg)
+    } else {
+        n <- length(xx) # nb of nodes
+        size <- rep(size, length.out = n)
+        col <- rep(col, length.out = n)
+        bg <- rep(bg, length.out = n)
+        shape <- rep(shape, length.out = n)
+        for (i in 1:n) {
+            if (shape[i] == "circles") {
+                circle(xx[i], yy[i], size[i], col[i], pie[i, ], bg[i])
+                next
+            }
+            if (shape[i] == "squares") {
+                square(xx[i], yy[i], size[i], col[i], pie[i, ], bg[i])
+                next
+            }
+            ## if (shape[i] == "diamonds")
+            diamond(xx[i], yy[i], size[i], col[i], pie[i, ], bg[i])
+        }
     }
 }
 
@@ -431,7 +624,7 @@ print.haploNet <- function(x, ...)
     })
 }
 
-replot <- function(xy = NULL, ...)
+replot <- function(xy = NULL, col.identifier = "purple", ...)
 {
     on.exit(return(list(x = xx, y = yy)))
 
@@ -446,6 +639,7 @@ replot <- function(xy = NULL, ...)
     col <- Last.phn$col
     bg <- Last.phn$bg
     lty <- Last.phn$lty
+    shape <- Last.phn$shape
     col.link <- Last.phn$col.link
     labels <- Last.phn$labels
     asp <- Last.phn$asp
@@ -463,26 +657,26 @@ replot <- function(xy = NULL, ...)
     getMove <- function() {
         p1 <- locator(1)
         if (is.null(p1)) return("done")
-        p2 <- locator(1)
         ## find the closest node to p1...
         i <- which.min(sqrt((p1$x - xx)^2 + (p1$y - yy)^2))
+        points(xx[i][rep(1L, 3L)], yy[i][rep(1L, 3L)],
+               pch = 10, cex = 3:5, col = col.identifier)
+        p2 <- locator(1)
         ## ... and change its coordinates:
         xx[i] <<- p2$x
         yy[i] <<- p2$y
     }
 
     if (is.null(xy)) {
-        cat("Click close to the node you want to move, then click where to place it\n(only single left-clicks).\nRight-click to exit.\n")
+        cat("\n    *** You are about to edit your haplotype network ***\n\n1. Click once on the node to be moved (it will be visually identified).\n2. Click a second time where to place it.\n3. Repeat 1. and 2. as many times as you want.\n4. Right-click to exit.\n\nNOTES:\n* The whole network is redrawn after each node move.\n* This function returns the final coordinates of the nodes so it is\n  recommended to save them (e.g., xy <- replot()).\n* The saved coordinates can later be used non-interactively\n  (e.g., replot(xy) or plot(net, xy = xy)).\n")
         res <- getMove()
     } else {
         xx <- xy$x
         yy <- xy$y
-        res <- "done"
     }
 
     repeat {
-        plot(xx, yy, type = "n", xlab = "", ylab = "",
-             axes = FALSE, bty = "n", asp = asp, ...)
+        .setWindow4haploNet(xx, yy, size, asp, ...)
         segments(xx[l1], yy[l1], xx[l2], yy[l2], lwd = lwd,
                  lty = lty, col = col.link)
         if (show.mutation)
@@ -490,24 +684,59 @@ replot <- function(xy = NULL, ...)
                                    col.link, as.numeric(show.mutation))
         if (!is.null(altlink) && !identical(as.numeric(threshold), 0))
             .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation)
-        .drawSymbolsHaploNet(xx, yy, size, col, bg, pie)
+        .drawSymbolsHaploNet(xx, yy, size, col, bg, shape, pie)
         if (is.character(labels))
             text(xx, yy, labels, font = font, cex = cex)
         assign("tmp", list(xx, yy), envir = .PlotHaploNetEnv)
         eval(quote(last_plot.haploNet[1:2] <- tmp), envir = .PlotHaploNetEnv)
-        if (identical(res, "done")) break
+        if (!is.null(xy)) break
         res <- getMove()
+        if (identical(res, "done")) break
     }
 }
 
-plot.haploNet <-
-    function(x, size = 1, col = "black", bg = "white",
-             col.link = "black", lwd = 1, lty = 1, pie = NULL,
-             labels = TRUE, font = 2, cex = 1, scale.ratio = 1,
-             asp = 1, legend = FALSE, fast = FALSE, show.mutation = 1,
-             threshold = c(1, 2), ...)
+
+## set the (empty) graphic window before plotting the network
+.setWindow4haploNet <- function(xx, yy, size, asp, ...)
 {
-    par(xpd = TRUE)
+    dots <- list(...)
+    noxlim <- noylim <- TRUE
+    if (length(dots)) {
+        ## find the bounding box unless xlim and/or ylim given
+        if ("xlim" %in% names(dots)) noxlim <- FALSE
+        if ("ylim" %in% names(dots)) noylim <- FALSE
+    }
+    half.size <- size / 2
+    if (noxlim) dots$xlim <- c(min(xx - half.size), max(xx + half.size))
+    if (noylim) dots$ylim <- c(min(yy - half.size), max(yy + half.size))
+    dots$x <- NA
+    dots$type <- dots$bty <- "n"
+    dots$ann <- dots$axes <- FALSE
+    dots$asp <- asp
+    do.call(plot, dots)
+}
+
+plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
+             shape = "circles", pie = NULL, labels, font, cex,
+             scale.ratio, asp = 1, legend = FALSE, fast = FALSE,
+             show.mutation, threshold = c(1, 2), xy = NULL, ...)
+{
+    ## map options to arguments
+    OPTS <- get("plotHaploNetOptions", envir = .PlotHaploNetEnv)
+    if (missing(col)) col <- OPTS$haplotype.outer.color
+    if (missing(bg)) bg <- OPTS$haplotype.inner.color
+    if (missing(col.link)) col.link <- OPTS$link.color
+    if (missing(lwd)) lwd <- OPTS$link.width
+    if (missing(lty)) lty <- OPTS$link.type
+    if (missing(labels)) labels <- OPTS$labels
+    if (missing(font)) font <- OPTS$labels.font
+    if (missing(cex)) cex <- OPTS$labels.cex
+    if (missing(scale.ratio)) scale.ratio <- OPTS$scale.ratio
+    if (missing(show.mutation)) show.mutation <- OPTS$show.mutation
+
+    SHAPES <- c(c = "circles", s = "squares", d = "diamonds")
+    shape <- SHAPES[substr(tolower(shape), 1L, 1L)]
+    ## par(xpd = TRUE) # normalement plus utile...
     link <- x[, 1:2, drop = FALSE]
     l1 <- x[, 1]
     l2 <- x[, 2]
@@ -521,44 +750,50 @@ plot.haploNet <-
     size <- rep(size, length.out = n)
     ld <- ld + (size[l1] + size[l2])/2
 
-    if (n < 3) {
-        xx <- c(-ld, ld)/2
-        yy <- rep(0, 2)
+    if (!is.null(xy)) {
+        xx <- xy$x
+        yy <- xy$y
         fast <- TRUE
     } else {
-        xx <- yy <- angle <- theta <- r <- numeric(n)
-        avlb <- !logical(length(ld))
+        if (n < 3) {
+            xx <- c(-ld, ld)/2
+            yy <- rep(0, 2)
+            fast <- TRUE
+        } else {
+            xx <- yy <- angle <- theta <- r <- numeric(n)
+            avlb <- !logical(length(ld))
 
-        H <- vector("list", n) # the list of hierarchy of nodes...
+            H <- vector("list", n) # the list of hierarchy of nodes...
 
-        ## the recursive function to allocate quadrants
-        foo <- function(i) {
-            j <- integer() # indices of the haplotypes linked to 'i'
-            for (ii in 1:2) { # look at both columns
-                ll <- which(link[, ii] == i & avlb)
-                if (length(ll)) {
-                    newj <- link[ll, -ii]
-                    r[newj] <<- ld[ll]
-                    j <- c(j, newj)
-                    avlb[ll] <<- FALSE
+            ## the recursive function to allocate quadrants
+            foo <- function(i) {
+                j <- integer() # indices of the haplotypes linked to 'i'
+                for (ii in 1:2) { # look at both columns
+                    ll <- which(link[, ii] == i & avlb)
+                    if (length(ll)) {
+                        newj <- link[ll, -ii]
+                        r[newj] <<- ld[ll]
+                        j <- c(j, newj)
+                        avlb[ll] <<- FALSE
+                    }
+                }
+                if (nlink <- length(j)) {
+                    H[[i]] <<- j
+                    start <- theta[i] - angle[i]/2
+                    by <- angle[i]/nlink
+                    theta[j] <<- seq(start, by = by, length.out = nlink)
+                    angle[j] <<- by
+                    xx[j] <<- r[j] * cos(theta[j]) + xx[i]
+                    yy[j] <<- r[j] * sin(theta[j]) + yy[i]
+                    for (ii in j) foo(ii)
                 }
             }
-            if (nlink <- length(j)) {
-                H[[i]] <<- j
-                start <- theta[i] - angle[i]/2
-                by <- angle[i]/nlink
-                theta[j] <<- seq(start, by = by, length.out = nlink)
-                angle[j] <<- by
-                xx[j] <<- r[j] * cos(theta[j]) + xx[i]
-                yy[j] <<- r[j] * sin(theta[j]) + yy[i]
-                for (ii in j) foo(ii)
-            }
-        }
 
-        ## start with the haplotype with the most links:
-        central <- which.max(tab)
-        angle[central] <- 2*pi
-        foo(central)
+            ## start with the haplotype with the most links:
+            central <- which.max(tab)
+            angle[central] <- 2*pi
+            foo(central)
+        }
     }
 
     if (!fast) {
@@ -696,8 +931,7 @@ plot.haploNet <-
         }
     }
 
-    plot(xx, yy, type = "n", xlab = "", ylab = "",
-         axes = FALSE, bty = "n", asp = asp, ...)
+    .setWindow4haploNet(xx, yy, size, asp, ...)
     segments(xx[l1], yy[l1], xx[l2], yy[l2], lwd = lwd,
              lty = lty, col = col.link)
 
@@ -715,7 +949,7 @@ plot.haploNet <-
                                show.mutation)
     }
 
-    .drawSymbolsHaploNet(xx, yy, size, col, bg, pie)
+    .drawSymbolsHaploNet(xx, yy, size, col, bg, shape, pie)
 
     if (labels) {
         labels <- attr(x, "labels") # for export below
@@ -723,35 +957,61 @@ plot.haploNet <-
     }
     if (legend[1]) {
         if (is.logical(legend)) {
-            cat("Click where you want to draw the legend\n")
+            cat("Click where you want to draw the legend")
             xy <- unlist(locator(1))
-        } else xy <- legend
-        segments(xy[1], xy[2], xy[1] + scale.ratio, xy[2])
-        text(xy[1] + scale.ratio, xy[2], " 1", adj = 0)
-        if (length(unique(size)) > 1) {
+            cat("\nThe coordinates x = ", xy[1], ", y = ", xy[2], " are used\n", sep = "")
+        } else {
+            if (!is.numeric(legend) || length(legend) < 2)
+                stop("wrong coordinates of legend")
+            xy <- legend
+        }
+        if (length(SZ <- unique(size)) > 1) {
+            SZ <- unique(c(min(SZ), floor(median(SZ)), max(SZ)))
             vspace <- strheight(" ")
-            symbols(xy[1] + 0.5, xy[2] - 2*vspace, circles = 0.5,
-                    inches = FALSE, add = TRUE)
-            text(xy[1] + 0.5, xy[2] - 2*vspace, "  1", adj = 0)
+            if (any(shape == "circles")) {
+                SHIFT <- max(SZ)/2
+                for (sz in SZ) {
+                    seqx <- seq(-sz / 2, sz / 2, length.out = 100)
+                    seqy <- sqrt((sz /2)^2 - seqx^2)
+                    seqx <- seqx + xy[1] + SHIFT
+                    seqy <- xy[2] + seqy - SHIFT
+                    lines(seqx, seqy)
+                    text(seqx[100], seqy[100], sz, adj = c(0.5, 1.1))
+                }
+                xy[2] <- xy[2] - SHIFT - 2 * vspace # update 'y'
+            }
+            if (any(shape == "squares") || any(shape == "diamonds")) {
+                sqrtPIon4 <- sqrt(pi) / 4
+                ## center of the squares:
+                orig.x <- xy[1] + max(SZ) * sqrtPIon4
+                orig.y <- xy[2] - max(SZ) * sqrtPIon4
+                for (sz in SZ) {
+                    TMP <- sz * sqrtPIon4
+                    lines(orig.x + c(-TMP, -TMP, TMP, TMP),
+                          orig.y + c(0, TMP, TMP, 0))
+                    text(orig.x + TMP, orig.y, sz, adj = c(0.5, 1.1))
+                }
+                xy[2] <- xy[2] - SHIFT - 2 * vspace # update
+            }
         }
         if (!is.null(pie)) {
-            TEXT <- paste(" ", colnames(pie))
             nc <- ncol(pie)
             co <- if (length(bg) == 1 && bg == "white") rainbow(nc) else rep(bg, length.out = nc)
-            for (i in 1:nc) {
-                Y <- xy[2] - 2 * (i + 1) * vspace
-                symbols(xy[1] + 0.5, Y, circles = 0.5,
-                        inches = FALSE, add = TRUE, bg = co[i])
-                text(xy[1] + 0.5, Y, TEXT[i], adj = 0)
-            }
+            w <- diff(par("usr")[3:4]) / 40
+            TOP <- seq(xy[2], by = -w, length.out = nc)
+            BOTTOM <- TOP + diff(TOP[1:2]) * 0.9
+            LEFT <- rep(xy[1], nc)
+            RIGHT <- LEFT + w
+            rect(LEFT, BOTTOM, RIGHT, TOP, col = co)
+            text(RIGHT, (TOP + BOTTOM) /2, colnames(pie), adj = -0.5)
         }
     }
     assign("last_plot.haploNet",
            list(xx = xx, yy = yy, link = link, step = x[, 3], size = size,
-                col = col, bg = bg, lwd = lwd, lty = lty, col.link = col.link,
-                labels = labels, font = font, cex = cex, asp = asp, pie = pie,
-                show.mutation = show.mutation, alter.links = altlink,
-                threshold = threshold),
+                col = col, bg = bg, lwd = lwd, lty = lty, shape = shape,
+                col.link = col.link,labels = labels, font = font, cex = cex,
+                asp = asp, pie = pie, show.mutation = show.mutation,
+                alter.links = altlink, threshold = threshold),
            envir = .PlotHaploNetEnv)
 }
 
@@ -916,6 +1176,30 @@ as.igraph.haploNet <- function(x, directed = FALSE, use.labels = TRUE,
         else y - 1L
     graph.edgelist(y, directed = directed, ...)
 }
+
+## approximate function giving the cophenetic distance on a network
+## -> can be used to find nodes with short distances to most nodes, eg:
+## rowSums(cophenetic.haploNet(net))
+cophenetic.haploNet <- function(x)
+{
+    LABS <- attr(x, "labels")
+    phy <- as.phylo.haploNet(x, quiet = TRUE)
+    res <- dist.nodes(phy)
+    o <- match(LABS, c(phy$tip.label, phy$node.label))
+    res <- res[o, o]
+    alt <- attr(x, "alter.links")
+    if (!is.null(alt)) {
+        for (i in 1:nrow(alt)) {
+            a <- alt[i, 1]
+            b <- alt[i, 2]
+            res[a, b] <- res[b, a] <- alt[i, 3]
+        }
+    }
+    dimnames(res) <- list(LABS, LABS)
+    res
+}
+
+labels.haploNet <- function(object, ...) attr(object, "labels")
 
 haplotype.loci <- function(x, locus = 1:2, quiet = FALSE, compress = TRUE,
                            check.phase = TRUE, ...)
@@ -1454,4 +1738,126 @@ all.equal.haploNet <- function(target, current, use.steps = TRUE, ...)
         }
     }
     if (is.null(msg)) TRUE else msg
+}
+
+.diffHaplo.loci <- function(h, a = 1, b = 2)
+{
+    s <- which(h[, a] != h[, b])
+    data.frame(pos = s, h[s, c(a, b)])
+}
+
+mutations <- function(haploNet, link, x, y, data = NULL, style = "table",
+                      POS, SEQLEN, ...)
+{
+    m <- haploNet[, 1:2, drop = FALSE]
+    if (!is.null(attr(haploNet, "alter.links")))
+        m <- rbind(m, attr(haploNet, "alter.links")[, 1:2])
+    if (missing(link)) {
+        cat("Link is missing: select one below\n")
+        labs <- labels(haploNet)
+        cat(paste0(1:nrow(m), ": ", labs[m[, 1]], "-", labs[m[, 2]]), sep = "\n")
+        link <- as.integer(readLines(n = 1))
+    }
+    if (link < 1 || link > nrow(m) || is.na(link)) stop("wrong value")
+    Last.phn <- get("last_plot.haploNet", envir = .PlotHaploNetEnv)
+    nodes <- m[link, 1:2]
+    xx.link <- sum(Last.phn$xx[nodes]) / 2
+    yy.link <- sum(Last.phn$yy[nodes]) / 2
+    if (missing(x) || missing(y)) {
+        cat("Coordinates are missing: click where you want to place the annotations...")
+        xy <- locator(1)
+        x <- xy$x
+        y <- xy$y
+        cat("\nThe coordinates x = ", x, ", y = ", y, " are used\n", sep = "")
+    }
+    style <- match.arg(style, c("table", "sequence"))
+    if (is.null(data)) {
+        data <- attr(haploNet, "data")
+        if (is.null(data)) stop("no data attached to network")
+    }
+    ## for the moment only two main classes are accepted:
+    dnabin <- if (inherits(data, "DNAbin")) TRUE else FALSE
+    if (!dnabin && class(data) != "haplotype.loci")
+        stop("data must have the class \"DNAbin\" or \"haplotype.loci\"")
+    if (!dnabin) { # => class(data) == "haplotype.loci"
+        if (missing(POS)) stop("'POS' should be given")
+        if (style == "sequence" && missing(SEQLEN))
+            stop("'SEQLEN' should be given")
+    }
+    ## get/check the options
+    OPTS <- getHaploNetOptions()
+    dots <- list(...)
+    options.names <- switch(style, "table" = {
+        c("mutations.cex", "mutations.font", "mutations.frame.background",
+          "mutations.frame.border", "mutations.text.color",
+          "mutations.arrow.color", "mutations.arrow.type")
+    }, "sequence" = {
+        c("mutations.arrow.color", "mutations.arrow.type",
+          "mutations.sequence.color", "mutations.sequence.end",
+          "mutations.sequence.length", "mutations.sequence.width")
+    })
+    mapply(assign, options.names, OPTS[options.names],
+           MoreArgs = list(envir = environment()))
+    if (length(dots)) {
+        if (any(i <- names(dots) %in% options.names)) {
+            dots <- dots[i]
+            mapply(assign, names(dots), dots,
+                   MoreArgs = list(envir = environment()))
+        }
+    }
+    ## get the mutations
+    if (dnabin) {
+        mu <- diffHaplo(data, m[link, 1], m[link, 2])
+    } else {
+        mu <- .diffHaplo.loci(data, m[link, 1], m[link, 2])
+        mu$pos <- POS[mu$pos]
+    }
+    nmu <- nrow(mu)
+    switch(style, "table" = {
+        strg <- paste0(mu[[1]], ": ", mu[[2]], "|", mu[[3]])
+        maxw <- max(strwidth(strg))
+        strh <- max(strheight(strg))
+        spc <- strh * 0.5
+        ystrings <- seq(y - strh/2, by = -1.5 * strh, length.out = nmu)
+        xleft <- x - spc
+        ybottom <- ystrings[nmu] - strh/2 - spc
+        xright <- x + maxw + spc
+        ytop <- ystrings[1] + strh/2 + spc
+        rect(xleft, ybottom, xright, ytop, col = mutations.frame.background,
+             border = mutations.frame.border)
+        text(x + maxw, ystrings, strg, adj = 1, cex = mutations.cex,
+             font = mutations.font, col = mutations.text.color)
+        if (xx.link <= xleft) {
+            x0 <- xleft
+        } else {
+            if (xx.link >= xright) {
+                x0 <- xright
+            } else {
+                x0 <- (xleft + xright) / 2
+            }
+        }
+        if (yy.link <= ybottom) {
+            y0 <- ybottom
+        } else {
+            if (yy.link >= ytop) {
+                y0 <- ytop
+            } else {
+                y0 <- (ybottom + ytop) / 2
+            }
+        }
+    }, "sequence" = {
+        WIDTH <- diff(par("usr")[1:2])
+        if (dnabin) SEQLEN <- ncol(data)
+        W <- WIDTH * mutations.sequence.length # real width of the segment
+        x2 <- x + W
+        segments(x, y, x2, y, lwd = mutations.sequence.width,
+                 col = mutations.sequence.color, end = mutations.sequence.end)
+        ## text(x2, y, " 1 kb", adj = 0)
+        xx <- x + W * mu[[1]] / SEQLEN
+        segments(xx, y - 0.5, xx, y + 0.5)
+        x0 <- if (abs(x - xx.link) <= abs(x2 - xx.link)) x - WIDTH / 250 else x2 + WIDTH / 250
+        y0 <- y
+    })
+    fancyarrows(x0, y0, xx.link, yy.link, col = mutations.arrow.color,
+                style = mutations.arrow.type)
 }

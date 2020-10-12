@@ -1,4 +1,4 @@
-/* pegas.c    2020-05-14 */
+/* pegas.c    2020-10-12 */
 
 /* Copyright 2015-2020 Emmanuel Paradis */
 
@@ -257,9 +257,77 @@ SEXP unique_haplotype_loci(SEXP x, SEXP NROW, SEXP NCOL)
     return res;
 }
 
+SEXP alreadyIn_mjn_DNAbin(SEXP x, SEXP table)
+{
+    int n1, n2, s, i1, i2, j;
+    unsigned char *xp, *tablep;
+    SEXP res;
+    int *y, diff_seq = 0;
+
+    PROTECT(x = coerceVector(x, RAWSXP));
+    PROTECT(table = coerceVector(table, RAWSXP));
+    xp = RAW(x);
+    tablep = RAW(table);
+
+    n1 = nrows(x);
+    n2 = nrows(table);
+    s = ncols(x);
+
+    PROTECT(res = allocVector(INTSXP, n1));
+    y = INTEGER(res);
+    memset(y, 0, n1 * sizeof(int));
+
+    for (i1 = 0; i1 < n1; i1++) {
+	for (i2 = 0; i2 < n2; i2++) {
+	    for (j = 0; j < s; j++) {
+		if (DifferentBase(xp[i1 + j * n1], tablep[i2 + j * n2])) {
+		    diff_seq = 1;
+		    break;
+		}
+	    }
+	    if (diff_seq) {
+		diff_seq = 0;
+		continue;
+	    } else {
+		y[i1] = 1;
+		break;
+	    }
+	}
+	if (y[i1]) continue;
+    }
+
+    UNPROTECT(3);
+    return res;
+}
+
+void getMedianVectors_DNAbin_mjn(unsigned char *x, int *p, unsigned char *res, int *flag)
+{
+    int j, k, s = p[0];
+    unsigned char z;
+
+    for (j = 0; j < s; j++) {
+	k = j * 3; /* there are 3 seqs */
+	z = x[k];
+	if (z == x[k + 1] || z == x[k + 2]) {
+	    res[k] = res[k + 1] = res[k + 2] = z;
+	} else {
+	    z = x[k + 1];
+	    if (z == x[k + 2]) {
+		res[k] = res[k + 1] = res[k + 2] = z;
+	    } else {
+		res[k] = x[k]; k++;
+		res[k] = x[k]; k++;
+		res[k] = x[k];
+		*flag = 0;
+	    }
+	}
+    }
+}
+
 static R_CMethodDef C_entries[] = {
     {"haplotype_DNAbin", (DL_FUNC) &haplotype_DNAbin, 6},
     {"distDNA_pegas", (DL_FUNC) &distDNA_pegas, 4},
+    {"getMedianVectors_DNAbin_mjn", (DL_FUNC) &getMedianVectors_DNAbin_mjn, 4},
     {NULL, NULL, 0}
 };
 
@@ -278,6 +346,7 @@ static R_CallMethodDef Call_entries[] = {
     {"build_factor_loci", (DL_FUNC) &build_factor_loci, 2},
     {"unique_haplotype_loci", (DL_FUNC) &unique_haplotype_loci, 3},
     {"summary_loci_pegas", (DL_FUNC) &summary_loci_pegas, 2},
+    {"alreadyIn_mjn_DNAbin", (DL_FUNC) &alreadyIn_mjn_DNAbin, 2},
     {NULL, NULL, 0}
 };
 

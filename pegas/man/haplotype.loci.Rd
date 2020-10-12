@@ -53,7 +53,5 @@ dist.haplotype.loci(x)
   \code{dist.haplotype.loci} returns an object of class \code{"dist"}.
 }
 \author{Emmanuel Paradis}
-\seealso{
-  \code{\link{haplotype}},  \code{\link{LD}}
-}
+\seealso{ \code{\link{haplotype}}, \code{\link{LD}}}
 \keyword{manip}

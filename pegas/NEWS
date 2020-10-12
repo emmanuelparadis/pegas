@@ -1,3 +1,41 @@
+		CHANGES IN PEGAS VERSION 0.14-1
+
+
+NEW FEATURES
+
+    o The new function mutations() draws mutations on a network (with
+      many options; see ?mutations).
+
+    o There is a new cophenetic() method for objects of class "haploNet".
+
+    o diffHaplo() has been simplified and gains the options 'strict'
+      and 'trailingGapsAsN' which are passed to ape::seg.sites().
+
+    o mjn() has a new option 'quiet = FALSE'; its code has been
+      improved and is now 10 times faster (25 times with 100 sequences
+      resulting in running times less than 15 sec). The returned
+      object have the class c("mjn", "haploNet") and there is a new
+      plot() method for the class "mjn".
+
+    o replot() has been improved: the instructions are more detailed,
+      there is a new option 'col.identifier' to show the node to be
+      moved, and the bounding box of the plot is now calculated
+      correctly to the network does not "shrink" after each move.
+
+    o plot.haploNet() has two new options: 'shape' and 'xy' to change
+      the symbol shapes and their coordinates, respectively.
+
+    o There are three new functions, getHaploNetOptions,
+      setHaploNetOptions, and setHaploNetTheme, to help users change
+      the graphical paramaters when plotting haplotype networks.
+
+    o rmst() implements a new algorithm to stop iterations after no
+      new links are found: this is controlled by the new options
+      'stop.criterion' and 'iter.lim'. There is also a new option
+      'quiet = FALSE'.
+
+
+
 		CHANGES IN PEGAS VERSION 0.14
 
 

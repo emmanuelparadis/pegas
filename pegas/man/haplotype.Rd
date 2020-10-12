@@ -35,7 +35,7 @@ haplotype(x, ...)
   \item{labels}{a vector of character strings used as names for the rows
     of the returned object. By default, Roman numerals are given.}
   \item{strict}{a logical value; if \code{TRUE}, ambiguities and gaps in
-    the sequences are ignored.}
+    the sequences are ignored and treated as separate characters.}
   \item{trailingGapsAsN}{a logical value; if \code{TRUE} (the default),
     the leading and trailing alignment gaps are considered as unknown
     bases (i.e., N). This option has no effect if \code{strict = TRUE}.}

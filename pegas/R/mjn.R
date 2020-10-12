@@ -1,13 +1,13 @@
-## mjn.R (2018-06-30)
+## mjn.R (2020-10-09)
 
 ##   Median-Joining Network
 
-## Copyright 2017-2018 Emmanuel Paradis
+## Copyright 2017-2020 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
+mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", quiet = FALSE)
 {
     if (is.data.frame(x)) x <- as.matrix(x)
     if (mode(x) == "numeric") {
@@ -53,37 +53,22 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
     if (inherits(x, "DNAbin")) {
         getMedianVectors <- function(x) {
             ## returns 1 or 3 sequences
-            p <- ncol(x)
-            res <- matrix(raw(), 3, p)
-            flag <- TRUE
-            for (j in 1:p) {
-                if (x[1, j] == x[2, j] || x[1, j] == x[3, j]) {
-                    res[, j] <- x[1, j]
-                } else {
-                    if (x[2, j] == x[3, j]) {
-                        res[, j] <- x[2, j]
-                    } else {
-                        res[, j] <- x[, j]
-                        flag <- FALSE
-                    }
-                }
-            }
-            if (flag) res <- res[1, , drop = FALSE]
+            p <- as.integer(ncol(x))
+            #browser()
+            ans <- .C(getMedianVectors_DNAbin_mjn, x, p, raw(3L * p), 1L)
+            res <- ans[[3L]]
+            dim(res) <- c(3L, p)
+            if (ans[[4L]]) res <- res[1L, , drop = FALSE]
             res
         }
     } else {
         getMedianVectors <- function(x) { # for binary (0/1) data
             p <- ncol(x)
-            res <- matrix(NA_real_, 1, p)
+            res <- matrix(NA_real_, 1L, p)
             for (j in 1:p) res[, j] <- as.integer(sum(x[, j]) > 1)
             res
         }
     }
-
-###    funUpdateDistmat <-
-###        switch(mode(x),
-###               "raw" = function(x) dist.dna(x, "n", pairwise.deletion = TRUE, as.matrix = TRUE),
-###               "numeric" = function(x) as.matrix(dist(x, "manhattan")))
 
     funDist <-
         switch(mode(x),
@@ -100,16 +85,10 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
 
     alreadyIn <-
         switch(mode(x),
-               "raw" = function(x, table) {
-            D <- dist.dna(rbind(x, table), "n", pairwise.deletion = TRUE, as.matrix = TRUE)
-            s1 <- 1:nrow(x)
-            s2 <- nrow(x) + 1:nrow(table)
-            res <- logical(nrow(x))
-            for (i in s1) res[i] <- any(D[i, s2] == 0)
-            res
-        },
-        "numeric" = function(x, table)
-            any(apply(table, 1, function(y) all(y == x))))
+               "raw" = function(x, table) .Call(alreadyIn_mjn_DNAbin, x, table),
+               "numeric" = function(x, table) any(apply(table, 1, function(y) all(y == x))))
+
+    if (mode(x) == "raw") class(x) <- NULL
 
     ## initialization --
     n <- nrow(x)
@@ -148,6 +127,7 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
     n.cost <- 0L
 
     lambda <- Inf
+    if (!quiet) cat("Adding median vectors:")
     repeat {
         ## step 3 --
         purged <- purgeObsolete()
@@ -213,7 +193,7 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
             ##     link2 <- c(link2, rep(nextX, 3))
             ##     weight <- c(weight, dist2X)
             ##     median.vector <- if (is.null(median.vector)) tmp else rbind(median.vector, tmp)
-             ##    nextX <- nextX + 1L
+            ##    nextX <- nextX + 1L
             ## }
             if (any(connection.cost < lambda)) lambda <- min(connection.cost)
             for (k in 1:m) {
@@ -228,6 +208,7 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
                 }
             }
         }
+        if (!quiet) cat("", nrow(median.vector))
         if (is.null(median.vector)) break else x <- rbind(x, median.vector)
     }
 
@@ -241,7 +222,17 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
 
     ## build the network:
     i <- 1L
+    if (!quiet) {
+        cat("\nBuilding the network... number of clusters:")
+        previousNC <- N
+    }
     while (length(unique(forest)) > 1) {
+        if (!quiet) {
+            if (length(unique(forest)) < previousNC) {
+                previousNC <- length(unique(forest))
+                cat("", previousNC)
+            }
+        }
         delta <- ud[i]
         for (iud in which(d == delta)) {
             p <- getIandJ(iud, N)
@@ -296,7 +287,21 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_")
     }
     dimnames(m) <- list(NULL, c("", "", "step"))
     attr(m, "labels") <- rownames(x)
+    if (mode(x) == "raw") class(x) <- "DNAbin"
     attr(m, "data") <- x
-    class(m) <- "haploNet"
+    attr(m, "prefix") <- prefix
+    class(m) <- c("mjn", "haploNet")
+    if (!quiet) cat(" 1\n")
     m
+}
+
+plot.mjn <- function(x, shape = c("circles", "diamonds"),
+                     bg = c("green", "slategrey"), ...)
+{
+    class(x) <- "haploNet"
+    prefix <- attr(x, "prefix")
+    labs <- labels(x)
+    ## identify the median vectors among the labels (1 or 2):
+    mv <- grepl(paste0("^", prefix), labs) + 1L
+    plot.haploNet(x, bg = bg[mv], shape = shape[mv], labels = FALSE, ...)
 }

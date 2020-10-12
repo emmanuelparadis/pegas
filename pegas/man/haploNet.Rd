@@ -14,11 +14,10 @@
 \usage{
 haploNet(h, d = NULL, getProb = TRUE)
 \method{print}{haploNet}(x, ...)
-\method{plot}{haploNet}(x, size = 1, col = "black", bg = "white",
-     col.link = "black", lwd = 1, lty = 1, pie = NULL,
-     labels = TRUE, font = 2, cex = 1, scale.ratio = 1,
-     asp = 1, legend = FALSE, fast = FALSE, show.mutation = 1,
-     threshold = c(1, 2), ...)
+\method{plot}{haploNet}(x, size = 1, col, bg, col.link, lwd, lty,
+     shape = "circles", pie = NULL, labels, font, cex, scale.ratio,
+     asp = 1, legend = FALSE, fast = FALSE, show.mutation,
+     threshold = c(1, 2), xy = NULL, ...)
 \method{as.network}{haploNet}(x, directed = FALSE, altlinks = TRUE, ...)
 \method{as.igraph}{haploNet}(x, directed = FALSE, use.labels = TRUE,
         altlinks = TRUE, ...)
@@ -45,6 +44,9 @@ haploNet(h, d = NULL, getProb = TRUE)
   \item{lwd}{a numeric vector giving the width of the links; eventually
     recycled.}
   \item{lty}{idem for the line types.}
+  \item{shape}{the symbol shape used for the haplotypes (eventually
+    recycled): \code{"circles"}, \code{"squares"}, \code{"diamonds"}
+    (can be abbreviated).}
   \item{pie}{a matrix used to draw pie charts for each haplotype; its
     number of rows must be equal to the number of haplotypes.}
   \item{labels}{a logical specifying whether to identify the haplotypes
@@ -80,6 +82,7 @@ haploNet(h, d = NULL, getProb = TRUE)
     converting to another class; \code{TRUE} by default.}
   \item{quiet}{whether to give a warning when reticulations are dropped
     when converting a network into a tree.}
+  \item{xy}{the coordinates of the nodes (see \code{\link{replot}}).}
   \item{\dots}{further arguments passed to \code{plot}.}
 }
 \details{
