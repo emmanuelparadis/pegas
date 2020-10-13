@@ -1,4 +1,4 @@
-## haplotype.R (2020-10-12)
+## haplotype.R (2020-10-13)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -558,7 +558,7 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
     }
 }
 
-.mutationRug <- function(x0, y0, x1, y1, n, space = 0.05, length = 0.2)
+.mutationRug <- function(x0, y0, x1, y1, n, deltaRadii, space = 0.05, length = 0.2)
 {
     ## convert inches into user-coordinates:
     l <- xinch(length)
@@ -585,8 +585,18 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
             ystop <- xy.stop$y
         }
         ## translation:
-        xm <- (x0[i] + x1[i])/2
-        ym <- (y0[i] + y1[i])/2
+        if (deltaRadii[i] == 0) {
+            xm <- (x0[i] + x1[i]) / 2
+            ym <- (y0[i] + y1[i]) / 2
+           } else {
+               ## see explanations below
+               li <- sqrt((x0[i] - x1[i])^2 + (y0[i] - y1[i])^2)
+               w0 <- 1 / (li - deltaRadii[i] / 2)
+               w1 <- 1 / (li + deltaRadii[i] / 2)
+               sumw <- w0 + w1
+               xm <- (x0[i] * w0 + x1[i] * w1) / sumw
+               ym <- (y0[i] * w0 + y1[i] * w1) / sumw
+        }
         xstart <- xstart + xm
         ystart <- ystart + ym
         xstop <- xstop + xm
@@ -595,7 +605,7 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
     }
 }
 
-.labelSegmentsHaploNet <- function(xx, yy, link, step, size, lwd, col.link, method)
+.labelSegmentsHaploNet <- function(xx, yy, link, step, size, lwd, col.link, method, scale.ratio)
 {
 ### method: the way the segments are labelled
 ### 1: small segments
@@ -605,10 +615,10 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
     l1 <- link[, 1]
     l2 <- link[, 2]
     switch(method, {
-        .mutationRug(xx[l1], yy[l1], xx[l2], yy[l2], step)
+        .mutationRug(xx[l1], yy[l1], xx[l2], yy[l2], step, size[l2] - size[l1])
     }, {
         ld1 <- step
-        ld2 <- step# * scale.ratio
+        ld2 <- step * scale.ratio
         for (i in seq_along(ld1)) {
             pc <- ((1:ld1[i]) / (ld1[i] + 1) * ld2[i] + size[l1[i]]/2) / (ld2[i] + (size[l1[i]] + size[l2[i]])/2)
             xr <- pc * (xx[l2[i]] - xx[l1[i]]) +  xx[l1[i]]
@@ -617,8 +627,31 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
                     add = TRUE, fg = col.link, bg = col.link)
         }
     }, {
-        x <- (xx[l1] + xx[l2])/2
-        y <- (yy[l1] + yy[l2])/2
+        x0 <- xx[l1]
+        x1 <- xx[l2]
+        y0 <- yy[l1]
+        y1 <- yy[l2]
+        x <- (x0 + x1) / 2
+        y <- (y0 + y1) / 2
+        deltaRadii <- size[l2] - size[l1]
+        if (any(s <- deltaRadii != 0)) {
+### if there are links between symbols of different size: need to place the
+### annotation in the middle of the "visible" part of the link. We do that
+### with a weighting mean of the coordinates (simpler to calculate than
+### trogonometric formulas). We do that only for the different sized symbols.
+            s <- which(s)
+            ## lengths between each pair of nodes:
+            l <- sqrt((x0[s] - x1[s])^2 + (y0[s] - y1[s])^2)
+            ## difference in radii (keep in mind that 'size' are diameters,
+            ## so we need to divide by 2):
+            deltaRadii <- deltaRadii[s] / 2
+            ## weights for the mean:
+            w0 <- 1 / (l - deltaRadii)
+            w1 <- 1 / (l + deltaRadii)
+            sumw <- w0 + w1
+            x[s] <- (x0[s] * w0 + x1[s] * w1) / sumw
+            y[s] <- (y0[s] * w0 + y1[s] * w1) / sumw
+        }
         BOTHlabels(step, NULL, x, y, c(0.5, 0.5), "rect", NULL, NULL,
                    NULL, NULL, "black", "lightgrey", FALSE, NULL, NULL)
     })
@@ -722,7 +755,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
              show.mutation, threshold = c(1, 2), xy = NULL, ...)
 {
     ## map options to arguments
-    OPTS <- get("plotHaploNetOptions", envir = .PlotHaploNetEnv)
+    OPTS <- get("plotHaploNetOptions", envir = pegas:::.PlotHaploNetEnv)
     if (missing(col)) col <- OPTS$haplotype.outer.color
     if (missing(bg)) bg <- OPTS$haplotype.inner.color
     if (missing(col.link)) col.link <- OPTS$link.color
@@ -946,7 +979,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
             show.mutation <- 3
         }
         .labelSegmentsHaploNet(xx, yy, link, x[, 3], size, lwd, col.link,
-                               show.mutation)
+                               show.mutation, scale.ratio)
     }
 
     .drawSymbolsHaploNet(xx, yy, size, col, bg, shape, pie)
@@ -1012,7 +1045,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
                 col.link = col.link,labels = labels, font = font, cex = cex,
                 asp = asp, pie = pie, show.mutation = show.mutation,
                 alter.links = altlink, threshold = threshold),
-           envir = .PlotHaploNetEnv)
+           envir = pegas:::.PlotHaploNetEnv)
 }
 
 plot.haplotype <- function(x, xlab = "Haplotype", ylab = "Number", ...)
