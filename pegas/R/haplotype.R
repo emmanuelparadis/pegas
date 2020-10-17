@@ -1,4 +1,4 @@
-## haplotype.R (2020-10-13)
+## haplotype.R (2020-10-17)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -313,10 +313,9 @@ haploFreq <- function(x, fac, split = "_", what = 2, haplo = NULL)
 
 diffHaplo <- function(h, a = 1, b = 2, strict = FALSE, trailingGapsAsN = TRUE)
 {
-    s <- seg.sites(h[c(a, b), ], strict = strict,
-                   trailingGapsAsN = trailingGapsAsN)
-    x <- h[c(a, b), s]
-    data.frame(pos = s, toupper(t(as.character(x))))
+    x <- h[c(a, b), ]
+    s <- seg.sites(x, strict = strict, trailingGapsAsN = trailingGapsAsN)
+    data.frame(pos = s, toupper(t(as.character(x[, s]))))
 }
 
 .TempletonProb <- function(j, S, b = 2, r = 1)
@@ -755,7 +754,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
              show.mutation, threshold = c(1, 2), xy = NULL, ...)
 {
     ## map options to arguments
-    OPTS <- get("plotHaploNetOptions", envir = pegas:::.PlotHaploNetEnv)
+    OPTS <- get("plotHaploNetOptions", envir = .PlotHaploNetEnv)
     if (missing(col)) col <- OPTS$haplotype.outer.color
     if (missing(bg)) bg <- OPTS$haplotype.inner.color
     if (missing(col.link)) col.link <- OPTS$link.color
@@ -1045,7 +1044,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
                 col.link = col.link,labels = labels, font = font, cex = cex,
                 asp = asp, pie = pie, show.mutation = show.mutation,
                 alter.links = altlink, threshold = threshold),
-           envir = pegas:::.PlotHaploNetEnv)
+           envir = .PlotHaploNetEnv)
 }
 
 plot.haplotype <- function(x, xlab = "Haplotype", ylab = "Number", ...)
@@ -1783,12 +1782,13 @@ mutations <- function(haploNet, link, x, y, data = NULL, style = "table",
                       POS, SEQLEN, ...)
 {
     m <- haploNet[, 1:2, drop = FALSE]
+    labs <- labels.haploNet(haploNet)
     if (!is.null(attr(haploNet, "alter.links")))
-        m <- rbind(m, attr(haploNet, "alter.links")[, 1:2])
+        m <- rbind(m, attr(haploNet, "alter.links")[, 1:2, drop = FALSE])
     if (missing(link)) {
         cat("Link is missing: select one below\n")
-        labs <- labels(haploNet)
         cat(paste0(1:nrow(m), ": ", labs[m[, 1]], "-", labs[m[, 2]]), sep = "\n")
+        cat("\nEnter a link number:")
         link <- as.integer(readLines(n = 1))
     }
     if (link < 1 || link > nrow(m) || is.na(link)) stop("wrong value")
@@ -1797,7 +1797,7 @@ mutations <- function(haploNet, link, x, y, data = NULL, style = "table",
     xx.link <- sum(Last.phn$xx[nodes]) / 2
     yy.link <- sum(Last.phn$yy[nodes]) / 2
     if (missing(x) || missing(y)) {
-        cat("Coordinates are missing: click where you want to place the annotations...")
+        cat("Coordinates are missing: click where you want to place the annotations:")
         xy <- locator(1)
         x <- xy$x
         y <- xy$y
@@ -1840,9 +1840,9 @@ mutations <- function(haploNet, link, x, y, data = NULL, style = "table",
     }
     ## get the mutations
     if (dnabin) {
-        mu <- diffHaplo(data, m[link, 1], m[link, 2])
+        mu <- diffHaplo(data, labs[m[link, 1]], labs[m[link, 2]])
     } else {
-        mu <- .diffHaplo.loci(data, m[link, 1], m[link, 2])
+        mu <- .diffHaplo.loci(data, labs[m[link, 1]], labs[m[link, 2]])
         mu$pos <- POS[mu$pos]
     }
     nmu <- nrow(mu)
@@ -1884,7 +1884,7 @@ mutations <- function(haploNet, link, x, y, data = NULL, style = "table",
         W <- WIDTH * mutations.sequence.length # real width of the segment
         x2 <- x + W
         segments(x, y, x2, y, lwd = mutations.sequence.width,
-                 col = mutations.sequence.color, end = mutations.sequence.end)
+                 col = mutations.sequence.color, lend = mutations.sequence.end)
         ## text(x2, y, " 1 kb", adj = 0)
         xx <- x + W * mu[[1]] / SEQLEN
         segments(xx, y - 0.5, xx, y + 0.5)
@@ -1892,5 +1892,5 @@ mutations <- function(haploNet, link, x, y, data = NULL, style = "table",
         y0 <- y
     })
     fancyarrows(x0, y0, xx.link, yy.link, col = mutations.arrow.color,
-                style = mutations.arrow.type)
+                code = mutations.arrow.type)
 }

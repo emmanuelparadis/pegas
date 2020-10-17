@@ -23,6 +23,7 @@ setHaploNetTheme(theme)
   \code{\link[graphics]{par}}).
 
 \itemize{
+  \item{bg = "transparent"}{the background colour of the plot.}
   \item{labels = TRUE}{whether to show the haplotype labels.}
   \item{labels.cex = 1}{size of the haplotype labels.}
   \item{labels.font = 2}{font of the haplotype labels.}

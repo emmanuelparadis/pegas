@@ -10,7 +10,7 @@
 mjn(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_",
     quiet = FALSE)
 \method{plot}{mjn}(x, shape = c("circles", "diamonds"),
-      bg = c("green", "slategrey"), ...)
+      bg = c("green", "slategrey"), labels = FALSE, ...)
 }
 \arguments{
   \item{x}{a matrix (or data frame) of DNA sequences or binary 0/1
@@ -22,6 +22,7 @@ mjn(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_",
     calculatins is printed.}
   \item{shape, bg}{the default shapes and colours for observed
     haplotypes and median vectors.}
+  \item{labels}{by default, the labels of the haplotypes are printed.}
   \item{\dots}{other arguments passed to \code{\link{plot.haploNet}}.}
 }
 \details{

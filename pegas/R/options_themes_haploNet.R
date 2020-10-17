@@ -1,4 +1,4 @@
-## options_themes_haploNet.R (2020-10-12)
+## options_themes_haploNet.R (2020-10-17)
 
 ##   Options and Themes to Plot "haploNet" Objects
 
@@ -33,17 +33,22 @@ setHaploNetTheme <- function(theme)
         cat("List of themes:\n")
         cat(.list.themes.haploNet, sep = "\n")
     } else {
-        setHaploNetOptions(get(paste0(".theme.", theme)))
+        if (! theme %in% .list.themes.haploNet) {
+            warning(paste("theme", theme, "not found"))
+        } else {
+            L <- get(paste0(".theme.", theme))
+            par(bg = L[[1]])
+            do.call(setHaploNetOptions, L[-1])
+        }
     }
 }
 
 ## themes ... maybe better to move them elsewhere?...
 
-.list.themes.haploNet <- c(
-    ".theme.puma",
-    ".theme.tiger")
+.list.themes.haploNet <- c("puma", "tiger")
 
 .theme.puma <- list(
+    bg = "slategrey",
     labels = FALSE,
     labels.cex = 1,
     labels.font = 2,
@@ -73,6 +78,7 @@ setHaploNetTheme <- function(theme)
     show.mutation = 3)
 
 .theme.tiger <- list(
+    bg = "slategrey",
     labels = FALSE,
     labels.cex = 1,
     labels.font = 2,

@@ -77,6 +77,7 @@ S3method(all.equal, haploNet)
 S3method(as.phylo, haploNet)
 S3method(as.evonet, haploNet)
 S3method(cophenetic, haploNet)
+S3method(labels, haploNet)
 S3method(plot, haploNet)
 S3method(print, haploNet)
 

@@ -296,12 +296,11 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
 }
 
 plot.mjn <- function(x, shape = c("circles", "diamonds"),
-                     bg = c("green", "slategrey"), ...)
+                     bg = c("green", "slategrey"), labels = FALSE, ...)
 {
-    class(x) <- "haploNet"
     prefix <- attr(x, "prefix")
     labs <- labels(x)
     ## identify the median vectors among the labels (1 or 2):
     mv <- grepl(paste0("^", prefix), labs) + 1L
-    plot.haploNet(x, bg = bg[mv], shape = shape[mv], labels = FALSE, ...)
+    plot.haploNet(x, bg = bg[mv], shape = shape[mv], labels = labels, ...)
 }
