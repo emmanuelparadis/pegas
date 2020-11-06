@@ -6,7 +6,8 @@ NEW FEATURES
     o The new function mutations() draws mutations on a network (with
       many options; see ?mutations).
 
-    o There is a new cophenetic() method for objects of class "haploNet".
+    o There is a new cophenetic() method for objects of class
+      "haploNet" as well as a labels() method.
 
     o diffHaplo() has been simplified and gains the options 'strict'
       and 'trailingGapsAsN' which are passed to ape::seg.sites().
@@ -15,7 +16,7 @@ NEW FEATURES
       improved and is now 10 times faster (25 times with 100 sequences
       resulting in running times less than 15 sec). The returned
       object have the class c("mjn", "haploNet") and there is a new
-      plot() method for the class "mjn".
+      plot.mjn() method.
 
     o replot() has been improved: the instructions are more detailed,
       there is a new option 'col.identifier' to show the node to be
@@ -33,6 +34,14 @@ NEW FEATURES
       new links are found: this is controlled by the new options
       'stop.criterion' and 'iter.lim'. There is also a new option
       'quiet = FALSE'.
+
+
+BUG FIXES
+
+    o A bug was fixed in geoTrans2().
+
+    o as.loci.data.frame() now works with "tibble" objects (thanks to
+      Jean-Baka Domelevo Entfellner for the fix).
 
 
 

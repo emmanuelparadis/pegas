@@ -1,4 +1,4 @@
-## geo.R (2020-03-05)
+## geo.R (2020-10-20)
 
 ##   Tools for Geographic Data
 
@@ -38,9 +38,9 @@ geoTrans2 <- function(lon, lat = NULL, degsym = NULL, minsym = "'",
     }
     if (is.null(degsym)) degsym <- "\u00b0"
     foo <- function(x) {
-        d <- floor(x)
+        d <- floor(round(x, 8))
         m2 <- (x - d) * 60
-        m <- floor(m2)
+        m <- floor(round(m2, 8))
         s <- round(60 * (m2 - m), digits = digits)
         if (dropzero) {
             m <- ifelse(m == 0 & s == 0, "", paste0(m, minsym))

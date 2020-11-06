@@ -1,4 +1,4 @@
-## conversion.R (2020-03-02)
+## conversion.R (2020-11-06)
 
 ##   Conversion Among Allelic Data Classes
 
@@ -167,7 +167,7 @@ as.loci.data.frame <-
         col.pop <- which(names(x) == col.pop)
     if (is.numeric(col.pop)) {
         names(x)[col.pop] <- "population"
-        x[, col.pop] <- factor(x[, col.pop])
+        x[[col.pop]] <- factor(x[[col.pop]])
     }
     if (is.null(col.loci)) {
         col.loci <- 1:ncol(x)
