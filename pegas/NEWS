@@ -6,6 +6,9 @@ NEW FEATURES
     o The new function mutations() draws mutations on a network (with
       many options; see ?mutations).
 
+    o The new function write.vcf writes an object of class "loci" into
+      a VCF file.
+
     o There is a new cophenetic() method for objects of class
       "haploNet" as well as a labels() method.
 

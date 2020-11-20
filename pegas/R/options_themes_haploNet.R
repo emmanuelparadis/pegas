@@ -45,7 +45,7 @@ setHaploNetTheme <- function(theme)
 
 ## themes ... maybe better to move them elsewhere?...
 
-.list.themes.haploNet <- c("puma", "tiger")
+.list.themes.haploNet <- c("puma", "tiger") # "whale", "leopard", "forest", "coral", "tundra"
 
 .theme.puma <- list(
     bg = "slategrey",
@@ -78,7 +78,7 @@ setHaploNetTheme <- function(theme)
     show.mutation = 3)
 
 .theme.tiger <- list(
-    bg = "slategrey",
+    bg = "yellow3",
     labels = FALSE,
     labels.cex = 1,
     labels.font = 2,
@@ -87,8 +87,8 @@ setHaploNetTheme <- function(theme)
     link.type.alt = 2,
     link.width = 1,
     link.width.alt = 1,
-    haplotype.inner.color = "yellow3",
-    haplotype.outer.color = "yellow3",
+    haplotype.inner.color = "navy",
+    haplotype.outer.color = "navy",
     haplotype.shape = "squares",
     mutations.cex = 1,
     mutations.font = 1,

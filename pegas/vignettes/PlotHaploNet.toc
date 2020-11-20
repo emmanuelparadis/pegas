@@ -1,0 +1,6 @@
+\contentsline {section}{\numberline {1}Background}{1}%
+\contentsline {subsection}{\numberline {1.1}Layout Algorithm}{1}%
+\contentsline {section}{\numberline {2}New Features in \textsf {pegas}\ 1.0}{1}%
+\contentsline {subsection}{\numberline {2.1}Improved ``Replotting''}{1}%
+\contentsline {subsection}{\numberline {2.2}Haplotype Symbol Shapes}{1}%
+\contentsline {subsection}{\numberline {2.3}Themes}{3}%

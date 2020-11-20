@@ -1,11 +1,17 @@
 \name{read.vcf}
 \alias{read.vcf}
+\alias{write.vcf}
 \title{Read Variant Calling Format Files}
 \description{
-  This function reads allelic data from VCF (variant calling format) files.
+  \code{read.vcf(} reads allelic data from VCF (variant calling format)
+  files.
+
+  code{write.vcf(} writes allelic data from an object of class
+  \code{"loci"} into a VCF file.
 }
 \usage{
 read.vcf(file, from = 1, to = 10000, which.loci = NULL, quiet = FALSE)
+write.vcf(x, file, quiet = FALSE)
 }
 \arguments{
   \item{file}{a file name specified by either a variable of mode character,
@@ -13,7 +19,9 @@ read.vcf(file, from = 1, to = 10000, which.loci = NULL, quiet = FALSE)
   \item{from, to}{the loci to read; by default, the first 10,000.}
   \item{which.loci}{an alternative way to specify which loci to read is
     to give their indices (see \code{link{VCFloci}} how to obtain them).}
-  \item{quiet}{a logical: should the progress of the operation be printed?}
+  \item{quiet}{a logical: should the progress of the operation be
+    printed?}
+  \item{x}{an object of class \code{"loci"}.}
 }
 \details{
   The VCF file can be compressed (*.gz) or not. Since pegas 0.11,

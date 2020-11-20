@@ -14,7 +14,7 @@ export(alleles2loci, allelicrichness, amova, as.igraph.haploNet,
        setHaploNetOptions, setHaploNetTheme, site.spectrum, stairway,
        sw, tajima.test, theta.h, theta.k, theta.msat, theta.s,
        unphase, theta.tree, theta.tree.hetero, VCFheader, VCFlabels,
-       VCFloci, write.loci, write.pegas.amova)
+       VCFloci, write.loci, write.pegas.amova, write.vcf)
 
 importFrom(ape, as.evonet, as.phylo, BOTHlabels, branching.times,
            base.freq, dist.dna, dist.nodes, fancyarrows, floating.pie.asp,

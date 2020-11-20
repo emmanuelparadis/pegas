@@ -1,8 +1,8 @@
-## IO.R (2019-11-15)
+## IO.R (2020-11-20)
 
 ##   Input/Ouput
 
-## Copyright 2009-2019 Emmanuel Paradis
+## Copyright 2009-2020 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -184,3 +184,43 @@ edit.loci <- function(name, edit.row.names = TRUE, ...)
     attr(name, "locicol") <- locicol
     name
 }
+
+write.vcf <- function(x, file, quiet = FALSE)
+{
+    if (!inherits(x, "loci")) stop("wrong class")
+    ALLELES <- summary(x)
+    ALLELES <- lapply(ALLELES, "[[", "allele")
+    LOCI <- attr(x, "locicol")
+    NAMES <- names(x)
+    cat("##fileformat=VCFv4.1\n", file = file)
+    cat("##File produced by pegas (", file = file, append = TRUE)
+    cat(date(), file = file, append = TRUE)
+    cat(")\n", file = file, append = TRUE)
+    tmp <- paste(c("#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER",
+                   "INFO", "FORMAT", row.names(x)), collapse = "\t")
+    cat(tmp, file = file, append = TRUE)
+    cat("\n", file = file, append = TRUE)
+    class(x) <- NULL
+    for (j in LOCI) {
+        if (!quiet) cat("\r", j, "/", length(LOCI))
+        alls <- sort(ALLELES[[j]], decreasing = TRUE)
+        nalls <- length(alls)
+        REF <- names(alls)[1]
+        ALT <- names(alls)[-1]
+        y <- x[[j]]
+        geno <- levels(y)
+        ngeno <- length(geno)
+        newgeno <- character(ngeno)
+        o <- .C("translateGenotypesForVCF", geno, newgeno, ngeno,
+                names(alls), nalls)
+        newgeno <- o[[2]]
+        y <- newgeno[as.integer(y)]
+        if (nalls > 2) ALT <- paste0(ALT, collapse = ",")
+        pref <- c(".", ".", NAMES[j], REF, ALT, ".", ".", ".", "GT")
+        tmp <- paste(c(pref, y), collapse = "\t")
+        cat(tmp, file = file, append = TRUE)
+        cat("\n", file = file, append = TRUE)
+    }
+    if (!quiet) cat("\n")
+}
+

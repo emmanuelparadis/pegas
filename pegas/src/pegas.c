@@ -1,4 +1,4 @@
-/* pegas.c    2020-10-12 */
+/* pegas.c    2020-11-20 */
 
 /* Copyright 2015-2020 Emmanuel Paradis */
 
@@ -324,10 +324,114 @@ void getMedianVectors_DNAbin_mjn(unsigned char *x, int *p, unsigned char *res, i
     }
 }
 
+
+#include <R.h>
+#include <Rinternals.h>
+
+/* fast tabulation (4 times faster than tabulate(); see write.vcf.R
+   ===> code unused <===
+SEXP C_tabulate_pegas(SEXP x, SEXP ncat) {
+    SEXP res;
+    PROTECT(x = coerceVector(x, INTSXP));
+    PROTECT(ncat = coerceVector(ncat, INTSXP));
+    int n = LENGTH(x);
+    int nc = INTEGER(ncat)[0];
+    PROTECT(res = allocVector(INTSXP, nc));
+    int *y = INTEGER(res);
+    memset(y, 0, nc * sizeof(int));
+    int *xp = INTEGER(x);
+    for (int i = 0; i < n; i++) ++y[xp[i]]; // O's are also counted
+    UNPROTECT(3);
+    return res;
+    }*/
+
+/* two functions to compare sprintf() and int2str():
+
+void funfoo(int *x, char **y, int *n)
+{
+    for (int i = 0; i < *n; i++) sprintf(y[i], "%d", x[i]);
+}
+
+SEXP funbar(SEXP x) {
+    SEXP res;
+    PROTECT(x = coerceVector(x, INTSXP));
+    int n = LENGTH(x);
+    PROTECT(res = allocVector(STRSXP, n));
+    int * xp = INTEGER(x);
+    char y[100];
+    for (int i = 0; i < n; i++) {
+	int2str(xp[i], y);
+	SET_STRING_ELT(res, i, mkChar(y));
+    }
+    UNPROTECT(2);
+    return res;
+}
+*/
+
+/* translates integers 0..999 into a char string
+   => 8 times faster than using sprintf() */
+int int2str(int x, char *str)
+{
+    static char digits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    if (x < 10) {
+	str[0] = digits[x];
+	str[1] = '\0';
+	return 1;
+    }
+    if (x < 100) {
+	str[0] = digits[x/10];
+	str[1] = digits[x % 10];
+	str[2] = '\0';
+	return 2;
+    }
+    if (x < 1000) {
+	str[0] = digits[x/100];
+	str[1] = digits[x/10 % 10];
+	str[2] = digits[x % 10];
+	str[3] = '\0';
+	return 3;
+    }
+}
+
+void translateGenotypesForVCF(char **old, char **new, int *ngeno, char **alleles, int *nall)
+{
+    int a = 0, b = 1, i = 0, j, k, l, in = 0, nd;
+    char buf[100], c;
+
+    for (;;) {
+	if (i >= *ngeno) break;
+	for (;;) {
+	    if (old[i][b] == '/' || old[i][b] == '|' || old[i][b] == '\0')
+		break;
+	    b++;
+	}
+	for (k = 0, l = a; l < b; k++, l++)
+	    buf[k] = old[i][l];
+	buf[k] = '\0';
+	for (j = 0; j < *nall; j++) {
+	    if (! strcmp(alleles[j], buf)) break;
+	}
+	nd = int2str(j, buf);
+	for (k = 0; k < nd; k++, in++) new[i][in] = buf[k];
+	c = old[i][b];
+	new[i][in++] = c;
+	if (c == '\0') {
+	    i++;
+	    in = 0;
+	    a = 0;
+	    b = 1;
+	} else {
+	    a = b + 1;
+	    b = a + 1;
+	}
+    }
+}
+
 static R_CMethodDef C_entries[] = {
     {"haplotype_DNAbin", (DL_FUNC) &haplotype_DNAbin, 6},
     {"distDNA_pegas", (DL_FUNC) &distDNA_pegas, 4},
     {"getMedianVectors_DNAbin_mjn", (DL_FUNC) &getMedianVectors_DNAbin_mjn, 4},
+    {"translateGenotypesForVCF", (DL_FUNC) &translateGenotypesForVCF, 5},
     {NULL, NULL, 0}
 };
 
