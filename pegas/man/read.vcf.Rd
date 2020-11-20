@@ -11,7 +11,7 @@
 }
 \usage{
 read.vcf(file, from = 1, to = 10000, which.loci = NULL, quiet = FALSE)
-write.vcf(x, file, quiet = FALSE)
+write.vcf(x, file, CHROM = NULL, POS = NULL, quiet = FALSE)
 }
 \arguments{
   \item{file}{a file name specified by either a variable of mode character,
@@ -22,6 +22,8 @@ write.vcf(x, file, quiet = FALSE)
   \item{quiet}{a logical: should the progress of the operation be
     printed?}
   \item{x}{an object of class \code{"loci"}.}
+  \item{CHROM, POS}{two vectors giving the chromosomes and (genomic)
+    positions of the loci (typically from the output of \code{\link{VCFloci}}).}
 }
 \details{
   The VCF file can be compressed (*.gz) or not. Since pegas 0.11,

@@ -185,12 +185,25 @@ edit.loci <- function(name, edit.row.names = TRUE, ...)
     name
 }
 
-write.vcf <- function(x, file, quiet = FALSE)
+write.vcf <- function(x, file, CHROM = NULL, POS = NULL, quiet = FALSE)
 {
-    if (!inherits(x, "loci")) stop("wrong class")
+    if (!inherits(x, "loci")) stop("'x' should be of class \"loci\"")
     ALLELES <- summary(x)
     ALLELES <- lapply(ALLELES, "[[", "allele")
     LOCI <- attr(x, "locicol")
+    nLOCI <- length(LOCI)
+    if (!is.null(CHROM)) {
+        if (length(CHROM) != nLOCI)
+            stop("length of 'CHROM' must be equal to the number of loci")
+    } else {
+        CHROM <- rep(".", nLOCI)
+    }
+    if (!is.null(POS)) {
+        if (length(POS) != nLOCI)
+            stop("length of 'POS' must be equal to the number of loci")
+    } else {
+        POS <- rep(".", nLOCI)
+    }
     NAMES <- names(x)
     cat("##fileformat=VCFv4.1\n", file = file)
     cat("##File produced by pegas (", file = file, append = TRUE)
@@ -201,7 +214,9 @@ write.vcf <- function(x, file, quiet = FALSE)
     cat(tmp, file = file, append = TRUE)
     cat("\n", file = file, append = TRUE)
     class(x) <- NULL
+    i <- 0L
     for (j in LOCI) {
+        i <- i + 1L
         if (!quiet) cat("\r", j, "/", length(LOCI))
         alls <- sort(ALLELES[[j]], decreasing = TRUE)
         nalls <- length(alls)
@@ -211,12 +226,12 @@ write.vcf <- function(x, file, quiet = FALSE)
         geno <- levels(y)
         ngeno <- length(geno)
         newgeno <- character(ngeno)
-        o <- .C("translateGenotypesForVCF", geno, newgeno, ngeno,
+        o <- .C(translateGenotypesForVCF, geno, newgeno, ngeno,
                 names(alls), nalls)
         newgeno <- o[[2]]
         y <- newgeno[as.integer(y)]
         if (nalls > 2) ALT <- paste0(ALT, collapse = ",")
-        pref <- c(".", ".", NAMES[j], REF, ALT, ".", ".", ".", "GT")
+        pref <- c(CHROM[i], POS[i], NAMES[j], REF, ALT, ".", ".", ".", "GT")
         tmp <- paste(c(pref, y), collapse = "\t")
         cat(tmp, file = file, append = TRUE)
         cat("\n", file = file, append = TRUE)
