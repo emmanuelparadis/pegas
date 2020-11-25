@@ -1,8 +1,8 @@
-## allelicrichness.R (2019-10-03)
+## allelicrichness.R (2020-11-25)
 
 ##   F-Statistics
 
-## Copyright 2019 Emmanuel Paradis
+## Copyright 2019-2020 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -39,12 +39,21 @@ rarefactionplot <-
     invisible(YY)
 }
 
-allelicrichness <- function(x, pop = NULL, method = "extrapolation")
+allelicrichness <- function(x, pop = NULL, method = "extrapolation", min.n = NULL)
 {
     method <- match.arg(method, c("extrapolation", "rarefaction", "raw"))
     s <- summary.loci(x)
     s <- lapply(s, "[[", "allele")
     nloci <- length(s)
+    if (!is.null(pop)) {
+        if (length(pop) == 1 && is.numeric(pop)) {
+            names(x)[pop] <- "population"
+        } else {
+            if (length(pop) != nrow(x))
+                stop("'pop' must have the same length than the number of rows in 'x'")
+            x$population <- pop
+        }
+    }
     bypop <- by(x)
     nbypop <- tabulate(x$population)
     npop <- length(nbypop)
@@ -64,10 +73,11 @@ allelicrichness <- function(x, pop = NULL, method = "extrapolation")
             }
         }
     }, "rarefaction" = {
+        if (is.null(min.n)) min.n <- min(sapply(bypop, rowSums))
         for (j in seq_len(nloci)) {
             tab <- bypop[[j]]
             for (i in 1:npop)
-                res[i, j] <- .eq13.Hurlbert1971(sum(tab[i, ]), tab[i, ])
+                res[i, j] <- .eq13.Hurlbert1971(min.n, tab[i, ])
         }
     }, "raw" = {
         for (j in seq_len(nloci)) {

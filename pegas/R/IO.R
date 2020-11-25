@@ -192,17 +192,17 @@ write.vcf <- function(x, file, CHROM = NULL, POS = NULL, quiet = FALSE)
     ALLELES <- lapply(ALLELES, "[[", "allele")
     LOCI <- attr(x, "locicol")
     nLOCI <- length(LOCI)
-    if (!is.null(CHROM)) {
+    if (is.null(CHROM)) {
+        CHROM <- rep(".", nLOCI)
+    } else {
         if (length(CHROM) != nLOCI)
             stop("length of 'CHROM' must be equal to the number of loci")
-    } else {
-        CHROM <- rep(".", nLOCI)
     }
-    if (!is.null(POS)) {
+    if (is.null(POS)) {
+        POS <- rep(".", nLOCI)
+    } else {
         if (length(POS) != nLOCI)
             stop("length of 'POS' must be equal to the number of loci")
-    } else {
-        POS <- rep(".", nLOCI)
     }
     NAMES <- names(x)
     cat("##fileformat=VCFv4.1\n", file = file)
@@ -217,7 +217,7 @@ write.vcf <- function(x, file, CHROM = NULL, POS = NULL, quiet = FALSE)
     i <- 0L
     for (j in LOCI) {
         i <- i + 1L
-        if (!quiet) cat("\r", j, "/", length(LOCI))
+        if (!quiet && j %% 100 == 0) cat("\r", j, "/", length(LOCI))
         alls <- sort(ALLELES[[j]], decreasing = TRUE)
         nalls <- length(alls)
         REF <- names(alls)[1]

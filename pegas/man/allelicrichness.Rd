@@ -7,7 +7,7 @@
   These functions analyse allelic richness.
 }
 \usage{
-allelicrichness(x, pop = NULL, method = "extrapolation")
+allelicrichness(x, pop = NULL, method = "extrapolation", min.n = NULL)
 rarefactionplot(x, maxn = nrow(x), type = "l", xlab = "Sample size",
                 ylab = "Expected number of alleles", plot = TRUE, ...)
 rhost(x, pop = NULL, method = "extrapolation")
@@ -21,6 +21,8 @@ rhost(x, pop = NULL, method = "extrapolation")
   \item{method}{a character string which should be one of
     ``extrapolation'', ``rarefaction'', ``raw'' or an unambiguous
     abbreviation of these.}
+  \item{min.n}{the value of \eqn{n} used in the rarefaction method; by
+    default, the smallest observed number of genotypes within a population.}
   \item{maxn}{the largest sample size used to calculate the rarefaction
     curve.}
   \item{type, xlab, ylab}{arguments passed to \code{plot}.}
@@ -35,7 +37,7 @@ rhost(x, pop = NULL, method = "extrapolation")
   method (Hurlbert 1971), and the raw numbers of alleles.
 
   \code{rarefactionplot} computes the rarefaction curves of the number
-  of alleles with respect to sample size using the Hurlbert's (1971)
+  of alleles with respect to sample size using Hurlbert's (1971)
   method. A plot is made by default.
 }
 \value{

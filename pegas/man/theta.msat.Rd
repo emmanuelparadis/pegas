@@ -14,13 +14,14 @@ theta.msat(x)
   \item{x}{an object of class \code{"loci"}.}
 }
 \details{
-  The data must be micro-satellites, so the allele names must be the
-  repeat counts (see the example).
-
   The three estimators are based on (i) the variance of the number of
   repeats, (ii) the expected homozygosity (both described in Kimmel et
   al., 1998), and (iii) the mean allele frequencies (Haasl and Payseur,
   2010).
+
+  The data must be micro-satellites, so the allele names must be the
+  allele sizes (see the example). If the data are expressed in repeat
+  counts, then only the first estimator is affected.
 }
 \value{
   a numeric matrix with loci as rows and the three estimates of

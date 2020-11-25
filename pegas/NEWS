@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.14-1
+		CHANGES IN PEGAS VERSION 0.14-2
 
 
 NEW FEATURES
@@ -24,7 +24,7 @@ NEW FEATURES
     o replot() has been improved: the instructions are more detailed,
       there is a new option 'col.identifier' to show the node to be
       moved, and the bounding box of the plot is now calculated
-      correctly to the network does not "shrink" after each move.
+      correctly so the network does not "shrink" after each move.
 
     o plot.haploNet() has two new options: 'shape' and 'xy' to change
       the symbol shapes and their coordinates, respectively.
@@ -34,7 +34,7 @@ NEW FEATURES
       the graphical paramaters when plotting haplotype networks.
 
     o rmst() implements a new algorithm to stop iterations after no
-      new links are found: this is controlled by the new options
+      new link is found: this is controlled by the new options
       'stop.criterion' and 'iter.lim'. There is also a new option
       'quiet = FALSE'.
 
@@ -45,6 +45,11 @@ BUG FIXES
 
     o as.loci.data.frame() now works with "tibble" objects (thanks to
       Jean-Baka Domelevo Entfellner for the fix).
+
+    o allelicrichness(, method = "rarefaction") used to return the raw
+      allelic richness: this is fixed and this function gains the
+      option 'min.n' to work with this method (common sample size used
+      for all populations).
 
 
 
