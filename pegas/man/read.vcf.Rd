@@ -3,10 +3,10 @@
 \alias{write.vcf}
 \title{Read Variant Calling Format Files}
 \description{
-  \code{read.vcf(} reads allelic data from VCF (variant calling format)
+  \code{read.vcf} reads allelic data from VCF (variant calling format)
   files.
 
-  code{write.vcf(} writes allelic data from an object of class
+  \code{write.vcf} writes allelic data from an object of class
   \code{"loci"} into a VCF file.
 }
 \usage{

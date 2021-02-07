@@ -11,7 +11,7 @@ export(alleles2loci, allelicrichness, amova, as.igraph.haploNet,
        mst, MMD, mutations, nuc.div, plotNetMDS, proba.genotype,
        R2.test, rangePOS, rarefactionplot, read.gtx, read.loci,
        read.vcf, replot, rhost, rmst, rr.test, Rst, selectQUAL,
-       setHaploNetOptions, setHaploNetTheme, site.spectrum, stairway,
+       setHaploNetOptions, site.spectrum, stairway,
        sw, tajima.test, theta.h, theta.k, theta.msat, theta.s,
        unphase, theta.tree, theta.tree.hetero, VCFheader, VCFlabels,
        VCFloci, write.loci, write.pegas.amova, write.vcf)

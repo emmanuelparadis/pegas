@@ -25,7 +25,6 @@
 \setkeys{Gin}{width=\textwidth}
 <<echo=false,quiet=true>>=
 options(width=60)
-library(pegas, lib.loc = "~/tmp/pegas.Rcheck")
 @
 
 \section{Background}
@@ -33,6 +32,7 @@ library(pegas, lib.loc = "~/tmp/pegas.Rcheck")
 \subsection{Layout Algorithm}
 
 <<>>=
+library(pegas)#, lib.loc = "~/tmp/pegas.Rcheck")
 data(woodmouse)
 d <- dist.dna(woodmouse, "N")
 nt <- rmst(d, quiet = TRUE)
@@ -86,24 +86,36 @@ o <- mapply(pegas:::diamond, x = x, size = size, MoreArgs = other.args)
 text(x, -7, paste("size =", size), font = 2, col = "blue")
 @
 
-\noindent A diamond is simply a square rotated 45\textdegree\ around its center.
+\noindent A diamond is a square rotated 45\textdegree\ around its center.
 
-\subsection{Themes}
+\subsection{Optionss}
 
 
 <<fig=true>>=
-plot(nt)
+plot(nt, size = 2)
 @
 
 
 <<fig=true>>=
-setHaploNetTheme("puma")
-plot(nt)
+setHaploNetOptions(haplotype.inner.color = "#CCCC4D",
+                   haplotype.outer.color = "#CCCC4D",
+                   show.mutation = 3, labels = FALSE)
+plot(nt, size = 2)
 @
 
 <<fig=true>>=
-setHaploNetTheme("tiger")
-plot(nt)
+setHaploNetOptions(haplotype.inner.color = "blue",
+                   haplotype.outer.color = "blue",
+                   show.mutation = 1)
+par(bg = "yellow3")
+plot(nt, size = 2)
+@
+
+<<fig=true>>=
+setHaploNetOptions(haplotype.inner.color = "navy",
+                   haplotype.outer.color = "navy")
+par(bg = "lightblue")
+plot(nt, size = 2)
 @
 
 \end{document}

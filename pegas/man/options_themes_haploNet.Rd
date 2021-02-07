@@ -1,21 +1,17 @@
 \name{getHaploNetOptions}
 \alias{getHaploNetOptions}
 \alias{setHaploNetOptions}
-\alias{setHaploNetTheme}
-\title{Options and Themes to Plot haploNet Objects}
+\title{Options to Plot haploNet Objects}
 \description{
   These functions change the graphical options to plot haplotype networks.
 }
 \usage{
 getHaploNetOptions()
 setHaploNetOptions(...)
-setHaploNetTheme(theme)
 }
 \arguments{
   \item{...}{option(s) and value(s) to be changed (separated by commas
     if several).}
-  \item{theme}{the theme to be selected; if missing, the list of
-    available themes is printed.}
 }
 \details{
   The options are listed below with their default values. Most of these
@@ -36,8 +32,6 @@ setHaploNetTheme(theme)
     haplotype symbols.}
   \item{haplotype.outer.color = "black"}{colour used for the border of
     the haplotype symbols.}
-  \item{haplotype.shape = "circles"}{the default shape for the haplotype
-    symbols.}
   \item{mutations.cex = 1}{size of the mutation annotations.}
   \item{mutations.font = 1}{font of the mutation annotations.}
   \item{mutations.frame.background = "#0000FF4D"}{transparent blue.}
@@ -61,13 +55,12 @@ setHaploNetTheme(theme)
 }}
 \value{
   \code{getHaploNetOptions} returns a list of options. The other
-  functions return nothing.
+  function returns nothing.
 }
 \author{Emmanuel Paradis}
 \seealso{\code{\link{plot.haploNet}}, \code{\link{mutations}}}
 \examples{
 getHaploNetOptions()
-setHaploNetOptions(shape = "diamonds")
 }
 \keyword{hplot}
 \keyword{lplot}

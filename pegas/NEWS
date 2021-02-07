@@ -29,12 +29,12 @@ NEW FEATURES
     o plot.haploNet() has two new options: 'shape' and 'xy' to change
       the symbol shapes and their coordinates, respectively.
 
-    o There are three new functions, getHaploNetOptions,
-      setHaploNetOptions, and setHaploNetTheme, to help users change
-      the graphical paramaters when plotting haplotype networks.
+    o There are two new functions, getHaploNetOptions and
+      setHaploNetOptions, to help users change the graphical
+      paramaters when plotting haplotype networks.
 
     o rmst() implements a new algorithm to stop iterations after no
-      new link is found: this is controlled by the new options
+      new links are found: this is controlled by the new options
       'stop.criterion' and 'iter.lim'. There is also a new option
       'quiet = FALSE'.
 
@@ -50,6 +50,11 @@ BUG FIXES
       allelic richness: this is fixed and this function gains the
       option 'min.n' to work with this method (common sample size used
       for all populations).
+
+
+OTHER CHANGES
+
+    o adegenet has been moved from 'Depends' to 'Imports'.
 
 
 

@@ -1,4 +1,4 @@
-## options_themes_haploNet.R (2020-10-17)
+## options_themes_haploNet.R (2020-12-17)
 
 ##   Options and Themes to Plot "haploNet" Objects
 
@@ -27,84 +27,106 @@ setHaploNetOptions <- function(...)
     }
 }
 
-setHaploNetTheme <- function(theme)
-{
-    if (missing(theme)) {
-        cat("List of themes:\n")
-        cat(.list.themes.haploNet, sep = "\n")
-    } else {
-        if (! theme %in% .list.themes.haploNet) {
-            warning(paste("theme", theme, "not found"))
-        } else {
-            L <- get(paste0(".theme.", theme))
-            par(bg = L[[1]])
-            do.call(setHaploNetOptions, L[-1])
-        }
-    }
-}
-
-## themes ... maybe better to move them elsewhere?...
-
-.list.themes.haploNet <- c("puma", "tiger") # "whale", "leopard", "forest", "coral", "tundra"
-
-.theme.puma <- list(
-    bg = "slategrey",
-    labels = FALSE,
-    labels.cex = 1,
-    labels.font = 2,
-    link.color = "black",
-    link.type = 1,
-    link.type.alt = 2,
-    link.width = 1,
-    link.width.alt = 1,
-    haplotype.inner.color = "orange",
-    haplotype.outer.color = "orange",
-    haplotype.shape = "circles",
-    mutations.cex = 1,
-    mutations.font = 1,
-    mutations.frame.background = "#0000FF4D",
-    mutations.frame.border = "black",
-    mutations.text.color = 1,
-    mutations.arrow.color = "grey",
-    mutations.arrow.type = "triangle",
-    mutations.sequence.color = "slategrey",
-    mutations.sequence.end = "round",
-    mutations.sequence.length = 0.3,
-    mutations.sequence.width = 5,
-    pie.outer.color = "black",
-    pie.inner.segments.color = NULL,
-    pie.colors.function = colorRampPalette(c("white", "orange")),
-    scale.ratio = 1,
-    show.mutation = 3)
-
-.theme.tiger <- list(
-    bg = "yellow3",
-    labels = FALSE,
-    labels.cex = 1,
-    labels.font = 2,
-    link.color = "black",
-    link.type = 1,
-    link.type.alt = 2,
-    link.width = 1,
-    link.width.alt = 1,
-    haplotype.inner.color = "navy",
-    haplotype.outer.color = "navy",
-    haplotype.shape = "squares",
-    mutations.cex = 1,
-    mutations.font = 1,
-    mutations.frame.background = "#0000FF4D",
-    mutations.frame.border = "black",
-    mutations.text.color = 1,
-    mutations.arrow.color = "grey",
-    mutations.arrow.type = "triangle",
-    mutations.sequence.color = "slategrey",
-    mutations.sequence.end = "round",
-    mutations.sequence.length = 0.3,
-    mutations.sequence.width = 5,
-    pie.outer.color = "black",
-    pie.inner.segments.color = NULL,
-    pie.colors.function = colorRampPalette(c("white", "orange")),
-    scale.ratio = 1,
-    show.mutation = 1)
-
-
+#setHaploNetTheme <- function(theme)
+#{
+#    if (missing(theme)) {
+#        cat('List of themes: "puma", "tiger", "ocean"\n')
+#    } else {
+#        if (! theme %in% c("puma", "tiger", "whale")) {
+#            warning(paste("theme", dQuote(theme), "not found"))
+#        } else {
+#            L <- get(paste0(".theme.", theme))
+#            par(bg = L[[1]])
+#            do.call(setHaploNetOptions, L[-1])
+#        }
+#    }
+#}
+#
+#.theme.puma <- list(
+#    bg = "white",
+#    labels = FALSE,
+#    labels.cex = 1,
+#    labels.font = 2,
+#    link.color = "black",
+#    link.type = 1,
+#    link.type.alt = 2,
+#    link.width = 1,
+#    link.width.alt = 1,
+#    haplotype.inner.color = "#CCCC4D",
+#    haplotype.outer.color = "#CCCC4D",
+#    mutations.cex = 1,
+#    mutations.font = 1,
+#    mutations.frame.background = "#0000FF4D",
+#    mutations.frame.border = "black",
+#    mutations.text.color = 1,
+#    mutations.arrow.color = "grey",
+#    mutations.arrow.type = "triangle",
+#    mutations.sequence.color = "slategrey",
+#    mutations.sequence.end = "round",
+#    mutations.sequence.length = 0.3,
+#    mutations.sequence.width = 5,
+#    pie.outer.color = "black",
+#    pie.inner.segments.color = NULL,
+#    pie.colors.function = colorRampPalette(c("white", "#666626")),
+#    scale.ratio = 1,
+#    show.mutation = 3)
+#
+#.theme.tiger <- list(
+#    bg = "yellow3",
+#    labels = FALSE,
+#    labels.cex = 1,
+#    labels.font = 2,
+#    link.color = "black",
+#    link.type = 1,
+#    link.type.alt = 2,
+#    link.width = 1,
+#    link.width.alt = 1,
+#    haplotype.inner.color = "blue",
+#    haplotype.outer.color = "blue",
+#    mutations.cex = 1,
+#    mutations.font = 1,
+#    mutations.frame.background = "#0000FF4D",
+#    mutations.frame.border = "black",
+#    mutations.text.color = 1,
+#    mutations.arrow.color = "grey",
+#    mutations.arrow.type = "triangle",
+#    mutations.sequence.color = "slategrey",
+#    mutations.sequence.end = "round",
+#    mutations.sequence.length = 0.3,
+#    mutations.sequence.width = 5,
+#    pie.outer.color = "black",
+#    pie.inner.segments.color = NULL,
+#    pie.colors.function = colorRampPalette(c("white", "orange")),
+#    scale.ratio = 1,
+#    show.mutation = 1)
+#
+#.theme.ocean <- list(
+#    bg = "lightblue",
+#    labels = FALSE,
+#    labels.cex = 1,
+#    labels.font = 2,
+#    link.color = "white",
+#    link.type = 1,
+#    link.type.alt = 2,
+#    link.width = 1,
+#    link.width.alt = 1,
+#    haplotype.inner.color = "navy",
+#    haplotype.outer.color = "navy",
+#    mutations.cex = 1,
+#    mutations.font = 1,
+#    mutations.frame.background = "#0000FF4D",
+#    mutations.frame.border = "black",
+#    mutations.text.color = 1,
+#    mutations.arrow.color = "grey",
+#    mutations.arrow.type = "triangle",
+#    mutations.sequence.color = "slategrey",
+#    mutations.sequence.end = "round",
+#    mutations.sequence.length = 0.3,
+#    mutations.sequence.width = 5,
+#    pie.outer.color = "black",
+#    pie.inner.segments.color = NULL,
+#    pie.colors.function = colorRampPalette(c("white", "navy")),
+#    scale.ratio = 1,
+#    show.mutation = 1)
+#
+#

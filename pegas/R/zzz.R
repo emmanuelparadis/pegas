@@ -1,4 +1,4 @@
-## zzz.R (2020-10-12)
+## zzz.R (2020-12-15)
 
 ##   Library Loading
 
@@ -22,7 +22,6 @@ list(
     link.width.alt = 1,
     haplotype.inner.color = "white",
     haplotype.outer.color = "black",
-    haplotype.shape = "circles",
     mutations.cex = 1,
     mutations.font = 1,
     mutations.frame.background = "#0000FF4D",

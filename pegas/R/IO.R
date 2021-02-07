@@ -1,8 +1,8 @@
-## IO.R (2020-11-20)
+## IO.R (2021-02-07)
 
 ##   Input/Ouput
 
-## Copyright 2009-2020 Emmanuel Paradis
+## Copyright 2009-2021 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -205,20 +205,21 @@ write.vcf <- function(x, file, CHROM = NULL, POS = NULL, quiet = FALSE)
             stop("length of 'POS' must be equal to the number of loci")
     }
     NAMES <- names(x)
-    cat("##fileformat=VCFv4.1\n", file = file)
-    cat("##File produced by pegas (", file = file, append = TRUE)
-    cat(date(), file = file, append = TRUE)
-    cat(")\n", file = file, append = TRUE)
-    tmp <- paste(c("#CHROM", "POS", "ID", "REF", "ALT", "QUAL", "FILTER",
-                   "INFO", "FORMAT", row.names(x)), collapse = "\t")
-    cat(tmp, file = file, append = TRUE)
-    cat("\n", file = file, append = TRUE)
+    if (file.exists(file)) unlink(file)
+    con <- file(file, "ab")
+    tmp <- paste0(c("##fileformat=VCFv4.1\n##File produced by pegas (",
+                    date(), ")\n"), collapse = "")
+    writeBin(charToRaw(tmp), con)
+    tmp <- paste0(c("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT",
+                    row.names(x)), collapse = "\t")
+    LF <- charToRaw("\n")
+    writeBin(c(charToRaw(tmp), LF), con)
     class(x) <- NULL
     i <- 0L
     for (j in LOCI) {
         i <- i + 1L
         if (!quiet && j %% 100 == 0) cat("\r", j, "/", length(LOCI))
-        alls <- sort(ALLELES[[j]], decreasing = TRUE)
+        alls <- sort.int(ALLELES[[j]], decreasing = TRUE, method = "quick")
         nalls <- length(alls)
         REF <- names(alls)[1]
         ALT <- names(alls)[-1]
@@ -226,16 +227,15 @@ write.vcf <- function(x, file, CHROM = NULL, POS = NULL, quiet = FALSE)
         geno <- levels(y)
         ngeno <- length(geno)
         newgeno <- character(ngeno)
-        o <- .C(translateGenotypesForVCF, geno, newgeno, ngeno,
-                names(alls), nalls)
+        o <- .C(translateGenotypesForVCF, geno, newgeno, ngeno, names(alls), nalls)
         newgeno <- o[[2]]
         y <- newgeno[as.integer(y)]
         if (nalls > 2) ALT <- paste0(ALT, collapse = ",")
-        pref <- c(CHROM[i], POS[i], NAMES[j], REF, ALT, ".", ".", ".", "GT")
-        tmp <- paste(c(pref, y), collapse = "\t")
-        cat(tmp, file = file, append = TRUE)
-        cat("\n", file = file, append = TRUE)
+        tmp <- paste0(c(CHROM[i], POS[i], NAMES[j], REF, ALT,
+                      ".\t.\t.\tGT", y), collapse = "\t")
+        writeBin(c(charToRaw(tmp), LF), con)
     }
+    close(con)
     if (!quiet) cat("\n")
 }
 
