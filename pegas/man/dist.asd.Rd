@@ -1,6 +1,5 @@
 \name{dist.asd}
 \alias{dist.asd}
-\alias{dist.snp}
 \title{Allelic Sharing Distance}
 \description{
   This function computes the allelic sharing distance (ASD) for diploid
@@ -8,7 +7,6 @@
 }
 \usage{
 dist.asd(x, scaled = TRUE)
-dist.snp(x, scaled = TRUE)
 }
 \arguments{
   \item{x}{an object of class \code{"loci"}.}
@@ -30,10 +28,6 @@ dist.snp(x, scaled = TRUE)
 }
 \value{
   an object of class \code{"dist"}.
-}
-\note{
-  \code{dist.snp} will be removed soon; it currently calls
-  \code{dist.asd} with a warning.
 }
 \references{
   Gao, X. and Martin, E. R. (2009) Using allele sharing distance for

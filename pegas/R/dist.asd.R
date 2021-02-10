@@ -1,17 +1,11 @@
-## dist.asd.R (2018-08-10)
+## dist.asd.R (2021-02-09)
 
 ##   Allelic Sharing Distance
 
-## Copyright 2017-2018 Emmanuel Paradis
+## Copyright 2017-2021 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
-
-dist.snp <- function(x, scaled = TRUE)
-{
-    warning("dist.snp() will be removed very soon: dist.asd() was used. Update your code!")
-    dist.asd(x, scaled)
-}
 
 dist.asd <- function(x, scaled = TRUE)
 {

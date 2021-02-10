@@ -2,19 +2,19 @@ useDynLib(pegas, .registration = TRUE)
 
 export(alleles2loci, allelicrichness, amova, as.igraph.haploNet,
        as.loci, as.network.haploNet, diffHaplo, dist.hamming,
-       dist.haplotype.loci, dist.asd, dist.snp, expand.genotype, F2,
-       F3, F4, Fst, genind2loci, geod, geoTrans, geoTrans2,
-       getAlleles, getGenotypes, getHaploNetOptions, getINFO,
-       getPloidy, getPhi, H, haploNet, haploFreq, hap.div, haplotype,
-       heterozygosity, hw.test, is.phased, is.snp, LD, LD2, LDscan,
-       LDmap, loci2alleles, loci2genind, loci2SnpMatrix, mjn, msn,
-       mst, MMD, mutations, nuc.div, plotNetMDS, proba.genotype,
-       R2.test, rangePOS, rarefactionplot, read.gtx, read.loci,
-       read.vcf, replot, rhost, rmst, rr.test, Rst, selectQUAL,
-       setHaploNetOptions, site.spectrum, stairway,
-       sw, tajima.test, theta.h, theta.k, theta.msat, theta.s,
-       unphase, theta.tree, theta.tree.hetero, VCFheader, VCFlabels,
-       VCFloci, write.loci, write.pegas.amova, write.vcf)
+       dist.haplotype.loci, dist.asd, expand.genotype, F2, F3, F4,
+       Fst, genind2loci, geod, geoTrans, geoTrans2, getAlleles,
+       getGenotypes, getHaploNetOptions, getINFO, getPloidy, getPhi,
+       H, haploNet, haploFreq, hap.div, haplotype, heterozygosity,
+       hw.test, is.phased, is.snp, LD, LD2, LDscan, LDmap,
+       loci2alleles, loci2genind, loci2SnpMatrix, mjn, msn, mst, MMD,
+       mutations, nuc.div, plotNetMDS, proba.genotype, R2.test,
+       rangePOS, rarefactionplot, read.gtx, read.loci, read.vcf,
+       replot, rhost, rmst, rr.test, Rst, selectQUAL,
+       setHaploNetOptions, site.spectrum, stairway, sw, tajima.test,
+       theta.h, theta.k, theta.msat, theta.s, unphase, theta.tree,
+       theta.tree.hetero, VCFheader, VCFlabels, VCFloci, write.loci,
+       write.pegas.amova, write.vcf)
 
 importFrom(ape, as.evonet, as.phylo, BOTHlabels, branching.times,
            base.freq, dist.dna, dist.nodes, fancyarrows, floating.pie.asp,
@@ -38,6 +38,7 @@ S3method(as.loci, character)
 S3method(as.loci, data.frame)
 S3method(as.loci, factor)
 S3method(as.loci, genind)
+S3method(as.loci, matrix)
 
 S3method(H, default)
 S3method(H, loci)

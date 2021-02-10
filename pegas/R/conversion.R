@@ -1,8 +1,8 @@
-## conversion.R (2020-11-06)
+## conversion.R (2021-02-09)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2020 Emmanuel Paradis
+## Copyright 2009-2021 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -192,6 +192,10 @@ as.loci.factor <- function(x, allele.sep = "/|", ...)
 
 as.loci.character <- function(x, allele.sep = "/|", ...)
     as.loci.data.frame(data.frame(factor(x)), allele.sep = allele.sep, ...)
+
+as.loci.matrix <- function(x, allele.sep = "/|", col.pop = NULL, col.loci = NULL, ...)
+    as.loci.data.frame(as.data.frame(x, allele.sep = allele.sep, col.pop = col.pop,
+                                     col.loci = col.loci, ...))
 
 alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
                          phased = FALSE)

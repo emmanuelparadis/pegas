@@ -2,6 +2,7 @@
 \alias{as.loci}
 \alias{as.loci.genind}
 \alias{as.loci.data.frame}
+\alias{as.loci.matrix}
 \alias{as.loci.factor}
 \alias{as.loci.character}
 \alias{genind2loci}

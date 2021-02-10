@@ -29,10 +29,10 @@ F4(x, allele.freq = NULL, population = NULL, check.data = TRUE,
     warning.}
   \item{pops}{a vector giving two, three, or four population names
     depending on the function. The order of these names is important
-    (see Patterson et al. 2012). By default, the populations in the
+    (see Patterson et al. 2012). By default, the populations in
     \code{x} are taken in the order they appear, and an error is
-    returned if the number of populations does not match number required
-    by the function.}
+    returned if the number of populations does not match the number
+    required by the function.}
   \item{jackknife.block.size}{the size of the block used in the
     jackknife to assess the significance of the \emph{F}-statistic (this
     should be around one thousandth of the number of loci, or not less

@@ -1,16 +1,11 @@
 \documentclass[a4paper]{article}
 %\VignetteIndexEntry{Reading Files}
 %\VignettePackage{pegas}
-\usepackage[utf8]{inputenc}
-\usepackage{fancyvrb}
-\usepackage{color}
+\usepackage{ape}
 
-\newcommand{\code}{\texttt}
 \newcommand{\loci}{\code{"loci"}}
 \newcommand{\genind}{\code{"genind"}}
 \newcommand{\NA}{\code{NA}}
-\newcommand{\pkg}{\textsf}
-\newcommand{\ape}{\pkg{ape}}
 \newcommand{\pegas}{\pkg{pegas}}
 \newcommand{\adegenet}{\pkg{adegenet}}
 \newcommand{\gdata}{\pkg{gdata}}
@@ -25,12 +20,18 @@
 \title{Reading Genetic Data Files Into R with \adegenet\ and \pegas}
 
 \begin{document}
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{formatcom=\color{darkblue}}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{formatcom=\color{black}\vspace{-1.5em}}
 
-\maketitle
+\maketitle\vspace*{1pc}\hrule
+
+\vspace{1cm}
 
 <<echo=false,quiet=true>>=
-options(width=60)
+options(width = 80, prompt = "> ")
 @
+
+\vspace{1cm}
 
 \adegenet\ \cite{Jombart2008} and \pegas\ \cite{Paradis2010} are two
 packages that complement each other for population genetic analyses in

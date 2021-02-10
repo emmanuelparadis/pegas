@@ -1,8 +1,8 @@
-## haplotype.R (2020-10-17)
+## haplotype.R (2021-02-10)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
-## Copyright 2009-2020 Emmanuel Paradis, 2013 Klaus Schliep
+## Copyright 2009-2021 Emmanuel Paradis, 2013 Klaus Schliep
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -294,8 +294,11 @@ haploFreq <- function(x, fac, split = "_", what = 2, haplo = NULL)
     if (missing(fac)) {
         fac <- strsplit(rownames(x), split)
         fac <- factor(sapply(fac, function(xx) xx[what]))
-    } else if (length(fac) != nrow(x))
-        stop("number of elements in 'fac' not the same than number of sequences")
+    } else {
+        if (length(fac) != nrow(x))
+            stop("number of elements in 'fac' not the same than number of sequences")
+        if (!is.factor(fac)) fac <- factor(fac) # added 2021-02-10
+    }
 
     if (is.null(haplo)) haplo <- haplotype(x)
     h.index <- attr(haplo, "index")
@@ -307,6 +310,7 @@ haploFreq <- function(x, fac, split = "_", what = 2, haplo = NULL)
         res <- sapply(h.index, function(xx) tabulate(fac[xx], l))
         res <- t(res)
     }
+    rownames(res) <- rownames(haplo)
     colnames(res) <- levels(fac)
     res
 }
@@ -999,9 +1003,9 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
         }
         if (length(SZ <- unique(size)) > 1) {
             SZ <- unique(c(min(SZ), floor(median(SZ)), max(SZ)))
+            SHIFT <- max(SZ) / 2
             vspace <- strheight(" ")
             if (any(shape == "circles")) {
-                SHIFT <- max(SZ)/2
                 for (sz in SZ) {
                     seqx <- seq(-sz / 2, sz / 2, length.out = 100)
                     seqy <- sqrt((sz /2)^2 - seqx^2)
@@ -1788,7 +1792,7 @@ mutations <- function(haploNet, link, x, y, data = NULL, style = "table",
     if (missing(link)) {
         cat("Link is missing: select one below\n")
         cat(paste0(1:nrow(m), ": ", labs[m[, 1]], "-", labs[m[, 2]]), sep = "\n")
-        cat("\nEnter a link number:")
+        cat("\nEnter a link number: ")
         link <- as.integer(readLines(n = 1))
     }
     if (link < 1 || link > nrow(m) || is.na(link)) stop("wrong value")

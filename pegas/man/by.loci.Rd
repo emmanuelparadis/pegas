@@ -1,6 +1,6 @@
 \name{by.loci}
 \alias{by.loci}
-\title{Summary by Population of Other Factor}
+\title{Summary by Population or Other Factor}
 \description{
   This is an implementation of the generic \code{\link[base]{by}}
   function which applies a function to some data for a each level of a
