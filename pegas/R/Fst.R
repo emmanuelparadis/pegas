@@ -1,8 +1,8 @@
-## Fst.R (2019-02-25)
+## Fst.R (2021-02-24)
 
 ##   F-Statistics
 
-## Copyright 2009-2019 Emmanuel Paradis
+## Copyright 2009-2021 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -43,11 +43,7 @@ Fst <- function(x, pop = NULL, quiet = TRUE, na.alleles = "")
         nBYpop <- tabulate(Z$pop)
         r <- length(nBYpop) # number of pops
         nbar <- N/r
-        if (r == 1) {
-            nC <- 0
-        } else {
-            nC <- (N - sum(nBYpop^2)/N)/(r - 1)
-        }
+        nC <- if (r == 1) 0 else (N - sum(nBYpop^2)/N)/(r - 1)
         ALLELES <- getAlleles(Z)[[1]]
         h <- p <- matrix(0, r, length(ALLELES))
         for (i in 1:r) {
@@ -65,18 +61,14 @@ Fst <- function(x, pop = NULL, quiet = TRUE, na.alleles = "")
         }
         ptild <- p/(2 * nBYpop)
         pbar <- colSums(p)/(2 * N) # for each allele in the locus
-        if (r == 1) {
-            s2 <- rep(0, length(ALLELES))
-        } else {
-            s2 <- colSums(nBYpop * (ptild - rep(pbar, each = r))^2)/((r - 1) * nbar)
-        }
+        s2 <- if (r == 1) rep(0, length(ALLELES)) else colSums(nBYpop * (ptild - rep(pbar, each = r))^2)/((r - 1) * nbar)
         hbar <- colSums(h)/N # id.
         A <- pbar * (1 - pbar) - (r - 1) * s2/r
         a <- nbar * (s2 - (A - hbar/4)/(nbar - 1))/nC
         b <- nbar * (A - (2*nbar - 1) * hbar/(4*nbar))/(nbar - 1)
         c <- hbar/2
-        res[j, 1] <- 1 - sum(c)/sum(a + b + c)
-        res[j, 2] <- sum(a)/sum(a + b + c)
+        res[j, 1] <- if (r == 1) NA else 1 - sum(c)/sum(a + b + c)
+        res[j, 2] <- if (r == 1) NA else sum(a)/sum(a + b + c)
         res[j, 3] <- 1 - sum(c)/sum(b + c)
     }
     if (!quiet) cat("... Done.\n")

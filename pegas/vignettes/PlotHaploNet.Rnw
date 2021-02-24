@@ -126,11 +126,6 @@ nt
 
 \noindent We now plot the network with the default arguments:
 
-<<echo=false,quiet=true>>=
-if (!exists("oldopts")) oldopts <- getHaploNetOptions()
-do.call(setHaploNetOptions, oldopts)
-@
-
 <<fig=true>>=
 plot(nt)
 @
