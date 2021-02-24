@@ -43,7 +43,11 @@ Fst <- function(x, pop = NULL, quiet = TRUE, na.alleles = "")
         nBYpop <- tabulate(Z$pop)
         r <- length(nBYpop) # number of pops
         nbar <- N/r
-        nC <- (N - sum(nBYpop^2)/N)/(r - 1)
+        if (r == 1) {
+            nC <- 0
+        } else {
+            nC <- (N - sum(nBYpop^2)/N)/(r - 1)
+        }
         ALLELES <- getAlleles(Z)[[1]]
         h <- p <- matrix(0, r, length(ALLELES))
         for (i in 1:r) {
@@ -61,7 +65,11 @@ Fst <- function(x, pop = NULL, quiet = TRUE, na.alleles = "")
         }
         ptild <- p/(2 * nBYpop)
         pbar <- colSums(p)/(2 * N) # for each allele in the locus
-        s2 <- colSums(nBYpop * (ptild - rep(pbar, each = r))^2)/((r - 1) * nbar)
+        if (r == 1) {
+            s2 <- rep(0, length(ALLELES))
+        } else {
+            s2 <- colSums(nBYpop * (ptild - rep(pbar, each = r))^2)/((r - 1) * nbar)
+        }
         hbar <- colSums(h)/N # id.
         A <- pbar * (1 - pbar) - (r - 1) * s2/r
         a <- nbar * (s2 - (A - hbar/4)/(nbar - 1))/nC

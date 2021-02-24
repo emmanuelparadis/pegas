@@ -39,6 +39,9 @@ NEW FEATURES
       new links are found: this is controlled by the new options
       'stop.criterion' and 'iter.lim'. There is also a new option
       'quiet = FALSE'.
+      
+    o Fst() now runs in the case of a single population, returning the
+      Fis (and Fit which equates 1).
 
 
 BUG FIXES

@@ -58,5 +58,9 @@ Rst(x, pop = NULL, quiet = TRUE, na.alleles = "")
 data(jaguar)
 Fst(jaguar)
 Rst(jaguar)
+
+## no Fst but Fit and Fis in case of single population:
+jaguar_corridor <- jaguar[jaguar$population == "Green Corridor", ]
+Fst(jaguar_corridor) 
 }
 \keyword{htest}
