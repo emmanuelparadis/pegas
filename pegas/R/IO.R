@@ -1,4 +1,4 @@
-## IO.R (2021-02-07)
+## IO.R (2021-03-22)
 
 ##   Input/Ouput
 
@@ -208,7 +208,7 @@ write.vcf <- function(x, file, CHROM = NULL, POS = NULL, quiet = FALSE)
     if (file.exists(file)) unlink(file)
     con <- file(file, "ab")
     tmp <- paste0(c("##fileformat=VCFv4.1\n##File produced by pegas (",
-                    date(), ")\n"), collapse = "")
+                    date(), ")\n##QUAL=<missingValue=9999>\n"), collapse = "")
     writeBin(charToRaw(tmp), con)
     tmp <- paste0(c("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT",
                     row.names(x)), collapse = "\t")
@@ -221,18 +221,30 @@ write.vcf <- function(x, file, CHROM = NULL, POS = NULL, quiet = FALSE)
         if (!quiet && j %% 100 == 0) cat("\r", j, "/", length(LOCI))
         alls <- sort.int(ALLELES[[j]], decreasing = TRUE, method = "quick")
         nalls <- length(alls)
-        REF <- names(alls)[1]
-        ALT <- names(alls)[-1]
+        allele.names <- names(alls)
+        withDotAllele <- any(s <- allele.names == ".")
         y <- x[[j]]
-        geno <- levels(y)
-        ngeno <- length(geno)
-        newgeno <- character(ngeno)
-        o <- .C(translateGenotypesForVCF, geno, newgeno, ngeno, names(alls), nalls)
-        newgeno <- o[[2]]
-        y <- newgeno[as.integer(y)]
-        if (nalls > 2) ALT <- paste0(ALT, collapse = ",")
+
+        ## if only missing data for this locus, no need to translate the genotypes
+        if (!(withDotAllele && nalls == 1)) {
+            if (withDotAllele) {
+                alls <- alls[!s]
+                allele.names <- allele.names[!s]
+                nalls <- nalls - 1L
+            }
+            REF <- allele.names[1]
+            ALT <- if (nalls == 1) "." else allele.names[-1]
+            geno <- levels(y)
+            ngeno <- length(geno)
+            newgeno <- character(ngeno)
+            o <- .C(translateGenotypesForVCF, geno, newgeno, ngeno, allele.names, nalls)
+            newgeno <- o[[2]]
+            y <- newgeno[as.integer(y)]
+            if (nalls > 2) ALT <- paste0(ALT, collapse = ",")
+        }
+
         tmp <- paste0(c(CHROM[i], POS[i], NAMES[j], REF, ALT,
-                      ".\t.\t.\tGT", y), collapse = "\t")
+                      "9999\t.\t.\tGT", y), collapse = "\t")
         writeBin(c(charToRaw(tmp), LF), con)
     }
     close(con)

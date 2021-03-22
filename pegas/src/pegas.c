@@ -1,6 +1,6 @@
-/* pegas.c    2020-11-20 */
+/* pegas.c    2021-03-22 */
 
-/* Copyright 2015-2020 Emmanuel Paradis */
+/* Copyright 2015-2021 Emmanuel Paradis */
 
 /* This file is part of the R-package `pegas'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -399,20 +399,26 @@ void translateGenotypesForVCF(char **old, char **new, int *ngeno, char **alleles
     char buf[100], c;
 
     for (;;) {
-	if (i >= *ngeno) break;
+    if (i >= *ngeno) break;
 	for (;;) {
-	    if (old[i][b] == '/' || old[i][b] == '|' || old[i][b] == '\0')
+	    c = old[i][b];
+	    if (c == '/' || c == '|' || c == '\0')
 		break;
 	    b++;
 	}
 	for (k = 0, l = a; l < b; k++, l++)
 	    buf[k] = old[i][l];
 	buf[k] = '\0';
-	for (j = 0; j < *nall; j++) {
-	    if (! strcmp(alleles[j], buf)) break;
+	if (strcmp(".\0", buf)) {
+	    for (j = 0; j < *nall; j++) {
+		if (! strcmp(alleles[j], buf)) break;
+	    }
+	    nd = int2str(j, buf);
+	    for (k = 0; k < nd; k++, in++) new[i][in] = buf[k];
+	} else {
+	    new[i][in++] = '.';
+	    new[i][in] = '\0';
 	}
-	nd = int2str(j, buf);
-	for (k = 0; k < nd; k++, in++) new[i][in] = buf[k];
 	c = old[i][b];
 	new[i][in++] = c;
 	if (c == '\0') {
