@@ -1,4 +1,4 @@
-## haplotype.R (2021-02-10)
+## haplotype.R (2021-03-24)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -242,6 +242,13 @@ haplotype.DNAbin <- function(x, labels = NULL, strict = FALSE, trailingGapsAsN =
     nms.x <- deparse(substitute(x))
     if (is.list(x)) x <- as.matrix(x)
     n <- nrow(x)
+    if (!n) {
+        class(x) <- c("haplotype", "DNAbin")
+        attr(x, "index") <- list()
+        attr(x, "from") <- nms.x
+        warning("empty DNAbin object")
+        return(x)
+    }
     if (trailingGapsAsN) x <- latag2n(x)
     segs <- seg.sites(x, strict = strict, trailingGapsAsN = FALSE)
     if (length(segs)) {

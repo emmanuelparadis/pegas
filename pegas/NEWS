@@ -39,7 +39,7 @@ NEW FEATURES
       new links are found: this is controlled by the new options
       'stop.criterion' and 'iter.lim'. There is also a new option
       'quiet = FALSE'.
-      
+
     o Fst() now runs in the case of a single population, returning the
       Fis (and Fit which equates 1).
 
@@ -55,6 +55,9 @@ BUG FIXES
       allelic richness: this is fixed and this function gains the
       option 'min.n' to work with this method (common sample size used
       for all populations).
+
+    o haplotype() on an empty "DNAbin" object returns an empty
+      "haplotype" object similarly to pegas 0.12 (see issue #53 on GH).
 
 
 OTHER CHANGES
