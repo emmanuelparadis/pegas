@@ -79,7 +79,7 @@ LDmap(d, seg.sites(woodmouse), seq(0, 1, .1))
 
 \dontrun{
 ## Download the VCF file from Dryad:
-## http://dx.doi.org/10.5061/dryad.446sv.2
+## https://doi.org/10.5061/dryad.446sv.2
 
 ## the VCF file should have this name:
 fl <- "global.pop.GATK.SNP.hard.filters.V3.phased_all.pop.maf.05.recode.vcf.gz"

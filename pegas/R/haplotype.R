@@ -1,4 +1,4 @@
-## haplotype.R (2021-03-24)
+## haplotype.R (2021-04-08)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -1788,6 +1788,8 @@ all.equal.haploNet <- function(target, current, use.steps = TRUE, ...)
     s <- which(h[, a] != h[, b])
     data.frame(pos = s, h[s, c(a, b)])
 }
+
+utils::globalVariables(c("mutations.arrow.color", "mutations.arrow.type", "mutations.cex", "mutations.font", "mutations.frame.background", "mutations.frame.border", "mutations.sequence.color", "mutations.sequence.end", "mutations.sequence.length", "mutations.sequence.width", "mutations.text.color"))
 
 mutations <- function(haploNet, link, x, y, data = NULL, style = "table",
                       POS, SEQLEN, ...)

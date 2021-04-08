@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 0.14-3
+		CHANGES IN PEGAS VERSION 1.0
 
 
 NEW FEATURES
@@ -10,7 +10,7 @@ NEW FEATURES
       a VCF file.
 
     o There is a new cophenetic() method for objects of class
-      "haploNet" as well as a labels() method.
+      "haploNet", and a new labels() method.
 
     o diffHaplo() has been simplified and gains the options 'strict'
       and 'trailingGapsAsN' which are passed to ape::seg.sites().
@@ -42,6 +42,10 @@ NEW FEATURES
 
     o Fst() now runs in the case of a single population, returning the
       Fis (and Fit which equates 1).
+
+    o There is a new vignette "PlotHaploNet" detailing some aspects of
+      plotting haplotype networks with pegas, including the new
+      features and options.
 
 
 BUG FIXES

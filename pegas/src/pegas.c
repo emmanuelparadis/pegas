@@ -1,4 +1,4 @@
-/* pegas.c    2021-03-22 */
+/* pegas.c    2021-04-08 */
 
 /* Copyright 2015-2021 Emmanuel Paradis */
 
@@ -391,6 +391,7 @@ int int2str(int x, char *str)
 	str[3] = '\0';
 	return 3;
     }
+    return 0;
 }
 
 void translateGenotypesForVCF(char **old, char **new, int *ngeno, char **alleles, int *nall)

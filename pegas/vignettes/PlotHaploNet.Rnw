@@ -39,9 +39,9 @@ the community working on population genetics and genomics
 This document covers some aspects of drawing haplotype networks with
 \pegas\ with an emphasis on recent improvements. Not all details and
 options are covered here: see the respective help pages
-(\code{?plot.haploNet} and \code{?mutations}) for full details. The
-function \code{plotNetMDS}, which offers an alternative approach to
-plot networks, is not considered in this document.
+(\code{?plot.haploNet} and \code{?mutations}) for full details.
+The function \code{plotNetMDS}, which offers an alternative approach
+to plotting networks, is not considered in this document.
 
 \section{The Function \code{plot.haploNet}}
 
@@ -63,35 +63,36 @@ haplotype networks as listed in the table below.
 \end{tabular}
 \end{center}
 All these functions output an object of class \code{"haploNet"} so
-that they are plotted with the same \code{plot} method.
+that they are plotted with the same \code{plot} method (\code{plot.haploNet}).
 
 \subsection{Node Layout}
 
 The coordinates of the nodes (or vertices) representing the haplotypes
 are computed in two steps: first, an equal-angle algorithm borrowed
-from Felsenstein \cite{Felsenstein2004} is used, second the spacing between
+from Felsenstein \cite{Felsenstein2004} is used; second, the spacing between
 nodes is optimised. The second step is ignored if the option
-\code{fast = TRUE} is used when calling \code{plot}.
+\code{fast = TRUE} is used when calling \code{plot}. These two steps are
+detailed a bit in the next paragraphs.
 
 In the first step, the haplotype with the largest number of links is
 placed at the centre of the plot (i.e., its coordinates are $x=y=0$),
 then the haplotypes connected to this first haplotype are arranged
 around it and given equal angles. This is then applied recursively
 until all haplotypes are plotted. To perform this layout, an initial
-``backbone'' network based on an MST is used, so there are no
-reticulations and the equal-angle algorithm makes sure that there are
-no segment-crossings. In practice, it is likely that this backbone MST
+`backbone' network based on an MST is used, so there is no
+reticulation and the equal-angle algorithm makes sure that there is
+no segment-crossing. In practice, it is likely that this backbone MST
 is arbitrary with respect to the rest of the network. The other
-segments are then drawn on ``top'' of this MST.
+segments are then drawn on this MST.
 
-In the second step, a ``global energy'' is calculated based on the
+In the second step, a `global energy' is calculated based on the
 spaces between the nodes of the network (closer nodes imply higher
 energies). The nodes are then moved repeatedly, while keeping the
 initial structure of the backbone MST, until the global energy is not
-improved.
+improved (decreased).
 
-We illustrate the procedure with the `woodmouse' data, a set of
-sequences of cytochrome \textit{b} from fifteen woodmice
+We illustrate the procedure with the \code{woodmouse} data, a set of
+sequences of cytochrome \textit{b} from 15 woodmice
 (\textit{Apodemus sylvaticus}):
 
 <<>>=
@@ -100,10 +101,10 @@ data(woodmouse)
 @
 
 \noindent In order, to simulate some population genetic data, we
-sample, with replacement, eighty sequences, and create two grouping,
-hierarchical variables: \code{region} with two levels each containing
-forty haplotypes, and \code{pop} with four levels each containing
-twenty haplotypes:
+sample, with replacement, 80 sequences, and create two
+hierarchical groupings: \code{region} with two levels each containing
+40 haplotypes, and \code{pop} with four levels each containing
+20 haplotypes:
 
 <<>>=
 set.seed(10)
@@ -113,8 +114,8 @@ pop <- rep(paste0("pop", 1:4), each = 20)
 table(region, pop)
 @
 
-\noindent We extract the haplotypes before reconstructing the RMST
-after computing the pairwise Hamming distances:
+\noindent We extract the haplotypes which are used to reconstruct
+the RMST after computing the pairwise Hamming distances:
 
 <<>>=
 h <- haplotype(x)
@@ -130,14 +131,14 @@ nt
 plot(nt)
 @
 
-\noindent We compare the layout after setting \code{fast = TRUE}:
+\noindent We compare the layout obtained with \code{fast = TRUE}:
 
 <<fig=true>>=
 plot(nt, fast = TRUE)
 @
 
-\noindent By default, not all links are drawn. This is controlled by
-the option \code{threshold} which takes two values to set the lower
+\noindent By default, not all links are drawn. This is controlled with
+the option \code{threshold} which takes two values in order to set the lower
 and upper bounds of the number of mutations for a link to be drawn:
 
 <<fig=true>>=
@@ -157,20 +158,20 @@ args(pegas:::plot.haploNet)
 @
 
 \noindent Like for most \code{plot} methods, the first argument
-(\code{x}) is the object to be plotted. Until \pegas\ 0.14, all but
-the first arguments were defined with default values. In recent
+(\code{x}) is the object to be plotted. Until \pegas\ 0.14, all other
+arguments were defined with default values. In recent
 versions, as shown above, only \code{size} and \code{shape} are
-defined; the other options, if not modified in the call to
+defined with default values; the other options, if not modified in the call to
 \code{plot}, are taken from a set of parameters which can be modified
 as explained in Section~\ref{sec:getsetopts}.
 
-The motivation for this is, in most practical applications of this
-function, the user will want to modify \code{size} and \code{shape}
-with their own data such as the haplotype frequencies or else, and
-they might be changed repeatedly, for instance with different data
-subsets. On the other hand, the other options are more likely to be
-used to change the visual aspect of the graph so it could be more
-useful to change them once during a session as explained below.
+The motivation for this new function definition is that in most cases
+users need to modify \code{size} and \code{shape}
+with their own data, such as haplotype frequencies or else, and
+these might be changed repeatedly (e.g., with different data
+sets or subsets). On the other hand, the other options are more likely to be
+used to modify the visual aspect of the graph, so it could be more
+useful to change them once during a session as explained later in this document.
 
 The size of the haplotype symbols can be used to display haplotype
 frequencies. The function \code{summary} can extract these
@@ -195,7 +196,7 @@ sz <- sz[nt.labs]
 plot(nt, size = sz)
 @
 
-A similar mechanism can be used to show variables such \code{region}
+A similar mechanism can be used to show variables such as \code{region}
 or \code{pop}. The function \code{haploFreq} is useful here because it
 computes the frequencies of haplotypes for each region or population:
 
@@ -223,12 +224,20 @@ plot(nt, size = sz, pie = R, legend = c(-25, 30))
 plot(nt, size = sz, pie = P, legend = c(-25, 30))
 @
 
+The option \code{legend} can be:
+
+\begin{itemize}
+\item \code{FALSE} (the default): no legend is shown;
+\item \code{TRUE}: the user is asked to click where the legend should be printed;
+\item a vector of two values with the coordinates where the print the legend (for non-interactive use like in this vignette).
+\end{itemize}
+
 \section{New Features in \pegas\ 1.0}
 
 This section details some of the improvements made to haplotype
 network drawing after \pegas\ 0.14.
 
-\subsection{Improved ``Replotting''}
+\subsection{Improved `Replotting'}
 
 The graphical display of networks is a notoriously difficult problem,
 especially when there is an undefined number of links (or edges). The
@@ -239,7 +248,7 @@ optimise the layouts of nodes and edges when plotting such networks.
 The function \code{replot} (introduced in \pegas\ 0.7, March 2015)
 lets the user modify the layout of nodes interactively by clicking on
 the graphical window where a network has been plotted
-beforehand. \code{replot}---which, of course, cannot be used in this
+beforehand. \code{replot}---which cannot be used in this
 non-interactive vignette---has been improved substantially:
 
 \begin{itemize}
@@ -247,9 +256,9 @@ non-interactive vignette---has been improved substantially:
   detailed and the node to be moved is visually identified after clicking.
 \item The final coordinates, for instance saved with \code{xy <-
     replot()}, can be used directly into \code{plot(nt, xy =
-    xy)}. This makes possible to input coordinates calculated with
+    xy)}. This also makes possible to input coordinates calculated with
   another software.
-\item In previous versions, the plot tended to ``drift'' when
+\item In previous versions, the limits of the plot tended to drift when
   increasing the number of node moves. This has been fixed, and the
   network is correctly displayed whatever the number of moves done.
 \end{itemize}
@@ -297,7 +306,7 @@ text(30, 5, "circles = size / 2")
 
 For squares and diamonds (\code{shape = "s"} and \code{shape = "d"},
 respectively), they are scaled so that their areas are equal to the
-discs for the same values given to \code{size}. The figure below shows
+disc areas for the same values given to \code{size}. The figure below shows
 these three symbol shapes superposed for several values of this parameter.
 Note that a diamond is a square rotated 45\textdegree\ around its center.
 
@@ -361,8 +370,8 @@ mutations(nt, 18, x = -8.9, y = 16.3, data = h)
 
 \noindent Like any low-level plotting function, \code{mutations()} can
 be called as many times as needed to display similar information on
-other links. The option \code{style} takes the value either \code{"table"}
-(the default) or \code{"sequence"}. In the second case, the positions
+other links. The option \code{style} takes the value \code{"table"}
+(the default) or \code{"sequence"}. In the second, the positions
 of the mutations are drawn on a horizontal segment representing the sequence:
 
 <<fig=true>>=
@@ -385,14 +394,14 @@ will be affected.\footnote{See \code{?par} for a similar mechanism
 currently in use can be printed with \code{getHaploNetOptions}. There
 is a relatively large number of options that affect either
 \code{plot.haploNet()} or \code{mutations()}. Their names are quite explicit
-so that the user will find which ones to modify:
+so that the user should find which one(s) to modify easily:
 
 <<>>=
 names(getHaploNetOptions())
 @
 
-We see here an example with the command \code{plot(nt, size = 2)}
-which is repeated after a call to \code{setHaploNetOptions}:
+We see here several examples with the command \code{plot(nt, size = 2)}
+which is repeated after calling \code{setHaploNetOptions}:
 
 <<fig=true>>=
 plot(nt, size = 2)

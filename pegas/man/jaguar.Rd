@@ -26,7 +26,7 @@ data(jaguar)
   fragmentation on the genetic structure of a top predator: loss of
   diversity and high differentiation among remnant populations of
   Atlantic Forest jaguars (Panthera onca). Dryad Digital
-  Repository. \url{http://dx.doi.org/10.5061/dryad.1884}
+  Repository. \doi{10.5061/dryad.1884}
 }
 \seealso{
   \code{\link{loci}}, \code{\link{alleles2loci}}
