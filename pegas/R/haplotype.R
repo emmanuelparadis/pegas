@@ -1,4 +1,4 @@
-## haplotype.R (2021-04-08)
+## haplotype.R (2021-04-14)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -534,19 +534,19 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
         n <- length(xx) # nb of nodes
         size <- rep(size, length.out = n)
         col <- rep(col, length.out = n)
-        bg <- rep(bg, length.out = n)
+        ## bg <- rep(bg, length.out = n)
         shape <- rep(shape, length.out = n)
         for (i in 1:n) {
             if (shape[i] == "circles") {
-                circle(xx[i], yy[i], size[i], col[i], pie[i, ], bg[i])
+                circle(xx[i], yy[i], size[i], col[i], pie[i, ], bg)#[i])
                 next
             }
             if (shape[i] == "squares") {
-                square(xx[i], yy[i], size[i], col[i], pie[i, ], bg[i])
+                square(xx[i], yy[i], size[i], col[i], pie[i, ], bg)#[i])
                 next
             }
             ## if (shape[i] == "diamonds")
-            diamond(xx[i], yy[i], size[i], col[i], pie[i, ], bg[i])
+            diamond(xx[i], yy[i], size[i], col[i], pie[i, ], bg)#[i])
         }
     }
 }

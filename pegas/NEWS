@@ -1,4 +1,13 @@
-		CHANGES IN PEGAS VERSION 1.0
+		CHANGES IN PEGAS VERSION 1.0-1
+
+
+BUG FIXES
+
+    o plot.haploNet() did not use 'bg' correctly when 'pie' was used.
+
+
+
+      		CHANGES IN PEGAS VERSION 1.0
 
 
 NEW FEATURES
