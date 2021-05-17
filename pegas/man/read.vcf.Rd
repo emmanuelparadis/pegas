@@ -60,7 +60,7 @@ write.vcf(x, file, CHROM = NULL, POS = NULL, quiet = FALSE)
 \examples{
 \dontrun{
 ## Chr Y from the 1000 Genomes:
-a <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502"
+a <- "https://ftp-trace.ncbi.nih.gov/1000genomes/ftp/release/20130502"
 b <- "ALL.chrY.phase3_integrated_v1b.20130502.genotypes.vcf.gz"
 ## WARNING: the name of the file above may change
 url <- paste(a, b, sep = "/")

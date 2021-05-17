@@ -10,8 +10,8 @@
 .VCFconnection <- function(file)
 {
     file <- path.expand(file) # fix by Frederic Michaud
-    remote <- if (length(grep("^(ht|f)tp(s|):", file))) TRUE else FALSE
-    GZ <- if (length(grep("\\.gz$", file))) TRUE else FALSE
+    remote <- grepl("^(ht|f)tp(s|):", file)
+    GZ <- grepl("\\.gz$", file, ignore.case = TRUE)
     if (GZ) {
         file <- if (remote) url(file) else gzfile(file)
         file <- gzcon(file)
@@ -51,8 +51,7 @@ VCFloci <- function(file, what = "all", chunk.size = 1e9, quiet = FALSE)
     FIELDS <- c("CHROM", "POS", "ID", "REF", "ALT",
                 "QUAL", "FILTER", "INFO", "FORMAT")
 
-    what <-
-        if (identical(what, "all")) 1:9 else match(what, FIELDS)
+    what <- if (identical(what, "all")) 1:9 else match(what, FIELDS)
 
     obj <- vector("list", 9L)
 

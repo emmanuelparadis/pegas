@@ -77,10 +77,9 @@ write.pegas.amova(x, file = "")
   data. \emph{Genetics}, \bold{131}, 479--491.
 }
 \seealso{
-  \code{\link[ade4]{amova}} in \pkg{ade4} for an implementation of
-  the original Excoffier et al.'s model;  \code{\link[vegan]{adonis}} in
-  \pkg{vegan} for a general (multivariate) implementation of an ANOVA
-  framework with distances.
+  \code{amova} in \pkg{ade4} for an implementation of the original
+  Excoffier et al.'s model; \code{adonis} in \pkg{vegan} for a general
+  (multivariate) implementation of an ANOVA framework with distances.
 }
 \examples{
 ### All examples below have 'nperm = 100' for faster execution times.

@@ -1,8 +1,8 @@
-## amova.R (2020-03-02)
+## amova.R (2021-05-14)
 
 ##   Analysis of Molecular Variance
 
-## Copyright 2010-2020 Emmanuel Paradis, 2018 Zhian N. Kamvar, 2018 Brian Knaus
+## Copyright 2010-2021 Emmanuel Paradis, 2018 Zhian N. Kamvar, 2018 Brian Knaus
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -27,7 +27,7 @@ amova <- function(formula, data = NULL, nperm = 1000, is.squared = FALSE)
     if (any(is.na(y)))
         warning("at least one missing value in the distance object.")
     if (!is.squared) y <- y^2 # square the distances
-    if (class(y) == "dist") y <- as.matrix(y)
+    if (inherits(y, "dist")) y <- as.matrix(y)
     if (!is.matrix(y))
         stop("the lhs of the formula must be either a matrix or an object of class 'dist'.")
     n <- dim(y)[1] # number of individuals
