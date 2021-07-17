@@ -1,4 +1,4 @@
-## haplotype.R (2021-04-14)
+## haplotype.R (2021-07-17)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -551,7 +551,7 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
     }
 }
 
-.drawAlternativeLinks <- function(xx, yy, altlink, threshold, show.mutation)
+.drawAlternativeLinks <- function(xx, yy, altlink, threshold, show.mutation, scale.ratio)
 {
     s <- altlink[, 3] >= threshold[1] & altlink[, 3] <= threshold[2]
     if (!any(s)) return(NULL)
@@ -564,7 +564,7 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
         n <- length(xx)
         .labelSegmentsHaploNet(xx, yy, altlink[s, 1:2, drop = FALSE],
                                altlink[s, 3, drop = FALSE], rep(1, n),
-                               1, "black", show.mutation)
+                               1, "black", show.mutation, scale.ratio)
     }
 }
 
@@ -689,6 +689,7 @@ replot <- function(xy = NULL, col.identifier = "purple", ...)
     pie <- Last.phn$pie
     labels <- Last.phn$labels
     show.mutation <- Last.phn$show.mutation
+    scale.ratio <- Last.phn$scale.ratio
     altlink <- Last.phn$alter.links
     threshold <- Last.phn$threshold
 
@@ -724,9 +725,9 @@ replot <- function(xy = NULL, col.identifier = "purple", ...)
                  lty = lty, col = col.link)
         if (show.mutation)
             .labelSegmentsHaploNet(xx, yy, cbind(l1, l2), step, size, lwd,
-                                   col.link, as.numeric(show.mutation))
+                                   col.link, as.numeric(show.mutation), scale.ratio)
         if (!is.null(altlink) && !identical(as.numeric(threshold), 0))
-            .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation)
+            .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation, scale.ratio)
         .drawSymbolsHaploNet(xx, yy, size, col, bg, shape, pie)
         if (is.character(labels))
             text(xx, yy, labels, font = font, cex = cex)
@@ -981,7 +982,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
     ## draw alternative links
     altlink <- attr(x, "alter.links")
     if (!is.null(altlink) && !identical(as.numeric(threshold), 0))
-        .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation)
+        .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation, scale.ratio)
 
     if (show.mutation) {
         if (show.mutation == 1 && all(x[, 3] < 1)) {
@@ -1054,7 +1055,8 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
                 col = col, bg = bg, lwd = lwd, lty = lty, shape = shape,
                 col.link = col.link,labels = labels, font = font, cex = cex,
                 asp = asp, pie = pie, show.mutation = show.mutation,
-                alter.links = altlink, threshold = threshold),
+                scale.ratio = scale.ratio, alter.links = altlink,
+                threshold = threshold),
            envir = .PlotHaploNetEnv)
 }
 

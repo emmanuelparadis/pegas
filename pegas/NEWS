@@ -5,6 +5,10 @@ BUG FIXES
 
     o plot.haploNet() did not use 'bg' correctly when 'pie' was used.
 
+    o The argument 'scale.ratio' was not always passed correctly among
+      internal functions when plotting "haploNet" objects (see issue
+      #59 on GH).
+
 
 OTHER CHANGES
 
