@@ -1,4 +1,4 @@
-## haplotype.R (2021-07-17)
+## haplotype.R (2021-08-11)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -1110,11 +1110,7 @@ subset.haplotype <- function(x, minfreq = 1, maxfreq = Inf, maxna = Inf,
 }
 
 summary.haplotype <- function(object, ...)
-{
-    res <- sapply(attr(object, "index"), length)
-    names(res) <- rownames(object)
-    res
-}
+    setNames(lengths(attr(object, "index")), rownames(object))
 
 print.haplotype <- function(x, ...)
 {
