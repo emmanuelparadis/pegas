@@ -9,6 +9,8 @@ BUG FIXES
       internal functions when plotting "haploNet" objects (see issue
       #59 on GH).
 
+    o haplotype.character() failed to work correctly (see issue #61).
+
 
 OTHER CHANGES
 

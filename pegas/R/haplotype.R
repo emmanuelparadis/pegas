@@ -1,4 +1,4 @@
-## haplotype.R (2021-08-11)
+## haplotype.R (2021-09-14)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -279,16 +279,18 @@ haplotype.DNAbin <- function(x, labels = NULL, strict = FALSE, trailingGapsAsN =
 haplotype.character <- function(x, labels = NULL, ...)
 {
     nms.x <- deparse(substitute(x))
-    if (!is.matrix(x)) stop("x must be a matrix")
-    h <- factor(apply(x, 1, paste, collapse = "\r"))
-    h <- as.integer(h)
-    obj <- x[which(!duplicated(h)), , drop = FALSE]
+    if (!is.matrix(x))
+        stop("x must be a matrix")
+    h <- apply(x, 1, paste, collapse = "\r")
+    hnotdup <- !duplicated(h)
+    obj <- x[which(hnotdup), , drop = FALSE]
+    hnotdup <- h[hnotdup]
     N <- nrow(obj)
     if (is.null(labels))
         labels <- as.character(as.roman(1:N))
     rownames(obj) <- labels
     class(obj) <- c("haplotype", "character")
-    attr(obj, "index") <- lapply(1:N, function(y) which(h == y))
+    attr(obj, "index") <- lapply(1:N, function(i) which(h == hnotdup[i]))
     attr(obj, "from") <- nms.x
     obj
 }
@@ -1129,8 +1131,10 @@ print.haplotype <- function(x, ...)
 
 "[.haplotype" <- function(x, ...)
 {
+    cls <- class(x)
+    if (length(cls) > 1) cls <- cls[-1]
     y <- NextMethod("[")
-    class(y) <- "DNAbin"
+    class(y) <- cls
     y
 }
 
