@@ -36,9 +36,10 @@ haploNet(h, d = NULL, getProb = TRUE)
     and eventually recycled.}
   \item{col}{a character vector specifying the colours of the circles;
     eventually recycled.}
-  \item{bg}{a character vector specifying either the colours of the
-    background of the circles (if \code{pie = NULL}), or the colours of
-    the slices of the pies; eventually recycled.}
+  \item{bg}{a character vector (or a function) specifying either the
+    colours of the background of the symbols (if \code{pie = NULL}), or
+    the colours of the slices of the pies (could be a function);
+    eventually recycled.}
   \item{col.link}{a character vector specifying the colours of the links;
     eventually recycled.}
   \item{lwd}{a numeric vector giving the width of the links; eventually

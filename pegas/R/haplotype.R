@@ -1,4 +1,4 @@
-## haplotype.R (2021-09-14)
+## haplotype.R (2021-09-24)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -424,15 +424,16 @@ print.haploNet <- function(x, ...)
     cat("Use print.default() to display all elements.\n")
 }
 
-circle <- function(x, y, size, col = "black", pie = NULL, bg = NULL, ...)
+circle <- function(x, y, size, col = "black", pie = NULL, bg = NULL)
 {
     if (is.null(pie)) {
         symbols(x, y, circles = size / 2, inches = FALSE,
                 add = TRUE, fg = col, bg = bg)
     } else {
-        n <- length(pie)
-        co <- if (length(bg) == 1 && bg == "white") rainbow(n) else rep(bg, length.out = n)
-        floating.pie.asp(x, y, pie, radius = size / 2, col = co)
+        OPTS <- get("plotHaploNetOptions", envir = .PlotHaploNetEnv)
+        op <- par(fg = OPTS$pie.inner.segments.color)
+        floating.pie.asp(x, y, pie, radius = size / 2, col = bg)
+        par(op)
     }
 }
 
@@ -472,20 +473,20 @@ circle <- function(x, y, size, col = "black", pie = NULL, bg = NULL, ...)
     c(res, list(m))
 }
 
-square <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
+square <- function(x, y, size, col, pie = NULL, bg = NULL)
 {
     XY <- .squarePegas(x, y, size, pie = pie)
+    OPTS <- get("plotHaploNetOptions", envir = .PlotHaploNetEnv)
+    border <- OPTS$pie.inner.segments.color
     if (!is.null(pie)) {
-        n <- length(pie)
-        co <- if (length(bg) == 1 && bg == "white") rainbow(n) else rep(bg, length.out = n)
-        for (i in 1:n) {
+        for (i in seq_along(pie)) {
             s <- XY[[2]][, i]
-            rect(s[1], s[2], s[3], s[4], col = co[i])
+            rect(s[1], s[2], s[3], s[4], col = bg[i], border = border)
         }
-        co <- NULL
-    } else co <- bg
+        bg <- NULL # for the call to rect() below
+    }
     s <- XY[[1]]
-    rect(s[1], s[2], s[3], s[4], col = co, border = col, ...)
+    rect(s[1], s[2], s[3], s[4], col = bg, border = border)
 }
 
 .rotateSquares <- function(XY)
@@ -509,21 +510,21 @@ square <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
     res
 }
 
-diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
+diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
 {
     XY <- .squarePegas(x, y, size, pie = pie)
     XY <- .rotateSquares(XY)
+    OPTS <- get("plotHaploNetOptions", envir = .PlotHaploNetEnv)
+    border <- OPTS$pie.inner.segments.color
     if (!is.null(pie)) {
-        n <- length(pie)
-        co <- if (length(bg) == 1 && bg == "white") rainbow(n) else rep(bg, length.out = n)
-        for (i in 1:n) {
+        for (i in seq_along(pie)) {
             xy <- XY[[2]][[i]]
-            polygon(xy$x, xy$y, col = co[i])
+            polygon(xy$x, xy$y, col = bg[i], border = border)
         }
-        co <- NULL
-    } else co <- bg
+        bg <- NULL # for the call to polygon() below
+    }
     xy <- XY[[1]]
-    polygon(xy$x, xy$y, border = col, col = co, ...)
+    polygon(xy$x, xy$y, border = border, col = bg)
 }
 
 .drawSymbolsHaploNet <- function(xx, yy, size, col, bg, shape, pie)
@@ -536,20 +537,14 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL, ...)
         n <- length(xx) # nb of nodes
         size <- rep(size, length.out = n)
         col <- rep(col, length.out = n)
-        ## bg <- rep(bg, length.out = n)
+        bg <- if (!is.null(pie) && is.function(bg)) bg(ncol(pie)) else rep(bg, length.out = n)
+        ## 'bg' should always be a vector of colours
         shape <- rep(shape, length.out = n)
-        for (i in 1:n) {
-            if (shape[i] == "circles") {
-                circle(xx[i], yy[i], size[i], col[i], pie[i, ], bg)#[i])
-                next
-            }
-            if (shape[i] == "squares") {
-                square(xx[i], yy[i], size[i], col[i], pie[i, ], bg)#[i])
-                next
-            }
-            ## if (shape[i] == "diamonds")
-            diamond(xx[i], yy[i], size[i], col[i], pie[i, ], bg)#[i])
-        }
+        for (i in 1:n)# {
+            switch(shape[i],
+                   "circles" = circle,
+                   "squares" = square,
+                   "diamonds" = diamond)(xx[i], yy[i], size[i], col[i], pie[i, ], bg)
     }
 }
 
@@ -770,7 +765,9 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
     ## map options to arguments
     OPTS <- get("plotHaploNetOptions", envir = .PlotHaploNetEnv)
     if (missing(col)) col <- OPTS$haplotype.outer.color
-    if (missing(bg)) bg <- OPTS$haplotype.inner.color
+    if (missing(bg)) {
+        bg <- if (is.null(pie)) OPTS$haplotype.inner.color else OPTS$pie.colors.function
+    }
     if (missing(col.link)) col.link <- OPTS$link.color
     if (missing(lwd)) lwd <- OPTS$link.width
     if (missing(lty)) lty <- OPTS$link.type
@@ -1042,7 +1039,8 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
         }
         if (!is.null(pie)) {
             nc <- ncol(pie)
-            co <- if (length(bg) == 1 && bg == "white") rainbow(nc) else rep(bg, length.out = nc)
+            ##co <- if (length(bg) == 1 && bg == "white") rainbow(nc) else rep(bg, length.out = nc)
+            co <- if (is.function(bg)) bg(nc) else rep(bg, length.out = nc)
             w <- diff(par("usr")[3:4]) / 40
             TOP <- seq(xy[2], by = -w, length.out = nc)
             BOTTOM <- TOP + diff(TOP[1:2]) * 0.9

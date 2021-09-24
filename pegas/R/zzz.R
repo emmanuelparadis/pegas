@@ -1,8 +1,8 @@
-## zzz.R (2020-12-15)
+## zzz.R (2021-09-24)
 
 ##   Library Loading
 
-## Copyright 2015-2020 Emmanuel Paradis
+## Copyright 2015-2021 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../COPYING for licensing issues.
@@ -33,7 +33,6 @@ list(
     mutations.sequence.end = "round",
     mutations.sequence.length = 0.3,
     mutations.sequence.width = 5,
-    pie.outer.color = "black",
     pie.inner.segments.color = "black",
     pie.colors.function = rainbow,
     scale.ratio = 1,
