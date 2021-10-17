@@ -7,7 +7,7 @@
   This function tests, for a series of loci, the hypothesis that
   genotype frequencies follow the Hardy--Weinberg equilibrium.
   \code{hw.test} is a generic with methods for the classes
-  \code{"\link{loci}"} and \linkS4class{genind}. Note that the latter
+  \code{"\link{loci}"} and \code{genind}. Note that the latter
   replaces \code{HWE.test.genind} in the \pkg{adegenet} package.
 }
 \usage{
@@ -16,7 +16,7 @@ hw.test(x, B = 1000, \dots)
 \method{hw.test}{genind}(x, B = 1000, \dots)
 }
 \arguments{
-  \item{x}{an object of class \code{"\link{loci}"} or \linkS4class{genind}.}
+  \item{x}{an object of class \code{"\link{loci}"} or \code{genind}.}
   \item{B}{the number of replicates for the Monte Carlo procedure; for
     the regular HW test, set B = 0 (see details).}
   \item{\dots}{further arguments to be passed.}
@@ -37,7 +37,7 @@ hw.test(x, B = 1000, \dots)
   this matrix are the different loci in \code{x}.
 }
 \author{
-  Main code by Emmanuel Paradis; wrapper for \linkS4class{genind}
+  Main code by Emmanuel Paradis; wrapper for \code{genind}
   objects by Thibaut Jombart.
 }
 \references{

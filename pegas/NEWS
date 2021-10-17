@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 1.0-2
+		CHANGES IN PEGAS VERSION 1.0-3
 
 
 BUG FIXES
@@ -21,6 +21,8 @@ OTHER CHANGES
 
     o amova() now accepts distance objects which inherit the class
       "dist" (instead of being strictly equal).
+
+    o adegenet has been moved from 'Depends' to 'Suggests'.
 
 
 

@@ -1,6 +1,6 @@
 Package: pegas
-Version: 1.0-2
-Date: 2021-09-24
+Version: 1.0-3
+Date: 2021-10-17
 Title: Population and Evolutionary Genetics Analysis System
 Authors@R: c(person("Emmanuel", "Paradis", role = c("aut", "cre", "cph"), email = "Emmanuel.Paradis@ird.fr", comment = c(ORCID = "0000-0003-3092-2199")),
   person("Thibaut", "Jombart", role = c("aut", "cph"), comment = c(ORCID = "0000-0003-2226-8692")),
@@ -10,8 +10,8 @@ Authors@R: c(person("Emmanuel", "Paradis", role = c("aut", "cre", "cph"), email 
   person("Alastair", "Potts", role = c("aut", "cph"), comment = c(ORCID = "0000-0003-0919-7279")),
   person("David", "Winter", role = c("aut", "cph"), comment = c(ORCID = "0000-0002-6165-0029")))
 Depends: R (>= 3.2.0), ape (>= 5.3-11)
-Imports: graphics, utils, methods, adegenet
-Suggests: rgl, snpStats
+Imports: graphics, utils, methods
+Suggests: rgl, snpStats, adegenet
 ZipData: no
 Description: Functions for reading, writing, plotting, analysing, and manipulating allelic and haplotypic data, including from VCF files, and for the analysis of population nucleotide sequences and micro-satellites including coalescent analyses, linkage disequilibrium, population structure (Fst, Amova) and equilibrium (HWE), haplotype networks, minimum spanning tree and network, and median-joining networks.
 License: GPL (>= 2)

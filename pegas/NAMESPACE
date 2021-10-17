@@ -20,7 +20,7 @@ importFrom(ape, as.evonet, as.phylo, BOTHlabels, branching.times,
            base.freq, dist.dna, dist.nodes, fancyarrows, floating.pie.asp,
            GC.content, latag2n, perm.rowscols, polar2rect, rcoal,
            rect2polar, seg.sites)
-importFrom(adegenet, df2genind, genind2df)
+#importFrom(adegenet, df2genind, genind2df)
 importFrom(graphics, abline, axis, barplot, hist, lines, lines.default, locator,
            matplot, mtext, par, points, polygon, plot, plot.default, rect,
            segments, strheight, strwidth, symbols, text, xinch)
@@ -28,7 +28,7 @@ importFrom(grDevices, colorRampPalette, dev.cur, devAskNewPage,
            deviceIsInteractive, rainbow, rgb)
 importFrom(stats, as.dist, cmdscale, cophenetic, density, dist, integrate,
            median, na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois,
-           sd, uniroot, weighted.mean)
+           sd, setNames, uniroot, weighted.mean)
 importFrom(utils, as.roman, combn, edit, read.table, write.csv, write.table)
 importFrom(methods, new)
 
