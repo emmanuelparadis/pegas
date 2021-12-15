@@ -22,7 +22,7 @@ OTHER CHANGES
     o amova() now accepts distance objects which inherit the class
       "dist" (instead of being strictly equal).
 
-    o adegenet has been moved from 'Depends' to 'Suggests'.
+    o adegenet has been moved from 'Imports' to 'Suggests'.
 
 
 
