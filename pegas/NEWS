@@ -1,4 +1,14 @@
-		CHANGES IN PEGAS VERSION 1.0-3
+		CHANGES IN PEGAS VERSION 1.1-1
+
+
+BUG FIXES
+
+    o The estimator variance in theta.s() has been corrected (thanks
+      to Carsten Wiuf) and the help page has been updated.
+
+
+
+		CHANGES IN PEGAS VERSION 1.1
 
 
 BUG FIXES

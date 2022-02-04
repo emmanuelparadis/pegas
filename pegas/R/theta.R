@@ -1,4 +1,4 @@
-## theta.R (2019-01-13)
+## theta.R (2022-01-04)
 
 ##   Population Parameter THETA
 
@@ -9,7 +9,7 @@
 ## theta.tree.hetero: using a genealogy with heterochronous dates
 ## theta.msat: using micro-satellites
 
-## Copyright 2002-2018 Emmanuel Paradis
+## Copyright 2002-2022 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -57,7 +57,7 @@ theta.s.default <- function(x, n, variance = FALSE, ...)
     th <- x/a1
     if (variance) {
         a2 <- sum(1/b^2)
-        var.th <- (a1^2 * x + a2 * x^2) / (a1^2 * (a1^2 + a2))
+        var.th <- (th * a1 + th^2 * a2) / a1^2 # fix by Carsten Wiuf (2022-01-04)
         th <- c(th, var.th)
     }
     th

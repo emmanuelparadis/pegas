@@ -25,10 +25,6 @@ theta.s(x, ...)
   or of length two if the standard error is returned
   (\code{variance = TRUE}).
 }
-\note{
-  The number of segregating sites needs to be computed beforehand, for
-  instance with the function \code{seg.sites} (see example below).
-}
 \references{
   Watterson, G. A. (1975) On the number of segragating sites in genetical
   models without recombination. \emph{Theoretical Population Biology},
