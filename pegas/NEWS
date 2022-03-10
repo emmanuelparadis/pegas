@@ -6,6 +6,10 @@ BUG FIXES
     o The estimator variance in theta.s() has been corrected (thanks
       to Carsten Wiuf) and the help page has been updated.
 
+    o plot.haploNet() did not handle correctly the 'bg' argument when
+      it is a vector of colours. This also affected the plot of MJN
+      networks.
+
 
 
 		CHANGES IN PEGAS VERSION 1.1

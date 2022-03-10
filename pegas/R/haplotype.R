@@ -1,8 +1,8 @@
-## haplotype.R (2021-09-24)
+## haplotype.R (2022-03-10)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
-## Copyright 2009-2021 Emmanuel Paradis, 2013 Klaus Schliep
+## Copyright 2009-2022 Emmanuel Paradis, 2013 Klaus Schliep
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -544,7 +544,7 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
             switch(shape[i],
                    "circles" = circle,
                    "squares" = square,
-                   "diamonds" = diamond)(xx[i], yy[i], size[i], col[i], pie[i, ], bg)
+                   "diamonds" = diamond)(xx[i], yy[i], size[i], col[i], pie[i, ], bg[i])
     }
 }
 
