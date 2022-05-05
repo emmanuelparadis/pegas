@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 1.1-1
+		CHANGES IN PEGAS VERSION 1.1-2
 
 
 BUG FIXES
@@ -9,6 +9,9 @@ BUG FIXES
     o plot.haploNet() did not handle correctly the 'bg' argument when
       it is a vector of colours. This also affected the plot of MJN
       networks.
+
+    o VCF files with DOS-style end of lines (i.e., CRLF) are now
+      supported.
 
 
 

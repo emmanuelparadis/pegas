@@ -1,8 +1,8 @@
-## IO.R (2021-03-22)
+## IO.R (2022-05-05)
 
 ##   Input/Ouput
 
-## Copyright 2009-2021 Emmanuel Paradis
+## Copyright 2009-2022 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -64,6 +64,7 @@ read.vcf <- function(file, from = 1, to = 1e4, which.loci = NULL, quiet = FALSE)
     locnms <- character(nLoci)
 
     if (GZ) open(f)
+    BACK <- 1L + as.integer(meta$DOS)
 
     ii <- 0L # number of loci read
     for (k in seq_len(nChunks)) {
@@ -83,7 +84,7 @@ read.vcf <- function(file, from = 1, to = 1e4, which.loci = NULL, quiet = FALSE)
 
         for (i in sel) {
             start <- if (i == 1) skip + 1L else EOL[i - 1] + 1L
-            end <- EOL[i] - 1L
+            end <- EOL[i] - BACK
             out <- .Call(build_factor_loci, Y[start:end], n)
             ii <- ii + 1L
             locnms[ii] <- out[[1L]]

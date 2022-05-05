@@ -1,8 +1,8 @@
-## VCFloci.R (2020-05-11)
+## VCFloci.R (2022-05-05)
 
 ##   Handling VCF Files
 
-## Copyright 2015-2020 Emmanuel Paradis
+## Copyright 2015-2022 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -24,18 +24,30 @@
 
 .getMETAvcf <- function(file)
 {
-    f <- .VCFconnection(file)
+    f <- pegas:::.VCFconnection(file)
     HEADER <- character(0)
     skip <- 0L
+    bloc <- 100L
     repeat {
-        x <- scan(file, "", sep = "\n", n = 1L, skip = skip, quiet = TRUE)
-        if (substr(x, 1, 6) == "#CHROM") break
-        skip <- skip + 1L
+        x <- scan(f, "", sep = "\n", n = bloc, skip = skip, quiet = TRUE)
+        w <- grep("^#CHROM", x)
+        if (length(w)) {
+            if (w > 1) HEADER <- c(HEADER, x[1:(w - 1)])
+            x <- x[w]
+            skip <- skip + w
+            break
+        }
+        skip <- skip + bloc
         HEADER <- c(HEADER, x)
     }
     HEADER <- paste(paste0(HEADER, "\n"), collapse = "")
     j <- nchar(HEADER, "bytes") + 1L + nchar(x, "bytes")
-    list(HEADER = HEADER, LABELS = x, position = j)
+    ## test end of lines of the file:
+    Y <- readBin(f, "raw", j + skip)
+    i <- which(Y == as.raw(0x0a))
+    DOS <- all(Y[i - 1L] == as.raw(0x0d))
+    if (DOS) j <- j + skip
+    list(HEADER = HEADER, LABELS = x, position = j, DOS = DOS)
 }
 
 VCFheader <- function(file) .getMETAvcf(file)$HEADER
