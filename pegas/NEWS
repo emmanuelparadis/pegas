@@ -1,6 +1,13 @@
 		CHANGES IN PEGAS VERSION 1.1-2
 
 
+NEW FEATURES
+
+    o MMD() now returns invisibly a list with the plotted data (i.e.,
+      histogram, empirical density, and expected curve under stable
+      population).
+
+
 BUG FIXES
 
     o The estimator variance in theta.s() has been corrected (thanks

@@ -20,7 +20,7 @@ MMD(x, xlab = "Distance", main = "", rug = TRUE, legend = TRUE,
   \item{lty}{the line types for the curves}
   \item{bw}{the bandwidth used for the empirical density curve (passed
     to \code{\link[stats]{density}}).}
-  \item{\dots}{further arguments passed to \code{hist}.}
+  \item{\dots}{further arguments passed to \code{\link[graphics]{hist}}.}
 }
 \details{
   The histogram shows the observed distribution of pairwise
@@ -28,6 +28,16 @@ MMD(x, xlab = "Distance", main = "", rug = TRUE, legend = TRUE,
   the expected distribution under stable population (Rogers and
   Harpending 1992).
 }
+\value{
+  an invisible list with three elements:
+  \itemize{
+    \item{histogram}{the output of the \code{\link[graphics]{hist}}
+      call.}
+    \item{empirical.density}{the empirical density as estimated by
+      \code{\link[stats]{density}}.}
+    \item{expected.curve}{the values of the curve expected under stable
+      population.}
+}}
 \author{Emmanuel Paradis and David Winter}
 \references{
   Rogers, A. R. and Harpending, H. (1992) Population growth makes waves
@@ -36,7 +46,8 @@ MMD(x, xlab = "Distance", main = "", rug = TRUE, legend = TRUE,
 }
 \examples{
 data(woodmouse)
-MMD(woodmouse, col = "grey")
+mmd.woodm <- MMD(woodmouse)
+str(mmd.woodm)
 MMD(woodmouse, breaks = 20, legend = FALSE)
 MMD(woodmouse, lty = 1:2, lcol = rep("black", 2), col = "lightgrey")
 }
