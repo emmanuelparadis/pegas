@@ -1,18 +1,19 @@
-## dist.asd.R (2021-02-09)
+## dist.asd.R (2022-05-16)
 
 ##   Allelic Sharing Distance
 
-## Copyright 2017-2021 Emmanuel Paradis
+## Copyright 2017-2022 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
 
-dist.asd <- function(x, scaled = TRUE)
+dist.asd <- function(x, scaled = TRUE, pairwise.deletion = FALSE)
 {
     labs <- row.names(x)
     locicol <- attr(x, "locicol")
     nloc <- length(locicol)
     n <- nrow(x)
+    np <- n*(n - 1)/2
 
     ## check if all loci are diploid and biallelic
     ploidy <- getPloidy(x)
@@ -21,7 +22,14 @@ dist.asd <- function(x, scaled = TRUE)
     FAST <- all(lengths(alleles) == 2)
     if (FAST && any(is.phased(x))) x <- unphase(x)
 
+    ## if all genotypes are biallelic (FAST == TRUE), then there can
+    ## only three genotypes which are coded 1, 2, 3 in the factor with
+    ## 2 being the heterozygote, so the distance between two genotypes
+    ## is equal to the difference of their respective codes
+
     class(x) <- NULL # makes things MUCH faster
+    spd <- scaled & pairwise.deletion
+    if (spd) NLOC <- integer(np)
 
     foo <- function(x) {
         geno <- levels(x)
@@ -35,14 +43,20 @@ dist.asd <- function(x, scaled = TRUE)
             for (j in (i + 1):ng)
                 m[i, j] <- m[j, i] <- 2 - sum(outer(a, ualle[[j]], "=="))
         }
+        ## There should be no NA in 'm'
         x <- unclass(x)
-        d <- numeric(n*(n - 1)/2)
+        d <- numeric(np)
         k <- 1L
         for (i in 1:(n - 1)) {
             a <- x[i]
+            if (is.na(a)) next
             for (j in (i + 1):n) {
-                d[k] <- m[a, x[j]]
+                b <- x[j]
+                if (is.na(b)) next
+                ## 'a' and 'b' cannot be NA
+                d[k] <- m[a, b]
                 k <- k + 1L
+                if (spd) NLOC[k] <<- NLOC[k] + 1L
             }
         }
         d
@@ -55,12 +69,14 @@ dist.asd <- function(x, scaled = TRUE)
             attributes(tmp) <- NULL
             y[, j] <- tmp
         }
-        D <- numeric(n*(n - 1)/2)
+        D <- numeric(np)
         k <- 1L
         for (i in 1:(n - 1)) {
             a <- y[i, ]
             for (j in (i + 1):n) {
-                D[k] <- sum(abs(a - y[j, ]))
+                tmp <- abs(a - y[j, ])
+                D[k] <- sum(tmp, na.rm = pairwise.deletion)
+                if (spd) NLOC[k] <- sum(!is.na(tmp))
                 k <- k + 1L
             }
         }
@@ -68,7 +84,10 @@ dist.asd <- function(x, scaled = TRUE)
         D <- 0
         for (j in locicol) D <- D + foo(x[[j]])
     }
-    if (scaled) D <- D/nloc
+    if (scaled) {
+        if (pairwise.deletion) nloc <- NLOC
+        D <- D/nloc
+    }
     attr(D, "Size") <- n
     attr(D, "Labels") <- labs
     attr(D, "Diag") <- attr(D, "Upper") <- FALSE

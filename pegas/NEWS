@@ -1,11 +1,16 @@
-		CHANGES IN PEGAS VERSION 1.1-2
+		CHANGES IN PEGAS VERSION 1.1-3
 
 
 NEW FEATURES
 
+    o The new function nullAlleles2NA changes genotypes with at least
+      one `null allele' into NA.
+
     o MMD() now returns invisibly a list with the plotted data (i.e.,
       histogram, empirical density, and expected curve under stable
       population).
+
+    o dist.asd() has now the option 'pairwise.deletion = FALSE'.
 
 
 BUG FIXES

@@ -1,8 +1,8 @@
-## conversion.R (2021-02-09)
+## conversion.R (2022-05-16)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2021 Emmanuel Paradis
+## Copyright 2009-2022 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -261,7 +261,10 @@ loci2alleles <- function(x)
 na.omit.loci <- function(object, na.alleles = c("0", "."), ...)
 {
     if (any(isDot <- na.alleles == ".")) na.alleles[isDot] <- "\\."
-    pat <- c(paste0("^", na.alleles, "/"), paste0("/", na.alleles, "$"), paste0("/", na.alleles, "/"))
+    pat <- c(paste0("^", na.alleles, "$"),
+             paste0("^", na.alleles, "/"),
+             paste0("/", na.alleles, "$"),
+             paste0("/", na.alleles, "/"))
     pat <- paste(pat, collapse = "|")
     drop <- logical(nrow(object))
     M <- 1:ncol(object)
@@ -276,6 +279,21 @@ na.omit.loci <- function(object, na.alleles = c("0", "."), ...)
             drop <- tabulate(x, nlevels(x)) == 0
             if (any(drop)) object[[i]] <- factor(x)
         }
+    }
+    object
+}
+
+nullAlleles2NA <- function(object, na.alleles = c("0", "."))
+{
+    if (any(isDot <- na.alleles == ".")) na.alleles[isDot] <- "\\."
+    pat <- c(paste0("^", na.alleles, "$"),
+             paste0("^", na.alleles, "/"),
+             paste0("/", na.alleles, "$"),
+             paste0("/", na.alleles, "/"))
+    pat <- paste(pat, collapse = "|")
+    for (i in attr(x, "locicol")) {
+        if (length(j <- grep(pat, object[[i]])))
+            object[[i]][j] <- NA_integer_
     }
     object
 }
