@@ -1,4 +1,4 @@
-## haplotype.R (2022-03-10)
+## haplotype.R (2022-06-27)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -544,7 +544,7 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
             switch(shape[i],
                    "circles" = circle,
                    "squares" = square,
-                   "diamonds" = diamond)(xx[i], yy[i], size[i], col[i], pie[i, ], bg[i])
+                   "diamonds" = diamond)(xx[i], yy[i], size[i], col[i], pie[i, ], bg)
     }
 }
 
