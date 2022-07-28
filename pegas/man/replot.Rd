@@ -31,6 +31,11 @@ replot(xy = NULL, col.identifier = "purple", ...)
   other graphics (which not possible with \code{replot} because the
   network is replotted).
 }
+\note{
+  For users of RStudio: the function does not work within this
+  application. It seems the best is to run R from a shell (or maybe
+  opening a new graphical device with \code{\link[grDevices]{X11}}).
+}
 \value{
   a named list with two numeric vertors (\code{x} and \code{y}).
 }
