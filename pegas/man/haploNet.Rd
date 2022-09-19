@@ -98,10 +98,25 @@ haploNet(h, d = NULL, getProb = TRUE)
   give non-finite values with very divergent sequences, resulting in an
   error from \code{haploNet}. If this happens, it may be better to use
   \code{getProb = FALSE}.
-}
-\note{
+
   If two haplotypes are very different, \code{haploNet} will likely fail
   (error during integration due to non-finite values).
+}
+\note{
+  Plotting haplotype networks is a difficult task. There is a vignette
+  in \pkg{pegas} (see \code{vignette("PlotHaploNet")}) giving some
+  information on this isseu. You may also see two posts on r-sig-genetics
+  (July 2022) that give some tricks in the situation when one haplotype
+  is abundant and the others are in low frequencies (the symbols are
+  likely to overlap a lot by default):
+
+  \url{https://stat.ethz.ch/pipermail/r-sig-genetics/2022-July/000237.html}
+
+  \url{https://stat.ethz.ch/pipermail/r-sig-genetics/2022-July/000238.html}
+
+  The first post explains how to use the package \pkg{network} in
+  combination with \pkg{pegas}, and the second one gives a trick that
+  works with \pkg{pegas} only for a similar result.
 }
 \value{
   \code{haploNet} returns an object of class \code{"haploNet"} which is
