@@ -1,8 +1,8 @@
-## amova.R (2021-05-14)
+## amova.R (2023-02-13)
 
 ##   Analysis of Molecular Variance
 
-## Copyright 2010-2021 Emmanuel Paradis, 2018 Zhian N. Kamvar, 2018 Brian Knaus
+## Copyright 2010-2023 Emmanuel Paradis, 2018 Zhian N. Kamvar, 2018 Brian Knaus
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -288,26 +288,24 @@ getPhi <- function(sigma2)
     mat
 }
 
+write.pegas.amova <- function(x, file = "")
+{
+    if (!inherits(x, "amova"))
+        stop(paste("Expecting an object of class 'amova', instead received:", class(x)))
 
-write.pegas.amova <- function(x, file = ""){
-  if(class(x) != "amova"){
-    stop(paste("Expecting an object of class 'amova',  instead received:", class(x)))
-  }
-  if(file == ""){
-    stop("Please specify a filename.")
-  }
-  # Convert variances coefficients to a matrix with a 'Total' row.
-  if(length(x[[2]]) == 1){
-    x[[2]] <- c(x[[2]], '')
-  }
-  x[[2]] <- as.data.frame(as.matrix(x[[2]], ncol=1))
-  rownames(x[[2]]) <- rownames(x[[3]])
-  x[[2]]['Total', 1] <- c('')
-  colnames(x[[2]]) <- 'Variance coefficients'
-  # Convert variance components to a matrix with a 'Total' row.
-  x[[3]]['Total', 1:2] <- c('','')
-  x[[1]] <- cbind(x[[1]], x[[3]], x[[2]])
-  write.csv(x[[1]], file=file)
+    if (file == "")
+        stop("Please specify a filename")
+
+    ## Convert variances coefficients to a matrix with a 'Total' row.
+    if (length(x[[2]]) == 1)
+        x[[2]] <- c(x[[2]], '')
+
+    x[[2]] <- as.data.frame(as.matrix(x[[2]], ncol = 1))
+    rownames(x[[2]]) <- rownames(x[[3]])
+    x[[2]]['Total', 1] <- c('')
+    colnames(x[[2]]) <- 'Variance coefficients'
+    ## Convert variance components to a matrix with a 'Total' row.
+    x[[3]]['Total', 1:2] <- c('', '')
+    x[[1]] <- cbind(x[[1]], x[[3]], x[[2]])
+    write.csv(x[[1]], file = file)
 }
-
-

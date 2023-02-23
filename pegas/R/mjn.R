@@ -1,8 +1,8 @@
-## mjn.R (2020-10-09)
+## mjn.R (2023-02-23)
 
 ##   Median-Joining Network
 
-## Copyright 2017-2020 Emmanuel Paradis
+## Copyright 2017-2023 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -12,10 +12,10 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
     if (is.data.frame(x)) x <- as.matrix(x)
     if (mode(x) == "numeric") {
         if (!all(unique.default(x) %in% 0:1))
-            stop("mjn() requires binary 0/1 data")
+            stop("mjn() requires binary data (0/1)")
     } else {
         if (!inherits(x, "DNAbin"))
-            stop("mjn() requires DNA or binary 0/1 data")
+            stop("mjn() requires DNA or binary data (0/1)")
         if (is.list(x)) x <- as.matrix(x)
     }
 
@@ -26,15 +26,14 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
 
     ## the reverse operation:
     getIandJ <- function(ij, n) {
-        j <- 1L
-        N <- n - 1L
-        while (ij > N) {
-            j <- j + 1L
-            N <- N + n - j
-        }
-        i <- n - (N - ij)
-        c(j, i)
+        b <- n - 0.5
+        i <- ceiling(b - sqrt(b * b - 2 * ij))
+        j <- n * (1 - i) + (i + 1) * i / 2 + ij
+        as.integer(c(i, j))
     }
+    ## the above function uses a quadratic equation to find i;
+    ## it is slightly faster than the previous version (below)
+    ## which uses an iteration (see sources of pegas 1.1)
 
     purgeObsolete <- function()
     {
@@ -50,7 +49,8 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
         res
     }
 
-    if (inherits(x, "DNAbin")) {
+    ## setting functions depending on the type of data
+    if (inherits(x, "DNAbin")) { # mode(x) == "raw"
         getMedianVectors <- function(x) {
             ## returns 1 or 3 sequences
             p <- as.integer(ncol(x))
@@ -61,34 +61,35 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
             if (ans[[4L]]) res <- res[1L, , drop = FALSE]
             res
         }
-    } else {
+
+        funDist <-function(x) dist.dna(x, "n", pairwise.deletion = TRUE)
+
+        funVariableCol <- seg.sites
+
+        alreadyIn <- function(x, table) .Call(alreadyIn_mjn_DNAbin, x, table)
+    } else { # mode(x) == "numeric"
         getMedianVectors <- function(x) { # for binary (0/1) data
             p <- ncol(x)
             res <- matrix(NA_real_, 1L, p)
             for (j in 1:p) res[, j] <- as.integer(sum(x[, j]) > 1)
             res
         }
-    }
 
-    funDist <-
-        switch(mode(x),
-               "raw" = function(x) dist.dna(x, "n", pairwise.deletion = TRUE),
-               "numeric" = function(x) dist(x, "manhattan"))
+        funDist <- function(x) dist(x, "manhattan")
 
-    funVariableCol <-
-        switch(mode(x),
-               "raw" = seg.sites,
-               "numeric" = function(x) {
+        funVariableCol <- function(x) {
             foo <- function(x) length(unique.default(x)) > 1
             which(apply(x, 2, foo))
-        })
+        }
 
-    alreadyIn <-
-        switch(mode(x),
-               "raw" = function(x, table) .Call(alreadyIn_mjn_DNAbin, x, table),
-               "numeric" = function(x, table) any(apply(table, 1, function(y) all(y == x))))
+        alreadyIn <- function(x, table) {
+            foo <- function(y) all(y == x)
+            any(apply(table, 1, foo))
+        }
+    }
 
-    if (mode(x) == "raw") class(x) <- NULL
+    ## this speeds-up significantly the indexing operations
+    if (mode(x) == "raw") class(x) <- c("matrix", "array")
 
     ## initialization --
     n <- nrow(x)
@@ -169,14 +170,8 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
                 if (any(check.presence)) tmp <- tmp[!check.presence, , drop = FALSE]
             }
 
-            ## code for 0/1 data:
-            ## if (alreadyIn(tmp, x)) next
-            ## if (!is.null(median.vector)) if (alreadyIn(tmp, median.vector)) next
-
             m <- nrow(tmp)
             rownames(tmp) <- paste0(prefix, nextX:(nextX + m - 1))
-            ## rownames(tmp) <- paste("median.vector", nextX, sep = "_")
-            ## dist2X <- funDist(rbind(tmp, subsamp))[1:3]
             dist2X <- matrix(0, m, 3)
             for (k in 1:m)
                 dist2X[k, ] <- funDist(rbind(tmp[k, ], subsamp))[1:3]
@@ -187,14 +182,6 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
             n.cost <- n.cost + length(connection.cost)
             if (n.cost > max.n.cost) stop("too many connection costs computed")
 
-            ## if (connection.cost < lambda) lambda <- connection.cost
-            ## if (connection.cost <= lambda + epsilon) {
-            ##     link1 <- c(link1, s)
-            ##     link2 <- c(link2, rep(nextX, 3))
-            ##     weight <- c(weight, dist2X)
-            ##     median.vector <- if (is.null(median.vector)) tmp else rbind(median.vector, tmp)
-            ##    nextX <- nextX + 1L
-            ## }
             if (any(connection.cost < lambda)) lambda <- min(connection.cost)
             for (k in 1:m) {
                 if (connection.cost[k] <= lambda + epsilon) {
@@ -300,6 +287,8 @@ plot.mjn <- function(x, shape = c("circles", "diamonds"),
 {
     prefix <- attr(x, "prefix")
     labs <- labels(x)
+    if (length(shape) != 2) stop("argument 'shape' must give two shapes")
+    if (length(bg) != 2) stop("argument 'bg' must give two colours")
     ## identify the median vectors among the labels (1 or 2):
     mv <- grepl(paste0("^", prefix), labs) + 1L
     plot.haploNet(x, bg = bg[mv], shape = shape[mv], labels = labels, ...)

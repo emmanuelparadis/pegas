@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 1.1-3
+		CHANGES IN PEGAS VERSION 1.2
 
 
 NEW FEATURES
@@ -24,6 +24,17 @@ BUG FIXES
 
     o VCF files with DOS-style end of lines (i.e., CRLF) are now
       supported.
+
+    o Argument 'bg' was not always well interpreted in plot.haploNet()
+      and plot.mjn().
+
+
+OTHER CHANGES
+
+    o There is a new (non-interactive) example in ?replot.
+
+    o The help page of plot.mjn() has been clarified about the usage
+      of the arguments 'shape' and 'bg'.
 
 
 

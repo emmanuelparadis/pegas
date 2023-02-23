@@ -29,7 +29,8 @@ importFrom(grDevices, colorRampPalette, dev.cur, devAskNewPage,
 importFrom(stats, as.dist, cmdscale, cophenetic, density, dist, integrate,
            median, na.omit, nlminb, pbeta, pchisq, pnorm, printCoefmat, rpois,
            sd, setNames, uniroot, weighted.mean)
-importFrom(utils, as.roman, combn, edit, read.table, write.csv, write.table)
+importFrom(utils, as.roman, combn, edit, packageVersion, read.table,
+           write.csv, write.table)
 importFrom(methods, new)
 
 S3method(print, amova)

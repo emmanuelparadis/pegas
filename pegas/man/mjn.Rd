@@ -41,6 +41,11 @@ mjn(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_",
   can take a very long time. The argument \code{max.n.cost} controls how
   many such vectors are added to the network (the default value should
   avoid the function to run endlessly).
+
+  The arguments \code{shape} and \code{bg} must be of length two (unlike
+  in \code{\link{plot.haploNet}}). It is possible to have more
+  flexibility when plotting the MJN by changing its class, for instance
+  with the output in the examples below: \code{class(nt0) <- "haplotNet"}.
 }
 \note{
   Since \pkg{pegas} 1.0, \code{mjn} is expected to run in reasonable

@@ -1,8 +1,8 @@
-## conversion.R (2022-05-16)
+## conversion.R (2023-02-13)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2022 Emmanuel Paradis
+## Copyright 2009-2023 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -291,7 +291,7 @@ nullAlleles2NA <- function(object, na.alleles = c("0", "."))
              paste0("/", na.alleles, "$"),
              paste0("/", na.alleles, "/"))
     pat <- paste(pat, collapse = "|")
-    for (i in attr(x, "locicol")) {
+    for (i in attr(object, "locicol")) {
         if (length(j <- grep(pat, object[[i]])))
             object[[i]][j] <- NA_integer_
     }

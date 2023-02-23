@@ -1,8 +1,8 @@
-## haplotype.R (2022-07-05)
+## haplotype.R (2023-02-23)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
-## Copyright 2009-2022 Emmanuel Paradis, 2013 Klaus Schliep
+## Copyright 2009-2023 Emmanuel Paradis, 2013 Klaus Schliep
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -529,7 +529,8 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
 
 .drawSymbolsHaploNet <- function(xx, yy, size, col, bg, shape, pie)
 {
-    if (length(shape) == 1 && is.null(pie) && shape == "circles") {
+    nopie <- is.null(pie)
+    if (identical(shape, "circles") && nopie) {
         ## the only case with vectorised arguments
         symbols(xx, yy, circles = size / 2, inches = FALSE,
                 add = TRUE, fg = col, bg = bg)
@@ -537,14 +538,14 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
         n <- length(xx) # nb of nodes
         size <- rep(size, length.out = n)
         col <- rep(col, length.out = n)
-        bg <- if (!is.null(pie) && is.function(bg)) bg(ncol(pie)) else rep(bg, length.out = ncol(pie))
+        bg <- if (!nopie && is.function(bg)) bg(ncol(pie)) else rep(bg, length.out = ifelse(nopie, n, ncol(pie)))
         ## 'bg' should always be a vector of colours
         shape <- rep(shape, length.out = n)
         for (i in 1:n)
             switch(shape[i],
                    "circles" = circle,
                    "squares" = square,
-                   "diamonds" = diamond)(xx[i], yy[i], size[i], col[i], pie[i, ], bg)
+                   "diamonds" = diamond)(xx[i], yy[i], size[i], col[i], pie[i, ], if (nopie) bg[i] else bg)
     }
 }
 
@@ -1047,7 +1048,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
             LEFT <- rep(xy[1], nc)
             RIGHT <- LEFT + w
             rect(LEFT, BOTTOM, RIGHT, TOP, col = co)
-            text(RIGHT, (TOP + BOTTOM) /2, colnames(pie), adj = -0.5)
+            text(RIGHT + strwidth("n"), (TOP + BOTTOM) /2, colnames(pie), adj = 0)
         }
     }
     assign("last_plot.haploNet",
@@ -1822,8 +1823,8 @@ mutations <- function(haploNet, link, x, y, data = NULL, style = "table",
         if (is.null(data)) stop("no data attached to network")
     }
     ## for the moment only two main classes are accepted:
-    dnabin <- if (inherits(data, "DNAbin")) TRUE else FALSE
-    if (!dnabin && class(data) != "haplotype.loci")
+    dnabin <- inherits(data, "DNAbin")
+    if (!dnabin && !inherits(data, "haplotype.loci"))
         stop("data must have the class \"DNAbin\" or \"haplotype.loci\"")
     if (!dnabin) { # => class(data) == "haplotype.loci"
         if (missing(POS)) stop("'POS' should be given")

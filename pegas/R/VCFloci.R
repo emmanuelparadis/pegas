@@ -24,7 +24,7 @@
 
 .getMETAvcf <- function(file)
 {
-    f <- pegas:::.VCFconnection(file)
+    f <- .VCFconnection(file)
     HEADER <- character(0)
     skip <- 0L
     bloc <- 100L
