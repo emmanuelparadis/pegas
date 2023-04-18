@@ -1,4 +1,4 @@
-## haplotype.R (2023-02-23)
+## haplotype.R (2023-04-18)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -194,41 +194,10 @@ msn <- function(d)
 
 mst <- function(d)
 {
-    getIandJ <- function(ij, n) {
-        ## assumes a lower triangle, so i > j
-        ## n must be > 1 (not checked)
-        ## ij must be <= (n - 1)*n/2 (not checked too)
-        j <- 1L
-        N <- n - 1L
-        while (ij > N) {
-            j <- j + 1L
-            N <- N + n - j
-        }
-        i <- n - (N - ij)
-        c(j, i) # return the smaller index first
-    }
     if (is.matrix(d)) d <- as.dist(d)
     n <- attr(d, "Size")
     if (n < 2) stop("less than 2 observations in distance matrix")
-    Nedge <- n - 1L
-    m <- matrix(NA_real_, Nedge, 3)
-    forest <- 1:n
-    o <- order(d)
-    p <- getIandJ(o[1L], n)
-    m[1, ] <- c(p, d[o[1L]])
-    forest[p[2L]] <- forest[p[1L]]
-    i <- j <- 2L
-    while (j <= Nedge) {
-        p <- getIandJ(o[i], n)
-        f1 <- forest[p[1L]]
-        f2 <- forest[p[2L]]
-        if (f2 != f1) {
-            m[j, ] <- c(p, d[o[i]])
-            forest[forest == f2] <- f1
-            j <- j + 1L
-        }
-        i <- i + 1L
-    }
+    m <- .Call("mst_C", d, n)
     colnames(m) <- c("", "", "step")
     attr(m, "labels") <- attr(d, "Labels")
     class(m) <- "haploNet"

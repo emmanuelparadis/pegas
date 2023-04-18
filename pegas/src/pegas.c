@@ -1,6 +1,6 @@
-/* pegas.c    2021-04-08 */
+/* pegas.c    2023-04-18 */
 
-/* Copyright 2015-2021 Emmanuel Paradis */
+/* Copyright 2015-2023 Emmanuel Paradis */
 
 /* This file is part of the R-package `pegas'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -448,6 +448,7 @@ SEXP extract_POS(SEXP x, SEXP EOL, SEXP nTABtoSKIP);
 SEXP extract_REF(SEXP x, SEXP EOL, SEXP nTABtoSKIP);
 SEXP build_factor_loci(SEXP x, SEXP N);
 SEXP summary_loci_pegas(SEXP x, SEXP LOCI);
+SEXP mst_C(SEXP D, SEXP size);
 
 static R_CallMethodDef Call_entries[] = {
     {"read_bin_pegas", (DL_FUNC) &read_bin_pegas, 3},
@@ -458,6 +459,7 @@ static R_CallMethodDef Call_entries[] = {
     {"unique_haplotype_loci", (DL_FUNC) &unique_haplotype_loci, 3},
     {"summary_loci_pegas", (DL_FUNC) &summary_loci_pegas, 2},
     {"alreadyIn_mjn_DNAbin", (DL_FUNC) &alreadyIn_mjn_DNAbin, 2},
+    {"mst_C", (DL_FUNC) &mst_C, 2},
     {NULL, NULL, 0}
 };
 
