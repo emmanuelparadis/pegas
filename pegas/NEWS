@@ -8,6 +8,14 @@ NEW FEATURES
       also rmst() and all other functions calling mst()).
 
 
+BUG FIXES
+
+    o tajima.test() may use different sets of sites when computing the
+      number of segregating sites and the mean pairwise distance. This
+      has been fixed by adding pairwise.deletion = TRUE to the call to
+      dist.dna (see issue #77 on GitHub).
+
+
 
 		CHANGES IN PEGAS VERSION 1.2
 
