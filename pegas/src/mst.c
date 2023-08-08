@@ -1,4 +1,4 @@
-/* mst.c    2023-04-18 */
+/* mst.c    2023-08-08 */
 
 /* Copyright 2023 Emmanuel Paradis */
 
@@ -21,6 +21,36 @@ void _getIandJ_(int k, int n, int *i, int *j)
     *j = (int)y - 1;
 }
 
+typedef struct DATA {
+    double x;
+    int o;
+} DATA;
+
+static int comp__(const void *a, const void *b)
+{
+    double x, y;
+    x = ((struct DATA *)a)->x;
+    y = ((struct DATA *)b)->x;;
+    return (x > y) - (x < y);
+}
+
+void order_(double *x, int n, int *o)
+{
+    int i;
+    struct DATA *X;
+
+    X = (DATA*)R_alloc(n, sizeof(DATA));
+
+    for (i = 0; i < n; i++) {
+	X[i].x = x[i];
+	X[i].o = i;
+    }
+
+    qsort(X, n, sizeof(struct DATA), comp__);
+
+    for (i = 0; i < n; i++) o[i] = X[i].o;
+}
+
 SEXP mst_C(SEXP D, SEXP size)
 {
     int e, i, j, k, n, l, z, Nedge, *o, *forest, f1, f2;
@@ -41,7 +71,7 @@ SEXP mst_C(SEXP D, SEXP size)
     for (i = 0; i < n; i++) forest[i] = i + 1;
 
     o = (int*)R_alloc(l, sizeof(int));
-    R_orderVector1(o, l, D, TRUE, FALSE);
+    order_(d, l, o);
 
     /* create the first edge */
     _getIandJ_(o[0], n, &i, &j);

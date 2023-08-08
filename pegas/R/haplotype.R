@@ -197,7 +197,7 @@ mst <- function(d)
     if (is.matrix(d)) d <- as.dist(d)
     n <- attr(d, "Size")
     if (n < 2) stop("less than 2 observations in distance matrix")
-    m <- .Call("mst_C", d, n)
+    m <- .Call(mst_C, d, n)
     colnames(m) <- c("", "", "step")
     attr(m, "labels") <- attr(d, "Labels")
     class(m) <- "haploNet"

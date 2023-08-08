@@ -5,7 +5,8 @@ NEW FEATURES
 
     o The R code of mst() has been replaced by a C code which can be
       1000 times faster with several 100s observations (this improves
-      also rmst() and all other functions calling mst()).
+      also rmst() and all other functions calling mst()). The code now
+      scales very nearly as O(n^2) in practice.
 
 
 BUG FIXES
