@@ -15,7 +15,7 @@
 haploNet(h, d = NULL, getProb = TRUE)
 \method{print}{haploNet}(x, ...)
 \method{plot}{haploNet}(x, size = 1, col, bg, col.link, lwd, lty,
-     shape = "circles", pie = NULL, labels, font, cex, scale.ratio,
+     shape = "circles", pie = NULL, labels, font, cex, col.lab, scale.ratio,
      asp = 1, legend = FALSE, fast = FALSE, show.mutation,
      threshold = c(1, 2), xy = NULL, ...)
 \method{as.network}{haploNet}(x, directed = FALSE, altlinks = TRUE, ...)
@@ -54,7 +54,9 @@ haploNet(h, d = NULL, getProb = TRUE)
     with their labels (the default).}
   \item{font}{the font used for these labels (bold by default); must be
     an integer between 1 and 4.}
-  \item{cex}{a numerical specifying the character expansion of the labels.}
+  \item{cex}{a numerical specifying the character expansion of the
+    labels.}
+  \item{col.lab}{the color of the labels.}
   \item{scale.ratio}{the ratio of the scale of the links representing
     the number of steps on the scale of the circles representing the
     haplotypes. It may be needed to give a value greater than one to

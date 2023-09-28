@@ -1,4 +1,4 @@
-## haplotype.R (2023-04-18)
+## haplotype.R (2023-09-28)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -518,7 +518,7 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
     }
 }
 
-.drawAlternativeLinks <- function(xx, yy, altlink, threshold, show.mutation, scale.ratio)
+.drawAlternativeLinks <- function(xx, yy, altlink, threshold, show.mutation, scale.ratio, size)
 {
     s <- altlink[, 3] >= threshold[1] & altlink[, 3] <= threshold[2]
     if (!any(s)) return(NULL)
@@ -530,7 +530,7 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
     if (show.mutation) {
         n <- length(xx)
         .labelSegmentsHaploNet(xx, yy, altlink[s, 1:2, drop = FALSE],
-                               altlink[s, 3, drop = FALSE], rep(1, n),
+                               altlink[s, 3, drop = FALSE], size,
                                1, "black", show.mutation, scale.ratio)
     }
 }
@@ -694,7 +694,7 @@ replot <- function(xy = NULL, col.identifier = "purple", ...)
             .labelSegmentsHaploNet(xx, yy, cbind(l1, l2), step, size, lwd,
                                    col.link, as.numeric(show.mutation), scale.ratio)
         if (!is.null(altlink) && !identical(as.numeric(threshold), 0))
-            .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation, scale.ratio)
+            .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation, scale.ratio, size)
         .drawSymbolsHaploNet(xx, yy, size, col, bg, shape, pie)
         if (is.character(labels))
             text(xx, yy, labels, font = font, cex = cex)
@@ -728,7 +728,7 @@ replot <- function(xy = NULL, col.identifier = "purple", ...)
 }
 
 plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
-             shape = "circles", pie = NULL, labels, font, cex,
+             shape = "circles", pie = NULL, labels, font, cex, col.lab,
              scale.ratio, asp = 1, legend = FALSE, fast = FALSE,
              show.mutation, threshold = c(1, 2), xy = NULL, ...)
 {
@@ -744,6 +744,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
     if (missing(labels)) labels <- OPTS$labels
     if (missing(font)) font <- OPTS$labels.font
     if (missing(cex)) cex <- OPTS$labels.cex
+    if (missing(col.lab)) col.lab <- OPTS$labels.color
     if (missing(scale.ratio)) scale.ratio <- OPTS$scale.ratio
     if (missing(show.mutation)) show.mutation <- OPTS$show.mutation
 
@@ -951,7 +952,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
     ## draw alternative links
     altlink <- attr(x, "alter.links")
     if (!is.null(altlink) && !identical(as.numeric(threshold), 0))
-        .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation, scale.ratio)
+        .drawAlternativeLinks(xx, yy, altlink, threshold, show.mutation, scale.ratio, size)
 
     if (show.mutation) {
         if (show.mutation == 1 && all(x[, 3] < 1)) {
@@ -966,7 +967,7 @@ plot.haploNet <- function(x, size = 1, col, bg, col.link, lwd, lty,
 
     if (labels) {
         labels <- attr(x, "labels") # for export below
-        text(xx, yy, labels, font = font, cex = cex)
+        text(xx, yy, labels, font = font, cex = cex, col = col.lab)
     }
     if (legend[1]) {
         if (is.logical(legend)) {

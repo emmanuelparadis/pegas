@@ -23,6 +23,7 @@ setHaploNetOptions(...)
   \item{labels = TRUE}{whether to show the haplotype labels.}
   \item{labels.cex = 1}{size of the haplotype labels.}
   \item{labels.font = 2}{font of the haplotype labels.}
+  \item{labels.color = "black"}{colour of the haplotype labels.}
   \item{link.color = "black"}{colour of the links.}
   \item{link.type = 1}{type of line for the links.}
   \item{link.type.alt = 2}{type of lines for the alternative links.}

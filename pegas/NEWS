@@ -1,7 +1,11 @@
-		CHANGES IN PEGAS VERSION 1.2-0.1
+		CHANGES IN PEGAS VERSION 1.2-0.2
 
 
 NEW FEATURES
+
+    o plot.haploNet() has a new argument 'col.lab' to change the
+      colors of the haplotype labels. It can be changed through the
+      option "labels.color" (see ?setHaploNetOptions).
 
     o The R code of mst() has been replaced by a C code which can be
       1000 times faster with several 100s observations (this improves
@@ -15,6 +19,9 @@ BUG FIXES
       number of segregating sites and the mean pairwise distance. This
       has been fixed by adding pairwise.deletion = TRUE to the call to
       dist.dna (see issue #77 on GitHub).
+
+    o The placement of mutation ticks on alternative links of
+      haplotype networks has been fixed (see issue #77 on GitHub).
 
 
 
