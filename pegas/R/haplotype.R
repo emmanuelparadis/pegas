@@ -1,4 +1,4 @@
-## haplotype.R (2023-09-28)
+## haplotype.R (2023-10-05)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -582,6 +582,43 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
     }
 }
 
+.mutationDots <- function(x0, y0, x1, y1, n, deltaRadii, lwd, col.link,
+                          space = 0.1, diameter = 0.05)
+{
+    ## convert inches into user-coordinates:
+    l <- xinch(diameter)
+    sp <- xinch(space)
+    for (i in seq_along(x0)) {
+        x <- seq(-(sp*(n[i] - 1))/2, by = sp, length.out = n[i])
+        y <- numeric(n[i])
+        ## rotation if the line is not horizontal
+        if (y0[i] != y1[i]) {
+            theta <- atan2(y1[i] - y0[i], x1[i] - x0[i])
+            tmp <- rect2polar(x, y)
+            xy <- polar2rect(tmp$r, tmp$angle + theta)
+            x <- xy$x
+            y <- xy$y
+        }
+        ## translation:
+        if (deltaRadii[i] == 0) {
+            xm <- (x0[i] + x1[i]) / 2
+            ym <- (y0[i] + y1[i]) / 2
+           } else {
+               ## see explanations below
+               li <- sqrt((x0[i] - x1[i])^2 + (y0[i] - y1[i])^2)
+               w0 <- 1 / (li - deltaRadii[i] / 2)
+               w1 <- 1 / (li + deltaRadii[i] / 2)
+               sumw <- w0 + w1
+               xm <- (x0[i] * w0 + x1[i] * w1) / sumw
+               ym <- (y0[i] * w0 + y1[i] * w1) / sumw
+        }
+        x <- x + xm
+        y <- y + ym
+        symbols(x, y, circles = rep(lwd/15, length(x)), inches = FALSE,
+                add = TRUE, fg = col.link, bg = col.link)
+    }
+}
+
 .labelSegmentsHaploNet <- function(xx, yy, link, step, size, lwd, col.link, method, scale.ratio)
 {
 ### method: the way the segments are labelled
@@ -594,15 +631,17 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
     switch(method, {
         .mutationRug(xx[l1], yy[l1], xx[l2], yy[l2], step, size[l2] - size[l1])
     }, {
-        ld1 <- step
-        ld2 <- step * scale.ratio
-        for (i in seq_along(ld1)) {
-            pc <- ((1:ld1[i]) / (ld1[i] + 1) * ld2[i] + size[l1[i]]/2) / (ld2[i] + (size[l1[i]] + size[l2[i]])/2)
-            xr <- pc * (xx[l2[i]] - xx[l1[i]]) +  xx[l1[i]]
-            yr <- pc * (yy[l2[i]] - yy[l1[i]]) +  yy[l1[i]]
-            symbols(xr, yr, circles = rep(lwd/15, length(xr)), inches = FALSE,
-                    add = TRUE, fg = col.link, bg = col.link)
-        }
+        .mutationDots(xx[l1], yy[l1], xx[l2], yy[l2], step, size[l2] - size[l1],
+                      lwd, col.link, space = 0.1, diameter = 0.05)
+###        ld1 <- step
+###        ld2 <- step * scale.ratio
+###        for (i in seq_along(ld1)) {
+###            pc <- ((1:ld1[i]) / (ld1[i] + 1) * ld2[i] + size[l1[i]]/2) / (ld2[i] + (size[l1[i]] + size[l2[i]])/2)
+###            xr <- pc * (xx[l2[i]] - xx[l1[i]]) +  xx[l1[i]]
+###            yr <- pc * (yy[l2[i]] - yy[l1[i]]) +  yy[l1[i]]
+###            symbols(xr, yr, circles = rep(lwd/15, length(xr)), inches = FALSE,
+###                    add = TRUE, fg = col.link, bg = col.link)
+###        }
     }, {
         x0 <- xx[l1]
         x1 <- xx[l2]
