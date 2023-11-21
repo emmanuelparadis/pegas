@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 1.2-0.2
+		CHANGES IN PEGAS VERSION 1.2-0.3
 
 
 NEW FEATURES
@@ -11,6 +11,10 @@ NEW FEATURES
       1000 times faster with several 100s observations (this improves
       also rmst() and all other functions calling mst()). The code now
       scales very nearly as O(n^2) in practice.
+
+    o rmst() now returns a network with a "backbone-MST" so that
+      repeated analyses of the same data are likely to return
+      graphically similar networks (see issue #82 on GitHub).
 
 
 BUG FIXES

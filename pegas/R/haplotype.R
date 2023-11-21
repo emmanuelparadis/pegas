@@ -1,4 +1,4 @@
-## haplotype.R (2023-10-05)
+## haplotype.R (2023-11-21)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -113,23 +113,49 @@ rmst <- function(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
     }
     links <- names(TAB) <- MAT
 
-    ## define the alternative links wrt the last MST:
-    labs <- attr(rnt, "labels")
-    MST.str <- labs[rnt[, 1:2]]
-    dim(MST.str) <- c(n - 1, 2)
-    MST.str <- apply(MST.str, 1, sort)
-    MST.str <- paste(MST.str[1, ], MST.str[2, ], sep = "\r")
-    k <- match(links, MST.str)
-    nak <- is.na(k)
-    TAB <- c(TAB[match(MST.str, links)], TAB[nak])
-    alt <- unlist(strsplit(links[nak], "\r"))
+    ## define the backbone-network:
+    labs <- rownames(D)
+    forest <- 1:n
+    k <- 0L
+    done <- FALSE
+    alt.logi <- !logical(length(TAB))
+    ## the backbone-network is built by checking the links in the order
+    ## of pairs of observations, and including the links which were
+    ## found during the iterations of RMST.
+    for (i in 1:(n - 1)) {
+        labi <- labs[i]
+        for (j in (i + 1):n) {
+            tmp <- paste(sort(c(labi, labs[j])), collapse = "\r")
+            m <- match(tmp, links)
+            if (is.na(m)) next
+            if (forest[i] == forest[j]) next
+            alt.logi[m] <- FALSE # so this is not an alternative link
+            k <- k + 1L
+            rnt[k, 1L] <- i
+            rnt[k, 2L] <- j
+            if (k == n - 1) {
+                done <- TRUE
+                break
+            }
+            forest[forest == forest[j]] <- forest[i]
+        }
+        if (done) break
+    }
+    rnt[, 3L] <- D[rnt[, 1:2]]
+
+    ## An alternative is to use the last MST and recode the haplotypes
+    ## in the same order than in the input distance matrix:
+    ##labs <- rownames(D)
+    ##recode <- match(attr(rnt, "labels"), labs)
+    ##rnt[, 1L] <- recode[rnt[, 1L]]
+    ##rnt[, 2L] <- recode[rnt[, 2L]]
+
+    attr(rnt, "labels") <- labs
+    alt <- unlist(strsplit(links[alt.logi], "\r"))
     alt <- match(alt, labs)
     alt <- matrix(alt, length(alt)/2, 2, byrow = TRUE)
     alt <- t(apply(alt, 1, sort))
-    i <- alt[, 1]
-    j <- alt[, 2]
-    k <- n*(i - 1) - i*(i - 1)/2 + j - i
-    alt <- cbind(alt, d[k])
+    alt <- cbind(alt, D[alt])
     colnames(alt) <- c("", "", "step")
     attr(rnt, "alter.links") <- alt
     names(TAB) <- gsub("\r", "--", names(TAB))
@@ -389,7 +415,7 @@ print.haploNet <- function(x, ...)
     altlinks <- attr(x, "alter.links")
     if (!is.null(altlinks)) N <- N + nrow(altlinks)
     cat(" ", N, if (N > 1) "links\n" else "link\n")
-    cat("  link lengths between", x[1, 3], "and", x[n, 3], "steps\n\n")
+    cat("  link lengths between", x[1, 3], "and", x[n, 3], "step(s)\n\n")
     cat("Use print.default() to display all elements.\n")
 }
 
