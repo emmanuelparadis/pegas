@@ -14,7 +14,7 @@ Population and Evolutionary Genetics Analysis System
   \code{library(help = pegas)}.
 
   More information on \pkg{pegas} can be found at
-  \url{http://ape-package.ird.fr/pegas.html}.
+  \url{https://emmanuelparadis.github.io/pegas.html}.
 }
 \author{
   Emmanuel Paradis, Thibaut Jombart, Zhian N. Kamvar, Brian Knaus,

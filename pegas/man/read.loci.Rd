@@ -56,7 +56,7 @@ read.loci(file, header = TRUE, loci.sep = "", allele.sep = "/|",
   be of any type.
 
   Details on the structure can be found in
-  \url{http://ape-package.ird.fr/pegas/DefinitionDataClassesPegas.pdf}
+  \url{https://emmanuelparadis.github.io/pegas/DefinitionDataClassesPegas.pdf}
 }
 \author{Emmanuel Paradis}
 \seealso{

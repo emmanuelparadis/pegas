@@ -72,7 +72,7 @@ where the different levels are the observed genotypes with the alleles
 separated with a forward slash, for instance, `A/A' for a classical
 genotype, or `132/148' for a microsatellite locus. This is an S3
 class.\footnote{For details:
-  ape-package.ird.fr/pegas/DefinitionDataClassesPegas.pdf.}
+  emmanuelparadis.github.io/pegas/DefinitionDataClassesPegas.pdf.}
 Some examples are given in the next subsection.
 
 With version 0.6, \pegas\ supports phased and unphased genotypes (A|A
@@ -110,7 +110,7 @@ x <- read.loci("toto", header = FALSE)
 x
 print(x, details = TRUE)
 class(x)
-@ 
+@
 Since the file has no label for the column, we used \code{header =
   FALSE}. Note that printing a \code{"loci"} object displays a very
 brief account of the data; the option \code{details = TRUE} allows to
@@ -137,7 +137,7 @@ Let us have a look on the different options of \code{read.loci}:
 
 <<>>=
 args(read.loci)
-@ 
+@
 We already know \code{file}, \code{header}, and \code{allele.sep}.
 Note the default value for this last option which specifies that the
 allele separator can be either a slash or a vertical bar.
@@ -205,20 +205,20 @@ which will be read with:
 z <- read.loci("tata", loci.sep = "\t", col.loci = 2:3, col.pop = 4, row.names = 1)
 z
 print(z, details = TRUE)
-@ 
+@
 Note \code{row.names} which is passed with the `\code{\dots}' argument.
 To make sure that only the first and the second columns are treated as
 loci, let us extract the alleles from this data set:
 
 <<>>=
 getAlleles(z)
-@ 
+@
 We may check that the attribute \code{"locicol"} has been set
 correctly, but usually the user does not need:
 
 <<>>=
 attr(z, "locicol")
-@ 
+@
 Finally we display the internal structure of the data to see that the
 additional variables are treated as they should be:
 
@@ -233,7 +233,7 @@ function \code{read.vcf}. Version 0.8 has a completely rewritten code:
 
 <<>>=
 args(read.vcf)
-@ 
+@
 By default, the first 10,000 loci are read. The option
 \code{which.loci} is an alternative way to specify which loci to read
 in the file. For instance, the following is the same than the default

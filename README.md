@@ -9,4 +9,4 @@ This repository contains:
 
 More information on pegas (including description of data structures):
 
-http://ape-package.ird.fr/pegas.html
+http://emmanuelparadis.github.io/pegas.html

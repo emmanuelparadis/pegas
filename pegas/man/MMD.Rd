@@ -30,14 +30,14 @@ MMD(x, xlab = "Distance", main = "", rug = TRUE, legend = TRUE,
 }
 \value{
   an invisible list with three elements:
-  \itemize{
-    \item histogram: the output of the \code{\link[graphics]{hist}}
-      call.
-    \item empirical.density: the empirical density as estimated by
-      \code{\link[stats]{density}}.
-    \item expected.curve: the values of the curve expected under stable
-      population.
-}}
+
+  \item{histogram}{the output of the \code{\link[graphics]{hist}}
+    call.}
+  \item{empirical.density}{the empirical density as estimated by
+    \code{\link[stats]{density}}.}
+  \item{expected.curve:}{the values of the curve expected under stable
+    population.}
+}
 \author{Emmanuel Paradis and David Winter}
 \references{
   Rogers, A. R. and Harpending, H. (1992) Population growth makes waves

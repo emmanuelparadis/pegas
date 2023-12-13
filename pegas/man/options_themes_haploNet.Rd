@@ -10,7 +10,7 @@ getHaploNetOptions()
 setHaploNetOptions(...)
 }
 \arguments{
-  \item{...}{option(s) and value(s) to be changed (separated by commas
+  \item{\dots}{option(s) and value(s) to be changed (separated by commas
     if several).}
 }
 \details{
