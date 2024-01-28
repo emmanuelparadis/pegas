@@ -33,8 +33,7 @@ among individuals characterised with genotypic or sequence data
 \cite{Huson2006, Paradis2018b}. \pegas\ has had tools to infer and plot
 haplotype networks since its first version (0.1, released in May
 2009). These tools have improved over the years and are appreciated in
-the community working on population genetics and genomics
-(see John Bhorne's blog\footnote{https://johnbhorne.wordpress.com/2016/09/15/still-making-haplotype-networks-the-old-way-how-to-do-it-in-r/}).
+the community working on population genetics and genomics.
 
 This document covers some aspects of drawing haplotype networks with
 \pegas\ with an emphasis on recent improvements. Not all details and

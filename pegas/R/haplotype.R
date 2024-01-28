@@ -1,8 +1,8 @@
-## haplotype.R (2023-11-21)
+## haplotype.R (2024-01-28)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
-## Copyright 2009-2023 Emmanuel Paradis, 2013 Klaus Schliep
+## Copyright 2009-2024 Emmanuel Paradis, 2013 Klaus Schliep
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -66,6 +66,11 @@ rmst <- function(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
         stop("'d' must be a matrix or a 'dist' object")
     D <- as.matrix(d)
     n <- nrow(D)
+    if (n == 2) {
+        if (!quiet)
+            warning("only 2 haplotypes: returning the MST")
+        return(mst(d))
+    }
     randomize <- TRUE
     if (n < 6 && is.null(B)) {
         B <- factorial(n)

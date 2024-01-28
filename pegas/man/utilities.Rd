@@ -15,7 +15,7 @@
   a set of alleles, \code{proba.genotype} calculates expected
   probabilities of genotypes under Hardy--Weinberg equilibrium,
   \code{is.snp} tests whether a locus is a SNP, \code{is.phased} tests
-  whether a gentotype is phased, and \code{unphase} unphase phased
+  whether a genotype is phased, and \code{unphase} unphase phased
   genotypes.
 }
 \usage{
