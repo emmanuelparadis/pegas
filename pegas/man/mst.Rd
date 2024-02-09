@@ -4,7 +4,7 @@
 \alias{rmst}
 \title{Minimum Spanning Tree and Network}
 \description{
-  Computes a minimum spanning tree using Kruskal's algorithm, the
+  Computes a minimum spanning tree (MST) using Kruskal's algorithm, the
   minimum spanning network using Bandelt et al.'s algorithm, or the
   randomized minimum spanning tree (Paradis 2018).
 }
@@ -12,25 +12,34 @@
 mst(d)
 msn(d)
 rmst(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
-     quiet = FALSE)
+     quiet = FALSE, random = FALSE)
 }
 \arguments{
   \item{d}{a distance matrix, either as an object of class \code{"dist"},
     or a (square symmetric) matrix.}
-  \item{B}{number of randomizations.}
+  \item{B}{number of randomizations (ignored if \code{random = FALSE}).}
   \item{stop.criterion}{the stopping criterion if \code{B} is not given
-    (see details).}
-  \item{iter.lim}{the maximum number of iterations.}
+    (see details; ignored if \code{random = FALSE}).}
+  \item{iter.lim}{the maximum number of iterations (ignored if
+    \code{random = FALSE}).}
   \item{quiet}{a logical value specifying whether to indicate progress
     of calculations.}
+  \item{random}{the default is to find all MSTs compatible with the
+    data. If \code{TRUE}, the random algorithm described in Paradis
+    (2018) is used.}
 }
 \details{
-  For the RMST, the calculations stop when no new links are found after a
-  number of successive iterations specified by \code{stop.criterion}. By
-  default, this number is ceiling(sqrt(n)) where n is the number of
-  observations. This criterion is ignored if \code{B} is given, or if n
-  < 6 in which case complete enumeration is done. In all cases, no more
-  than \code{iter.lim} iterations are done.
+  The new default implementation of \code{rmst} uses an algorithm which
+  finds all possible MSTs compatible with the data. This gives the same
+  results than \code{random = TRUE} if the number of iterations is
+  sufficienly large.
+
+  If \code{random = TRUE}, the calculations stop when no new links are
+  found after a number of successive iterations specified by
+  \code{stop.criterion}. By default, this number is ceiling(sqrt(n))
+  where n is the number of observations. This criterion is ignored if
+  \code{B} is given, or if n < 6 in which case complete enumeration is
+  done. In all cases, no more than \code{iter.lim} iterations are done.
 }
 \value{
   an object of class \code{"\link{haploNet}"}.
@@ -57,7 +66,7 @@ rmst(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
   other packages) and returns its results in a different form. The
   present version is more efficient. If you want to use the older
   version after loading \pkg{pegas}, use \code{ape::mst} since \pkg{ape}
-  will certainly always be loaded before \pkg{pegas}.
+  will be loaded before \pkg{pegas}.
 }
 \examples{
 data(woodmouse)

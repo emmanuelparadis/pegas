@@ -1,11 +1,25 @@
-## mjn.R (2023-02-23)
+## mjn.R (2024-02-09)
 
 ##   Median-Joining Network
 
-## Copyright 2017-2023 Emmanuel Paradis
+## Copyright 2017-2024 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
+
+## from ?dist:
+getIndex <- function(i, j, n) {
+    if (i < j) n*(i - 1) - i*(i - 1)/2 + j - i
+    else n*(j - 1) - j*(j - 1)/2 + i - j
+}
+
+## the reverse operation:
+getIandJ <- function(ij, n) {
+    b <- n - 0.5
+    i <- ceiling(b - sqrt(b * b - 2 * ij))
+    j <- n * (1 - i) + (i + 1) * i / 2 + ij
+    as.integer(c(i, j))
+}
 
 mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", quiet = FALSE)
 {
@@ -19,18 +33,6 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
         if (is.list(x)) x <- as.matrix(x)
     }
 
-    getIndex <- function(i, j, n) {
-        if (i < j) n*(i - 1) - i*(i - 1)/2 + j - i
-        else n*(j - 1) - j*(j - 1)/2 + i - j
-    }
-
-    ## the reverse operation:
-    getIandJ <- function(ij, n) {
-        b <- n - 0.5
-        i <- ceiling(b - sqrt(b * b - 2 * ij))
-        j <- n * (1 - i) + (i + 1) * i / 2 + ij
-        as.integer(c(i, j))
-    }
     ## the above function uses a quadratic equation to find i;
     ## it is slightly faster than the previous version (below)
     ## which uses an iteration (see sources of pegas 1.1)

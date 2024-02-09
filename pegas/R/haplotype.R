@@ -1,4 +1,4 @@
-## haplotype.R (2024-01-28)
+## haplotype.R (2024-02-09)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -30,9 +30,71 @@ getAllCombs <- function(n) {
     res
 }
 
-rmst <- function(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
-                 quiet = FALSE)
+.newrmst <- function(d)
 {
+    uD <- sort(unique.default(d))
+    n <- attr(d, "Size")
+
+    forest <- seq_len(n)
+    m <- matrix(NA_real_, n * (n - 1) / 2, 3L)
+    alt <- integer()
+    i <- 0L
+
+    for (x in uD) {
+        pairs <- sapply(which(d == x), getIandJ, n = n)
+        todrop <- forest[pairs[1L, ]] == forest[pairs[2L, ]]
+        if (all(todrop)) next
+        if (any(todrop)) pairs <- pairs[, !todrop, drop = FALSE]
+        Npairs <- ncol(pairs)
+        for (j in seq_len(Npairs)) {
+            h1 <- pairs[1L, j]
+            h2 <- pairs[2L, j]
+            k1 <- forest[h1]
+            k2 <- forest[h2]
+            if (k1 != k2) {
+                forest[forest == k2] <- k1
+                i <- i + 1L
+                m[i, ] <- c(h1, h2, x)
+            } else { # else a loop is created
+                i <- i + 1L
+                m[i, ] <- c(h1, h2, x)
+                alt <- c(alt, i)
+            }
+        }
+        if (length(unique(forest)) == 1L) break
+    }
+
+    m <- m[seq_len(i), , drop = FALSE]
+    colnames(m) <- c("", "", "step")
+    if (length(alt)) {
+        ALT <- m[alt, , drop = FALSE]
+        m <- m[-alt, , drop = FALSE]
+        attr(m, "alter.links") <- ALT
+    }
+    attr(m, "labels") <- attr(d, "Labels")
+    class(m) <- "haploNet"
+    m
+}
+
+rmst <- function(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
+                 quiet = FALSE, random = FALSE)
+{
+    if (!is.matrix(d) && !inherits(d, "dist"))
+        stop("'d' must be a matrix or a 'dist' object")
+
+    if (!inherits(d, "dist")) d <- as.dist(d)
+    n <- attr(d, "Size")
+
+    if (n < 3) {
+        if (!quiet)
+            warning("less than 3 haplotypes: returning the MST")
+        return(mst(d))
+    }
+
+    if (!random) return(.newrmst(d))
+
+    D <- as.matrix(d)
+
     updateMat <- function(mat, rep) {
         i <- match(mat, MAT)
         Nnew <- length(inew <- which(is.na(i)))
@@ -53,7 +115,8 @@ rmst <- function(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
     ## do MST and return vector of mode character with the labelled-links
     foo <- function(d) {
         d <<- as.dist(d)
-        rnt <<- rnt <- mst(d)
+        rnt <- mst(d)
+        assign("rnt", rnt, parent.env(environment()))
         m <- rnt[, 1:2]
         dm <- dim(m)
         mat <- attr(rnt, "labels")[m]
@@ -62,15 +125,6 @@ rmst <- function(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
         paste(mat[1, ], mat[2, ], sep = "\r")
     }
 
-    if (!is.matrix(d) && !inherits(d, "dist"))
-        stop("'d' must be a matrix or a 'dist' object")
-    D <- as.matrix(d)
-    n <- nrow(D)
-    if (n == 2) {
-        if (!quiet)
-            warning("only 2 haplotypes: returning the MST")
-        return(mst(d))
-    }
     randomize <- TRUE
     if (n < 6 && is.null(B)) {
         B <- factorial(n)
@@ -416,11 +470,16 @@ print.haploNet <- function(x, ...)
 {
     cat("Haplotype network with:\n")
     cat(" ", length(attr(x, "labels")), "haplotypes\n")
-    N <- n <- nrow(x)
+    N <- nrow(x)
     altlinks <- attr(x, "alter.links")
-    if (!is.null(altlinks)) N <- N + nrow(altlinks)
+    if (!is.null(altlinks)) {
+        N <- N + nrow(altlinks)
+        rl <- range(x[, 3], altlinks[, 3])
+    } else {
+        rl <- range(x[, 3])
+    }
     cat(" ", N, if (N > 1) "links\n" else "link\n")
-    cat("  link lengths between", x[1, 3], "and", x[n, 3], "step(s)\n\n")
+    cat("  link lengths between", rl[1], "and", rl[2], "step(s)\n\n")
     cat("Use print.default() to display all elements.\n")
 }
 

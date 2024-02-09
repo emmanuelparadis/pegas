@@ -1,10 +1,24 @@
 		CHANGES IN PEGAS VERSION 1.3-0.1
 
 
+NEW FEATURES
+
+    o rmst() has a new option: random = FALSE. The new default
+      algorithm of this function finds all MSTs for the data and
+      combines them to create the returned RMST. The results are
+      identical to those with the random algorithm with a sufficiently
+      large number of iterations (see PR #86 on GitHub).
+
+
 BUG FIXES
 
     o rmst() failed when given a single distance (i.e., there's only 2
       haplotypes): it now calls mst().
+
+    o rmst() created and object named "rnt" in the user's workspace.
+      This is fixed.
+
+    o print.haploNet() did not always display correctly link lengths.
 
 
 
