@@ -40,6 +40,9 @@ rmst(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
   where n is the number of observations. This criterion is ignored if
   \code{B} is given, or if n < 6 in which case complete enumeration is
   done. In all cases, no more than \code{iter.lim} iterations are done.
+
+  The method implemented in \code{rmst} is not directly related to the
+  algorithm of the same name summarized by Ramachandran (2008).
 }
 \value{
   an object of class \code{"\link{haploNet}"}.
@@ -55,7 +58,11 @@ rmst(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
 
   Paradis, E. (2018) Analysis of haplotype networks: the randomized
   minimum spanning tree method. \emph{Methods in Ecology and Evolution},
-  \bold{9}, 1308--1317. DOI: 10.1111/2041-210X.12969.
+  \bold{9}, 1308--1317.
+
+  Ramachandran, V. (2008) Randomized Minimum Spanning Tree. \emph{In}:
+  Kao, M. Y. (ed) Encyclopedia of Algorithms. Pages 1747--1750.
+  Springer, Boston, MA.
 }
 \author{Emmanuel Paradis}
 \seealso{

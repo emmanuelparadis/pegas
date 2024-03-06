@@ -1,4 +1,4 @@
-## haplotype.R (2024-02-09)
+## haplotype.R (2024-03-06)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
@@ -616,7 +616,9 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
     ya0 <- yy[altlink[s, 1]]
     xa1 <- xx[altlink[s, 2]]
     ya1 <- yy[altlink[s, 2]]
-    segments(xa0, ya0, xa1, ya1, col = "grey", lty = 2)
+    OPTS <- get("plotHaploNetOptions", envir = .PlotHaploNetEnv)
+    segments(xa0, ya0, xa1, ya1, col = OPTS$link.color.alt,
+             lty = OPTS$link.type.alt, lwd = OPTS$link.width.alt)
     if (show.mutation) {
         n <- length(xx)
         .labelSegmentsHaploNet(xx, yy, altlink[s, 1:2, drop = FALSE],
@@ -743,7 +745,7 @@ diamond <- function(x, y, size, col, pie = NULL, bg = NULL)
         if (any(s <- deltaRadii != 0)) {
 ### if there are links between symbols of different size: need to place the
 ### annotation in the middle of the "visible" part of the link. We do that
-### with a weighting mean of the coordinates (simpler to calculate than
+### with a weighted mean of the coordinates (simpler to calculate than
 ### trogonometric formulas). We do that only for the different sized symbols.
             s <- which(s)
             ## lengths between each pair of nodes:

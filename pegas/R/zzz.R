@@ -1,8 +1,8 @@
-## zzz.R (2023-09-28)
+## zzz.R (2024-03-06)
 
 ##   Library Loading
 
-## Copyright 2015-2023 Emmanuel Paradis
+## Copyright 2015-2024 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../COPYING for licensing issues.
@@ -17,6 +17,7 @@ list(
     labels.font = 2,
     labels.color = "black",
     link.color = "black",
+    link.color.alt = "grey",
     link.type = 1,
     link.type.alt = 2,
     link.width = 1,
