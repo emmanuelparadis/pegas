@@ -20,6 +20,9 @@ getIandJ <- function(ij, n) {
     j <- n * (1 - i) + (i + 1) * i / 2 + ij
     as.integer(c(i, j))
 }
+## the above function uses a quadratic equation to find i;
+## it is slightly faster than the previous version (below)
+## which uses an iteration (see sources of pegas 1.1)
 
 mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", quiet = FALSE)
 {
@@ -32,10 +35,6 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
             stop("mjn() requires DNA or binary data (0/1)")
         if (is.list(x)) x <- as.matrix(x)
     }
-
-    ## the above function uses a quadratic equation to find i;
-    ## it is slightly faster than the previous version (below)
-    ## which uses an iteration (see sources of pegas 1.1)
 
     purgeObsolete <- function()
     {

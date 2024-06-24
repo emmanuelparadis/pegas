@@ -1,8 +1,8 @@
-## dist.asd.R (2022-05-16)
+## dist.asd.R (2024-06-24)
 
 ##   Allelic Sharing Distance
 
-## Copyright 2017-2022 Emmanuel Paradis
+## Copyright 2017-2024 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -55,8 +55,8 @@ dist.asd <- function(x, scaled = TRUE, pairwise.deletion = FALSE)
                 if (is.na(b)) next
                 ## 'a' and 'b' cannot be NA
                 d[k] <- m[a, b]
-                k <- k + 1L
                 if (spd) NLOC[k] <<- NLOC[k] + 1L
+                k <- k + 1L
             }
         }
         d

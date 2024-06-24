@@ -1,4 +1,4 @@
-		CHANGES IN PEGAS VERSION 1.3-0.2
+		CHANGES IN PEGAS VERSION 1.3-0.3
 
 
 NEW FEATURES
@@ -25,6 +25,9 @@ BUG FIXES
 
     o When plotting a haplotype network, modifying the aspect of the
       alternative links did not work.
+
+    o A bug was fixed in dist.asd(, pairwise.deletion = TRUE) (see
+      issue #91 on GitHub).
 
 
 

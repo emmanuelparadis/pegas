@@ -104,5 +104,6 @@ dd <- as.dist(matrix(runif(320^2), 320))
 (dd_crp <- amova(dd ~ conti/region/pop, nperm = 100))
 sig2 <- setNames(dd_crp$varcomp$sigma2, rownames(dd_crp$varcomp))
 getPhi(sig2)
-}}
+}
+}
 \keyword{models}

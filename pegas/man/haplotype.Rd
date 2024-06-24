@@ -113,14 +113,16 @@ plot(sort(h))
 ## get the frequencies in a named vector:
 setNames(lengths(attr(h, "index")), labels(h))
 
+fl <- tempfile(fileext = ".fas")
+
 ## data posted by Hirra Farooq on r-sig-phylo (see link above):
 cat(">[A]\nCCCGATTTTATATCAACATTTATTT------",
     ">[D]\nCCCGATTTT----------------------",
     ">[B]\nCCCGATTTTATATCAACATTTATTT------",
     ">[C]\nCCCGATTTTATATCACCATTTATTTTGATTT",
     file = "x.fas", sep = "\n")
-x <- read.dna("x.fas", "f")
-unlink("x.fas")
+x <- read.dna(fl, "f")
+unlink(fl)
 
 ## show the sequences and the distances:
 alview(x)
