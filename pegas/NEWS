@@ -12,6 +12,10 @@ NEW FEATURES
     o The colour of the alternative links can now be changed with the
       new option $link.color.alt through setHaploNetOptions().
 
+    o haploNet() and mjn() now return a network with a single node and
+      zero link when given a single haplotype as input. They return
+      NULL when given an input with zero data.
+
 
 BUG FIXES
 

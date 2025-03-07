@@ -1,8 +1,8 @@
-## mjn.R (2024-02-09)
+## mjn.R (2025-03-07)
 
 ##   Median-Joining Network
 
-## Copyright 2017-2024 Emmanuel Paradis
+## Copyright 2017-2025 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -27,6 +27,18 @@ getIandJ <- function(ij, n) {
 mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", quiet = FALSE)
 {
     if (is.data.frame(x)) x <- as.matrix(x)
+    n <- nrow(x)
+    if (n == 0) return(NULL)
+    if (n == 1) {
+        m <- matrix(0, 0, 3)
+        colnames(m) <- c("", "", "step")
+        attr(m, "labels") <- rownames(x)
+        if (mode(x) == "raw") class(x) <- "DNAbin"
+        attr(m, "data") <- x
+        class(m) <- c("mjn", "haploNet")
+        return(m)
+    }
+
     if (mode(x) == "numeric") {
         if (!all(unique.default(x) %in% 0:1))
             stop("mjn() requires binary data (0/1)")
@@ -93,7 +105,6 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
     if (mode(x) == "raw") class(x) <- c("matrix", "array")
 
     ## initialization --
-    n <- nrow(x)
     nextX <- n + 1L
 
     ## step 1 --
@@ -273,7 +284,7 @@ mjn <- function(x, epsilon = 0, max.n.cost = 10000, prefix = "median.vector_", q
         m <- m[!nak, , drop = FALSE]
         attr(m, "alter.links") <- alt
     }
-    dimnames(m) <- list(NULL, c("", "", "step"))
+    colnames(m) <- c("", "", "step")
     attr(m, "labels") <- rownames(x)
     if (mode(x) == "raw") class(x) <- "DNAbin"
     attr(m, "data") <- x

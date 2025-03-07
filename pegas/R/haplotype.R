@@ -1,8 +1,8 @@
-## haplotype.R (2024-03-06)
+## haplotype.R (2025-03-07)
 
 ##   Haplotype Extraction, Frequencies, and Networks
 
-## Copyright 2009-2024 Emmanuel Paradis, 2013 Klaus Schliep
+## Copyright 2009-2025 Emmanuel Paradis, 2013 Klaus Schliep
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -412,7 +412,16 @@ haploNet <- function(h, d = NULL, getProb = TRUE)
         stop("'h' must be of class 'haplotype'")
     freq <- sapply(attr(h, "index"), length)
     n <- length(freq) # number of haplotypes
+    if (n == 0) return(NULL)
     link <- matrix(0, 0, 3)
+    if (n == 1) {
+        link <- cbind(link, NA)
+        colnames(link) <- c("", "", "step", "Prob")
+        attr(link, "freq") <- freq
+        attr(link, "labels") <- rownames(h)
+        class(link) <- "haploNet"
+        return(link)
+    }
     if (is.null(d)) {
         ## d <- dist.dna(h, "N", pairwise.deletion = TRUE)
         d <- .C(distDNA_pegas, h, as.integer(n), ncol(h), numeric(n * (n - 1)/2), NAOK = TRUE)[[4]]
@@ -471,16 +480,22 @@ print.haploNet <- function(x, ...)
     cat("Haplotype network with:\n")
     cat(" ", length(attr(x, "labels")), "haplotypes\n")
     N <- nrow(x)
+    steps <- x[, 3]
     altlinks <- attr(x, "alter.links")
     if (!is.null(altlinks)) {
-        N <- N + nrow(altlinks)
-        rl <- range(x[, 3], altlinks[, 3])
-    } else {
-        rl <- range(x[, 3])
+        steps <- c(steps, altlinks[, 3])
+        N <- length(steps)
     }
-    cat(" ", N, if (N > 1) "links\n" else "link\n")
-    cat("  link lengths between", rl[1], "and", rl[2], "step(s)\n\n")
-    cat("Use print.default() to display all elements.\n")
+    cat(sprintf("  %d link%s\n", N, ifelse(N > 1, "s", "")))
+    if (N) {
+        if (N == 1) {
+            cat("  link length:", steps, "step(s)")
+        } else { # N > 1
+            rl <- range(steps)
+            cat("  link lengths between", rl[1], "and", rl[2], "step(s)")
+        }
+    }
+    cat("\n\nUse print.default() to display all elements.\n")
 }
 
 circle <- function(x, y, size, col = "black", pie = NULL, bg = NULL)
