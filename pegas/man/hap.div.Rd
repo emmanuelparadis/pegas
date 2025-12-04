@@ -37,9 +37,11 @@ hap.div(x, ...)
 data(woodmouse)
 hap.div(woodmouse) # all haplotypes are unique
 
-## neuraminidase sequences from the 2009 H1N1 data (delivered with adegenet):
+## neuraminidase sequences from the 2009 H1N1 data (with adegenet):
+if (requireNamespace("adegenet", quietly = TRUE)) {
 fl <- system.file("files/pdH1N1-NA.fasta", package = "adegenet")
 H1N1.NA <- read.dna(fl, "fasta")
 hap.div(H1N1.NA, TRUE)
+}
 }
 \keyword{manip}

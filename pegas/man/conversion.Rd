@@ -76,11 +76,12 @@ loci2SnpMatrix(x, checkSNP = TRUE)
 x <- c("A-A", "A-a", "a-a")
 as.loci(x, allele.sep = "-")
 \dontrun{
-require(adegenet)
-data(nancycats)
-x <- as.loci(nancycats)
-y <- loci2genind(x) # back to "genind"
-identical(nancycats@tab, y@tab)
-identical(nancycats@pop, y@pop)
+if (require(adegenet)) {
+    data(nancycats)
+    x <- as.loci(nancycats)
+    y <- loci2genind(x) # back to "genind"
+    identical(nancycats@tab, y@tab)
+    identical(nancycats@pop, y@pop)
 }}
+}
 \keyword{IO}

@@ -47,7 +47,7 @@ hw.test(x, B = 1000, \dots)
 }
 \examples{
 \dontrun{
-require(adegenet)
+if (require(adegenet)) {
 
 ## load data
 data(nancycats)
@@ -58,7 +58,7 @@ hw.test(nancycats, B=0)
 ## test on loci object
 x <- as.loci(nancycats)
 hw.test(x)
-}
+}}
 data(jaguar)
 hw.test(jaguar)
 }

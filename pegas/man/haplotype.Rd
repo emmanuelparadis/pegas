@@ -120,7 +120,7 @@ cat(">[A]\nCCCGATTTTATATCAACATTTATTT------",
     ">[D]\nCCCGATTTT----------------------",
     ">[B]\nCCCGATTTTATATCAACATTTATTT------",
     ">[C]\nCCCGATTTTATATCACCATTTATTTTGATTT",
-    file = "x.fas", sep = "\n")
+    file = fl, sep = "\n")
 x <- read.dna(fl, "f")
 unlink(fl)
 

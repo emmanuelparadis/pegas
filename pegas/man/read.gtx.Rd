@@ -32,8 +32,9 @@ read.gtx(file)
   \code{\link{read.vcf}}, \code{\link[adegenet]{read.genetix}}
 }
 \examples{
-require(adegenet)
+if (require(adegenet)) {
 (X <- read.gtx(system.file("files/nancycats.gtx", package = "adegenet")))
 ## compare with the example in ?read.genetix
+}
 }
 \keyword{IO}
