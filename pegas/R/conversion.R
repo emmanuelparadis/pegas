@@ -1,8 +1,8 @@
-## conversion.R (2023-02-13)
+## conversion.R (2026-01-25)
 
 ##   Conversion Among Allelic Data Classes
 
-## Copyright 2009-2023 Emmanuel Paradis
+## Copyright 2009-2026 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -176,11 +176,12 @@ as.loci.data.frame <-
     }
     if (is.character(col.loci))
         col.loci <- match(col.loci, names(x))
+    for (i in col.loci) x[[i]] <- as.factor(x[[i]])
     if (allele.sep != "/|") {
         if (allele.sep == "")
             stop("alleles within a genotype must be separated")
         for (i in col.loci)
-            levels(x[, i]) <- gsub(allele.sep, "/", levels(x[, i]))
+            levels(x[[i]]) <- gsub(allele.sep, "/", levels(x[[i]]))
     }
     class(x) <- c("loci", "data.frame")
     attr(x, "locicol") <- col.loci

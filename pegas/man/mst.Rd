@@ -60,6 +60,9 @@ rmst(d, B = NULL, stop.criterion = NULL, iter.lim = 1000,
   minimum spanning tree method. \emph{Methods in Ecology and Evolution},
   \bold{9}, 1308--1317.
 
+  Paradis, E. (2025) An efficient algorithm to find all minimum spanning
+  trees. \emph{Journal of Complex Networks}, \bold{13}, cnaf004.
+
   Ramachandran, V. (2008) Randomized Minimum Spanning Tree. \emph{In}:
   Kao, M. Y. (ed) Encyclopedia of Algorithms. Pages 1747--1750.
   Springer, Boston, MA.

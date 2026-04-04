@@ -1,8 +1,8 @@
-## VCFloci.R (2022-05-05)
+## VCFloci.R (2026-01-23)
 
 ##   Handling VCF Files
 
-## Copyright 2015-2022 Emmanuel Paradis
+## Copyright 2015-2025 Emmanuel Paradis
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -167,15 +167,26 @@ VCFloci <- function(file, what = "all", chunk.size = 1e9, quiet = FALSE)
 
 print.VCFinfo <- function(x, ...)
 {
-    n <- length(x[[1]])
-    if (n < 10) print(as.data.frame(x)) else {
-        x <- x[c(1:5, (n - 4):n), , drop = FALSE]
+    n <- nrow(x)
+    m <- 100L
+    if (cond <- m >= n) m <- n
+    info_fields <- unique(gsub("=.*$", "", unlist(strsplit(x$INFO[1:m], ";"))))
+    x$INFO <- NULL
+    if (n < 10)
+        print(as.data.frame(x))
+    else {
+        x <- x[c(1:5, (n - 5):n), , drop = FALSE]
         x <- apply(x, 2, as.character)
         x <- as.data.frame(x, stringsAsFactors = FALSE)
-        x[5:6, ] <- ""
-        row.names(x) <- c(1:4, "....", ".....", (n - 3):n)
+        x[6, ] <- ""
+        row.names(x) <- c(1:5, ".....", (n - 4):n)
         print(x)
     }
+    cat("\nInformation in the `$INFO` field")
+    if (!cond) cat(" (from the first 100 rows)")
+    cat(":\n")
+    print(info_fields, quote = FALSE)
+    cat("\n(See VCFheader() to access their descriptions.)\n")
 }
 
 is.snp.VCFinfo <- function(x)
