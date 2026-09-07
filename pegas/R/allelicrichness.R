@@ -10,7 +10,8 @@
 .eq13.Hurlbert1971 <- function(x, ni)
 {
     n <- sum(ni, na.rm = TRUE)
-    length(ni) - sum(choose(n - ni, x))/choose(n, x)
+    ## Evaluate absence probabilities on the log scale to avoid overflow.
+    sum(-expm1(lchoose(n - ni, x) - lchoose(n, x)))
 }
 
 rarefactionplot <-
@@ -91,7 +92,7 @@ allelicrichness <- function(x, pop = NULL, method = "extrapolation", min.n = NUL
 
 rhost <- function(x, pop = NULL, method = "extrapolation")
 {
-    R <- allelicrichness(x, method = method)
+    R <- allelicrichness(x, pop = pop, method = method)
     Rbar <- apply(R, 2, mean, na.rm = TRUE)
     1 - (Rbar - 1)/(ncol(R) - 1)
 }
