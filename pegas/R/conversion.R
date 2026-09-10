@@ -195,8 +195,8 @@ as.loci.character <- function(x, allele.sep = "/|", ...)
     as.loci.data.frame(data.frame(factor(x)), allele.sep = allele.sep, ...)
 
 as.loci.matrix <- function(x, allele.sep = "/|", col.pop = NULL, col.loci = NULL, ...)
-    as.loci.data.frame(as.data.frame(x, allele.sep = allele.sep, col.pop = col.pop,
-                                     col.loci = col.loci, ...))
+    as.loci.data.frame(as.data.frame(x, ...), allele.sep = allele.sep,
+                       col.pop = col.pop, col.loci = col.loci)
 
 alleles2loci <- function(x, ploidy = 2, rownames = NULL, population = NULL,
                          phased = FALSE)

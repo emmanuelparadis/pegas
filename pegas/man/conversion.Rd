@@ -17,6 +17,7 @@ as.loci(x, ...)
 \method{as.loci}{genind}(x, ...)
 genind2loci(x)
 \method{as.loci}{data.frame}(x, allele.sep = "/|", col.pop = NULL, col.loci = NULL, ...)
+\method{as.loci}{matrix}(x, allele.sep = "/|", col.pop = NULL, col.loci = NULL, ...)
 loci2genind(x, ploidy = 2, na.alleles = c("0", "."), unphase = TRUE)
 \method{as.loci}{factor}(x, allele.sep = "/|", ...)
 \method{as.loci}{character}(x, allele.sep = "/|", ...)
@@ -24,7 +25,7 @@ loci2SnpMatrix(x, checkSNP = TRUE)
 }
 \arguments{
   \item{x}{an object of class \code{"loci"} or \code{"genind"}, a data
-    frame, a factor, or a vector of mode character.}
+    frame, a matrix, a factor, or a vector of mode character.}
   \item{allele.sep}{the character(s) separating the alleles for each locus
     in the data file (a forward slash by default).}
   \item{col.pop}{specifies whether one of the column of the data file
@@ -48,12 +49,13 @@ loci2SnpMatrix(x, checkSNP = TRUE)
   The main objectives of these functions is to provide easy conversion
   between the data structures of \pkg{adegenet} and \pkg{pegas}, so both
   packages can be used together smoothly. In addition, it is possible to
-  create a \code{"loci"} object directly from a data frame, a vector, or
+  create a \code{"loci"} object directly from a data frame, a matrix, a vector, or
   a factor.
-
+  For matrix input, \code{allele.sep}, \code{col.pop}, and \code{col.loci}
+  have the same interpretation as for data-frame input. Additional
+  arguments in \code{...} are passed to \code{as.data.frame}.
   \code{genind2loci(x)} and \code{as.loci(x)} are the same if \code{x}
   is of class \code{"genind"}.
-
   The ploidy level specified in \code{loci2genind} can be a vector in
   which case it should be of length equal to the number of individuals
   and will be interpreted as giving the ploidy of each of them. Note
@@ -75,6 +77,9 @@ loci2SnpMatrix(x, checkSNP = TRUE)
 \examples{
 x <- c("A-A", "A-a", "a-a")
 as.loci(x, allele.sep = "-")
+m <- cbind(group = c("north", "south"),
+           L1 = c("A:A", "A:B"), note = c("sample1", "sample2"))
+as.loci(m, allele.sep = ":", col.pop = "group", col.loci = "L1")
 \dontrun{
 if (require(adegenet)) {
     data(nancycats)
