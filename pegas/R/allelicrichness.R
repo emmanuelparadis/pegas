@@ -1,8 +1,8 @@
-## allelicrichness.R (2020-11-25)
+## allelicrichness.R (2026-09-11)
 
 ##   F-Statistics
 
-## Copyright 2019-2020 Emmanuel Paradis
+## Copyright 2019-2026 Emmanuel Paradis, bug fixes by Thierry Gosselin
 
 ## This file is part of the R-package `pegas'.
 ## See the file ../DESCRIPTION for licensing issues.

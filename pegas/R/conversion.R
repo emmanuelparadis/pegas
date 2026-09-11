@@ -1,4 +1,4 @@
-## conversion.R (2026-01-25)
+## conversion.R (2026-09-11)
 
 ##   Conversion Among Allelic Data Classes
 

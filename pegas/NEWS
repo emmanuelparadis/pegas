@@ -1,10 +1,26 @@
-		CHANGES IN PEGAS VERSION 1.4-0.1
+		CHANGES IN PEGAS VERSION 1.4-0.2
 
 
 OTHER CHANGES
 
     o print.VCFinfo() has been improved to clarify the information
       from VCF files.
+
+
+BUG FIXES
+
+    o as.loci.matrix() did not pass its arguments to
+      as.loci.data.frame(). Thanks to Thierry Gosselin for the fix
+      (see PR#98 on GitHub).
+
+    o The 'pop' argument of rhost() was unused. Thanks again to
+      Thierry for the fix (see PR#97 on GitHub).
+
+    o A bug was fixed in rarefactionplot() to avoid returning NaN with
+      large numbers of alleles (see PR#97 on GitHub).
+
+    o The calculation of Pearson and likelihood-ratio statistics in
+      LD() was corrected. Thanks to Thierry (see PR#96 on GitHub).
 
 
 
