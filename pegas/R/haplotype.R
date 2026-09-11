@@ -1512,8 +1512,12 @@ LD <- function(x, locus = c(1, 2), details = TRUE)
     T2 <- df * N * sum(rij^2) / (k * m)
     res <- c("T2" = T2, "df" = df, "P-val" = pchisq(T2, df, lower.tail = FALSE))
     if (details) {
-        res <- list(nij, eij, rij, 2 * sum(nij * log(nij / eij)),
-                    2 * sum((nij - eij)^2 / eij), res)
+        positive <- nij > 0
+        ## Zero observed counts contribute zero to the likelihood ratio.
+        G2 <- 2 * sum(nij[positive] * log(nij[positive] / eij[positive]))
+        
+        res <- list(nij, eij, rij, G2,
+                    sum((nij - eij)^2 / eij), res)
         names(res) <- c("Observed frequencies", "Expected frequencies", "Correlations among alleles",
                        "LRT (G-squared)", "Pearson's test (chi-squared)", "T2")
     }
